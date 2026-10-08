@@ -1,2 +1,23 @@
+# Only the concept docs (README) belong in the public repo.
+
 # Interview prep file (not part of this project)
 final-prep.html
+
+# Team photos and raw recordings (private)
+team member image/
+Speech/
+video/
+
+# Pitch deck (contains team photos) and working files
+*.pptx
+~$*
+VIDEO-SCRIPT.md
+
+# Media and OS clutter
+*.mp4
+*.mov
+*.mp3
+*.wav
+Thumbs.db
+desktop.ini
+.DS_Store

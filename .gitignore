@@ -12,6 +12,9 @@ video/
 *.pptx
 ~$*
 VIDEO-SCRIPT.md
+PLAN.md
+LunaHorizon-Plan*.pdf
+LunaHorizon-Mentor-Brief.pdf
 
 # Media and OS clutter
 *.mp4

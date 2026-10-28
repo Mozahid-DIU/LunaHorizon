@@ -3,7 +3,7 @@
 > **Find the right place and the right time to land on the Moon.**
 
 **Team Astral** · Cumilla, Bangladesh
-NASA Space Apps Challenge 2026 · Challenge: **CLPS Lunar Mission Browser**
+NASA Space Apps Challenge 2026 · Challenge: **Lunar Landing Site Navigator** (formerly listed as *CLPS Lunar Mission Browser*)
 Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 
 ---
@@ -28,17 +28,20 @@ If a mission picks the wrong site or the wrong date, it can lose both. Tools tha
 
 ## 💡 Our Solution
 
-**LunaHorizon** is a planned interactive web tool. A user picks a **landing site** and a **date**, and LunaHorizon shows:
+**LunaHorizon** is a planned interactive web tool. A user picks a **landing site** (from a curated list or their own coordinates) and a **date**, and LunaHorizon shows:
 
 | Feature | What the user sees |
 |---|---|
-| ☀️ **Sun position** | How high the Sun is above the local horizon, and in which direction |
-| 🔋 **Power potential** | A simple indicator of how much sunlight the site gets over time |
-| 🌍 **Earth position** | Whether Earth is above the horizon at that moment |
-| 📡 **Communication windows** | Time periods when direct-to-Earth contact is possible |
-| 📍 **Site comparison** | Two or more landing sites side by side |
-| 📅 **Date comparison** | The same site on different dates |
+| 📍 **Curated and custom sites** | Apollo, CLPS, other nations' missions (e.g. Chandrayaan-3, Chang'e, SLIM), Artemis III regions, or any latitude/longitude |
+| 🌄 **Sky View** | The Sun's path and Earth's position against the real terrain horizon, with an animation over a lunar day |
+| ⏳ **Sunset / Earthset countdown** | Time left before sunset and Earthset, and the current solar elevation |
+| 📡 **Power and comms windows** | When the site has sunlight, when Earth is visible, and the **Golden Window** when both happen together |
+| ⚖️ **Compare** | Up to three sites or dates side by side |
+| 📅 **Best dates + Schedule Slip Planner** | The best landing dates in the next 6–12 months, and what changes if the date slips or the site moves |
+| ✅ **Validation Panel** | Our numbers next to JPL Horizons, with the difference |
 | 💬 **Plain-language summary** | A short explanation of the results for non-experts |
+
+Planned next: a south pole **Golden Window Map**, a **"small change, big impact"** view, **Mission Replay** of real landings, and a **Classroom mode with Bangla**.
 
 ### Example view (concept)
 
@@ -85,11 +88,11 @@ NASA open data  →  Position calculation  →  Visualization  →  Plain-langua
 |---|---|
 | [NASA JPL Horizons](https://ssd.jpl.nasa.gov/horizons/) | Sun and Earth positions seen from a point on the Moon |
 | [NAIF SPICE](https://naif.jpl.nasa.gov/naif/) | Official ephemeris data used by NASA missions |
-| [LRO LOLA elevation data](https://pds-geosciences.wustl.edu/missions/lro/lola.htm) | South pole terrain, to find the real local horizon |
-| [NASA Moon Trek](https://trek.nasa.gov/moon/) | Reference maps and layers |
-| [NASA CLPS](https://www.nasa.gov/commercial-lunar-payload-services/) and published candidate landing regions | Real landing sites to compare |
+| [LRO LOLA elevation data](https://pds-geosciences.wustl.edu/missions/lro/lola.htm) | Terrain, to find the real local horizon (no atmosphere, so no refraction) |
+| [NASA Moon Trek](https://trek.nasa.gov/moon/) and [LROC QuickMap](https://quickmap.lroc.asu.edu) | Reference maps and layers |
+| [NASA CLPS](https://www.nasa.gov/commercial-lunar-payload-services/), Apollo and other agencies' mission pages | Real landing sites to compare |
 
-The official challenge resources are published on 28 October 2026. We will update this list to match them.
+The official challenge resources will be published on 13 November 2026. We will update this list to match them.
 
 ## 🧰 Planned Tech Stack
 

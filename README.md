@@ -57,7 +57,16 @@ If a mission picks the wrong site or the wrong date, it can lose both. Tools tha
 | ✅ **Validation Panel** | Our numbers next to JPL Horizons, with the difference |
 | 💬 **Plain-language summary** | A short explanation of the results for non-experts |
 
-Planned next: a south pole **Golden Window Map**, a **"small change, big impact"** view, **Mission Replay** of real landings, and a **Classroom mode with Bangla**.
+Also planned:
+
+| Feature | What the user sees |
+|---|---|
+| 📡 **DSN-aware comms** | Not just "Earth is up", but "Earth is up **and** a Deep Space Network station (Goldstone, Madrid, Canberra) can hear you" |
+| 🎯 **Landing Ellipse Risk** | Landers miss their target point; best and worst case sunlight inside a 100 m – 1 km landing ellipse |
+| 🔋 **Power & Battery Simulator** | Choose panel, battery and load; see the battery charge across the mission and whether the lander survives the night |
+| 🏔️ **Lander's-eye 3D view** | Real LOLA terrain with moving shadows over a lunar day |
+| 💬 **Ask LunaHorizon + Mission Brief** | Ask in plain English; export a one-page mission brief |
+| 🗺️ **More** | South pole Golden Window Map, "small change, big impact" view, Mission Replay of real landings, Classroom mode, share links, CSV export, offline mode, open data |
 
 ### Example view (concept)
 

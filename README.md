@@ -8,10 +8,26 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 
 ---
 
-> ⚠️ **Project status: Concept stage**
+> 🛠️ **Project status: In development**
 >
-> This repository has the **concept and plan** for LunaHorizon. It contains no working code yet.
-> NASA Space Apps rules say teams may not start building before the hackathon. Development will begin during the official hackathon (November 2026).
+> **Development start: 28 October 2026**, after our assigned Space Apps mentor confirmed that our team could begin development before the hackathon. All code in this repository is open source (MIT).
+
+### Progress
+
+- [x] **Ephemeris engine:** Sun and Earth azimuth/elevation from any point on the Moon (Skyfield + NASA SPICE: DE440, Moon ME frame with libration)
+- [x] **Validated against NASA JPL Horizons:** 24 checks across equatorial (Apollo 11), mid-latitude (Chandrayaan-3) and south pole (Shackleton rim) sites; all within the 0.1° target, observed difference below 0.0001°
+- [ ] Terrain horizon from LRO LOLA
+- [ ] Power, comms and Golden windows; sunset/Earthset countdown; best dates and slip planner
+- [ ] Web app (Sky View, compare, map)
+
+### Run the pipeline
+
+```bash
+python -m venv .venv
+.venv/Scripts/pip install -r pipeline/requirements.txt   # Windows; use .venv/bin/pip on macOS/Linux
+.venv/Scripts/python pipeline/get_kernels.py             # downloads NASA SPICE kernels (~35 MB)
+cd pipeline && ../.venv/Scripts/python -m pytest         # validates against JPL Horizons
+```
 
 ---
 
@@ -125,7 +141,8 @@ The official challenge resources will be published on 13 November 2026. We will 
 Following NASA Space Apps rules, we disclose our AI use:
 
 - This README and our pitch material were drafted with help from an AI assistant (Claude by Anthropic) and reviewed and edited by the team.
-- During the hackathon, we plan to use AI-assisted development (Claude Code) for code generation and review. All AI use will be listed here.
+- We use AI-assisted development (Claude Code) for code generation and review. Every AI-assisted change, with the prompt, the output and how we verified it, is logged in [docs/ai-use.md](docs/ai-use.md).
+- In the app, AI only explains numbers that our own code computed. It never calculates positions or windows.
 - Any AI-generated images or video will carry a visible watermark.
 - This project uses no NASA logos, flags or mission insignia.
 

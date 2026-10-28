@@ -24,3 +24,18 @@ LunaHorizon-Mentor-Brief.pdf
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Large NASA data files: download with pipeline/get_kernels.py
+pipeline/data/kernels/*.bsp
+pipeline/data/kernels/*.bpc
+pipeline/data/dem/
+
+# Web
+web/node_modules/
+web/.next/

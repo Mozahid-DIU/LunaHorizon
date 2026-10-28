@@ -1,0 +1,4 @@
+skyfield==1.55
+numpy
+requests
+pytest

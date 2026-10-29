@@ -1,0 +1,66 @@
+{
+  "frame": "Mean Earth / Polar Axis (DE421), planetocentric, east-positive longitude in degrees (-180, 180]",
+  "sites": [
+    {
+      "id": "apollo-11",
+      "name": "Apollo 11 (Tranquility Base)",
+      "agency": "NASA",
+      "mission": "Apollo 11",
+      "category": "apollo",
+      "lat": 0.67416,
+      "lon": 23.47314,
+      "landed": "1969-07-20",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+      "source_note": "NSSDCA Apollo landing site coordinates (LM position, updated 2017 from LRO, ME/DE421)"
+    },
+    {
+      "id": "chandrayaan-3",
+      "name": "Chandrayaan-3 (Shiv Shakti point)",
+      "agency": "ISRO",
+      "mission": "Chandrayaan-3 Vikram",
+      "category": "other-nations",
+      "lat": -69.3741,
+      "lon": 32.32,
+      "landed": "2023-08-23",
+      "source": "https://lroc.im-ldi.com/images/1314",
+      "source_note": "LROC: Chandrayaan-3 Landing Site (NASA/GSFC/Arizona State University)"
+    },
+    {
+      "id": "im-1",
+      "name": "IM-1 Odysseus (Malapert A region)",
+      "agency": "NASA CLPS / Intuitive Machines",
+      "mission": "IM-1 Odysseus",
+      "category": "clps",
+      "lat": -80.13,
+      "lon": 1.44,
+      "landed": "2024-02-22",
+      "source": "https://lroc.im-ldi.com/images/1360",
+      "source_note": "LROC: Odysseus came to rest at 80.13S, 1.44E (NASA/GSFC/Arizona State University)"
+    },
+    {
+      "id": "im-2",
+      "name": "IM-2 Athena (Mons Mouton)",
+      "agency": "NASA CLPS / Intuitive Machines",
+      "mission": "IM-2 Athena",
+      "category": "clps",
+      "lat": -84.78,
+      "lon": 29.13,
+      "landed": "2025-03-06",
+      "source": "https://lroc.im-ldi.com/images/1401",
+      "source_note": "LROC: IM-2 Landing Region, planned target. Athena touched down a few hundred metres away (see Landing Ellipse feature)"
+    },
+    {
+      "id": "shackleton-rim",
+      "name": "Shackleton crater rim (near the south pole)",
+      "agency": "-",
+      "mission": "Artemis III candidate area (Peak near Shackleton)",
+      "category": "artemis",
+      "lat": -89.9851,
+      "lon": -50.22,
+      "landed": null,
+      "provisional": true,
+      "source": "https://planetarynames.wr.usgs.gov/Feature/5450",
+      "source_note": "Point on the rim nearest the pole, derived from the IAU crater centre (89.67S, 129.78E) and diameter (20.92 km). To be replaced in M2 by the best-lit rim pixel from the NASA PGDA LOLA illumination map"
+    }
+  ]
+}

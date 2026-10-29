@@ -5,5 +5,6 @@ Tool: **Claude Code** (Anthropic), used as a pair programmer. Every entry lists 
 | Date | Prompt (summary) | AI output | How we verified |
 |---|---|---|---|
 | 2026-10-28 | "Set up the project and compute Sun and Earth positions from a point on the Moon using NASA SPICE data; validate against JPL Horizons." | `pipeline/ephemeris.py` (Skyfield + DE440 + Moon ME frame), `pipeline/horizons_ref.py`, tests, kernel download script | 24 test cases against JPL Horizons (3 sites × 4 times × Sun/Earth); all within 0.1°, observed difference < 0.0001° |
+| 2026-10-29 | "Add curated landing sites with official sources, and hourly sub-solar/sub-Earth points so the browser can compute any site." | `pipeline/data/sites.json` (5 demo sites), `pipeline/sites.py`, `pipeline/subpoints.py`, `web/public/data/subpoints-2026…2030.json`, tests | Coordinates checked by hand against NSSDCA, LROC and the IAU Gazetteer; sub-point az/el compared with full Skyfield/SPICE for 5 sites × random times (worst 0.00003°, tolerance 0.01°); analytic overhead/horizon cases; physical range checks |
 
 In the app, AI is used only to explain numbers that our own code computed. It never calculates positions or windows.

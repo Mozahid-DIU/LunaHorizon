@@ -15,7 +15,7 @@ TOL_DEG = 0.1
 SITES = [
     ("apollo-11", 0.674, 23.473),
     ("chandrayaan-3", -69.37, 32.32),
-    ("shackleton-rim", -89.45, 222.69),
+    ("south-pole-89s", -89.45, 222.69),  # polar test point, ~9 km from the Shackleton rim
 ]
 TIMES = ["2027-01-01 00:00", "2027-03-15 06:00", "2027-07-04 12:00", "2028-11-20 18:00"]
 

@@ -15,7 +15,8 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 ### Progress
 
 - [x] **Ephemeris engine:** Sun and Earth azimuth/elevation from any point on the Moon (Skyfield + NASA SPICE: DE440, Moon ME frame with libration)
-- [x] **Validated against NASA JPL Horizons:** 24 checks across equatorial (Apollo 11), mid-latitude (Chandrayaan-3) and south pole (Shackleton rim) sites; all within the 0.1° target, observed difference below 0.0001°
+- [x] **Validated against NASA JPL Horizons:** 24 checks across equatorial (Apollo 11), mid-latitude (Chandrayaan-3) and south pole (89.45°S) sites; all within the 0.1° target, observed difference below 0.0001°
+- [x] **Curated sites with official sources** (NSSDCA, LROC, IAU Gazetteer) and **hourly Sun/Earth sub-points 2026–2030**: any site's az/el reproduces the full SPICE result within 0.00003°
 - [ ] Terrain horizon from LRO LOLA
 - [ ] Power, comms and Golden windows; sunset/Earthset countdown; best dates and slip planner
 - [ ] Web app (Sky View, compare, map)

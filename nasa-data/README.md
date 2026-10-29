@@ -11,7 +11,7 @@ All source data LunaHorizon uses lives in this folder. Large files are not store
 | `horizons/*.json` | Sun and Earth seen from lunar sites, and the Moon seen from DSN stations; used to validate our engine | NASA JPL Horizons API | Yes | Created automatically by `pytest` if missing |
 | DSN station locations (in `pipeline/dsn.py`) | Goldstone DSS-14, Madrid DSS-63, Canberra DSS-43 | NASA DSN Telecommunications Link Design Handbook 810-005, module 301 | Yes | Coordinates written in the code |
 | `sites.json` | Landing site coordinates, each with its official source | NASA NSSDCA, NASA/ASU LROC, IAU Gazetteer (USGS) | Yes | Curated by the team |
-| `lola/` *(coming)* | LRO LOLA polar elevation maps and SLDEM2015 (LOLA + JAXA Kaguya) | NASA LRO / PDS, JAXA | No (large) | Download script added in M2 |
+| `lola/ldem_875s_20m`, `ldem_80s_80m`, `ldem_75s_120m` (.img + .lbl) | LRO LOLA south polar elevation maps: 87.5–90°S at 20 m, 80–90°S at 80 m, 75–90°S at 120 m | NASA LRO LOLA / PDS Geosciences Node | No (~330 MB) | `python pipeline/get_dem.py` |
 
 Data we compute from these files (hourly Sun/Earth sub-points, terrain horizons) is written to `web/public/data/`, where the web app loads it.
 

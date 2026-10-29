@@ -160,7 +160,11 @@ Following NASA Space Apps rules, we disclose our AI use:
 - Any AI-generated images or video will carry a visible watermark.
 - This project uses no NASA logos, flags or mission insignia.
 
-## 🎵 Video Credits
+## 📜 Credits and Licenses
+
+We use only public-domain NASA data and openly licensed software, fonts and media. The full list, with each licence, is in [docs/CREDITS.md](docs/CREDITS.md).
+
+### 🎵 Video Credits
 
 - Background music: "Lightless Dawn" by Kevin MacLeod ([incompetech.com](https://incompetech.com)), licensed under [Creative Commons: By Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).
 - South pole illumination map: NASA/GSFC/Arizona State University (LRO).

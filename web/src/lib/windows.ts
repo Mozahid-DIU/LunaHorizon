@@ -75,6 +75,13 @@ export class Ephemeris {
     return sampleAt(next.subpoints[body], 0);
   }
 
+  /** Last instant that can be evaluated: the final hourly sample of the last loaded year. */
+  dataEnd(): number {
+    const last = Math.max(...this.years.keys());
+    const d = this.years.get(last)!;
+    return Date.parse(d.subpoints.start) + (d.subpoints.sun.lat.length - 1) * HOUR_MS;
+  }
+
   dsnMask(utcMs: number): number {
     const { data, index } = this.locate(utcMs);
     return data.dsn.mask[Math.floor(index)];

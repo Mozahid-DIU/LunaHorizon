@@ -1,0 +1,690 @@
+{
+ "generated": "2026-10-29",
+ "summary": {
+  "checks": 58,
+  "passed": 58,
+  "max_angle_diff_deg": 0.000742
+ },
+ "sections": [
+  {
+   "id": "horizons-sun-earth",
+   "title": "Sun and Earth position vs NASA JPL Horizons",
+   "method": "Topocentric azimuth/elevation at 3 sites x 4 times; azimuth error weighted by cos(elevation)",
+   "rows": [
+    {
+     "site": "apollo-11",
+     "body": "sun",
+     "utc": "2027-01-01 00:00",
+     "ours": {
+      "az": 269.21894,
+      "el": -30.36417
+     },
+     "reference": {
+      "az": 269.218953,
+      "el": -30.364162
+     },
+     "diff_deg": 8e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "apollo-11",
+     "body": "sun",
+     "utc": "2027-03-15 06:00",
+     "ours": {
+      "az": 89.34565,
+      "el": 21.77461
+     },
+     "reference": {
+      "az": 89.345661,
+      "el": 21.77461
+     },
+     "diff_deg": 6e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "apollo-11",
+     "body": "sun",
+     "utc": "2027-07-04 12:00",
+     "ours": {
+      "az": 87.23391,
+      "el": -60.38884
+     },
+     "reference": {
+      "az": 87.23393,
+      "el": -60.38885
+     },
+     "diff_deg": 1.1e-05,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "apollo-11",
+     "body": "sun",
+     "utc": "2028-11-20 18:00",
+     "ours": {
+      "az": 90.94893,
+      "el": -19.61737
+     },
+     "reference": {
+      "az": 90.948939,
+      "el": -19.617371
+     },
+     "diff_deg": 7e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "apollo-11",
+     "body": "earth",
+     "utc": "2027-01-01 00:00",
+     "ours": {
+      "az": 288.47916,
+      "el": 72.82218
+     },
+     "reference": {
+      "az": 288.479188,
+      "el": 72.822185
+     },
+     "diff_deg": 9e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "apollo-11",
+     "body": "earth",
+     "utc": "2027-03-15 06:00",
+     "ours": {
+      "az": 256.0378,
+      "el": 61.93226
+     },
+     "reference": {
+      "az": 256.037823,
+      "el": 61.932266
+     },
+     "diff_deg": 1e-05,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "apollo-11",
+     "body": "earth",
+     "utc": "2027-07-04 12:00",
+     "ours": {
+      "az": 261.73682,
+      "el": 65.42204
+     },
+     "reference": {
+      "az": 261.736839,
+      "el": 65.422043
+     },
+     "diff_deg": 1e-05,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "apollo-11",
+     "body": "earth",
+     "utc": "2028-11-20 18:00",
+     "ours": {
+      "az": 264.99569,
+      "el": 72.69594
+     },
+     "reference": {
+      "az": 264.995712,
+      "el": 72.695943
+     },
+     "diff_deg": 7e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "body": "sun",
+     "utc": "2027-01-01 00:00",
+     "ours": {
+      "az": 232.35156,
+      "el": -11.89445
+     },
+     "reference": {
+      "az": 232.351565,
+      "el": -11.894453
+     },
+     "diff_deg": 7e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "body": "sun",
+     "utc": "2027-03-15 06:00",
+     "ours": {
+      "az": 60.75353,
+      "el": 9.5201
+     },
+     "reference": {
+      "az": 60.753535,
+      "el": 9.520102
+     },
+     "diff_deg": 5e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "body": "sun",
+     "utc": "2027-07-04 12:00",
+     "ours": {
+      "az": 139.52931,
+      "el": -16.78365
+     },
+     "reference": {
+      "az": 139.529318,
+      "el": -16.783639
+     },
+     "diff_deg": 1e-05,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "body": "sun",
+     "utc": "2028-11-20 18:00",
+     "ours": {
+      "az": 100.47461,
+      "el": -2.72198
+     },
+     "reference": {
+      "az": 100.474612,
+      "el": -2.721976
+     },
+     "diff_deg": 8e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "body": "earth",
+     "utc": "2027-01-01 00:00",
+     "ours": {
+      "az": 334.34335,
+      "el": 12.42982
+     },
+     "reference": {
+      "az": 334.343355,
+      "el": 12.429817
+     },
+     "diff_deg": 7e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "body": "earth",
+     "utc": "2027-03-15 06:00",
+     "ours": {
+      "az": 320.7504,
+      "el": 22.05091
+     },
+     "reference": {
+      "az": 320.750409,
+      "el": 22.050902
+     },
+     "diff_deg": 1e-05,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "body": "earth",
+     "utc": "2027-07-04 12:00",
+     "ours": {
+      "az": 324.573,
+      "el": 19.6505
+     },
+     "reference": {
+      "az": 324.573014,
+      "el": 19.65049
+     },
+     "diff_deg": 9e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "body": "earth",
+     "utc": "2028-11-20 18:00",
+     "ours": {
+      "az": 332.31999,
+      "el": 19.04331
+     },
+     "reference": {
+      "az": 332.319985,
+      "el": 19.043306
+     },
+     "diff_deg": 7e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "south-pole-89s",
+     "body": "sun",
+     "utc": "2027-01-01 00:00",
+     "ours": {
+      "az": 40.43329,
+      "el": 1.43258
+     },
+     "reference": {
+      "az": 40.433291,
+      "el": 1.432576
+     },
+     "diff_deg": 9e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "south-pole-89s",
+     "body": "sun",
+     "utc": "2027-03-15 06:00",
+     "ours": {
+      "az": 229.02201,
+      "el": -1.21903
+     },
+     "reference": {
+      "az": 229.022008,
+      "el": -1.219023
+     },
+     "diff_deg": 6e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "south-pole-89s",
+     "body": "sun",
+     "utc": "2027-07-04 12:00",
+     "ours": {
+      "az": 311.21076,
+      "el": -0.41852
+     },
+     "reference": {
+      "az": 311.210771,
+      "el": -0.418512
+     },
+     "diff_deg": 1.1e-05,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "south-pole-89s",
+     "body": "sun",
+     "utc": "2028-11-20 18:00",
+     "ours": {
+      "az": 270.38029,
+      "el": 1.12313
+     },
+     "reference": {
+      "az": 270.38029,
+      "el": 1.123133
+     },
+     "diff_deg": 7e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "south-pole-89s",
+     "body": "earth",
+     "utc": "2027-01-01 00:00",
+     "ours": {
+      "az": 144.46072,
+      "el": -6.69565
+     },
+     "reference": {
+      "az": 144.46073,
+      "el": -6.695661
+     },
+     "diff_deg": 8e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "south-pole-89s",
+     "body": "earth",
+     "utc": "2027-03-15 06:00",
+     "ours": {
+      "az": 133.61945,
+      "el": 5.24705
+     },
+     "reference": {
+      "az": 133.619448,
+      "el": 5.247039
+     },
+     "diff_deg": 1.1e-05,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "south-pole-89s",
+     "body": "earth",
+     "utc": "2027-07-04 12:00",
+     "ours": {
+      "az": 136.57732,
+      "el": 2.12034
+     },
+     "reference": {
+      "az": 136.577322,
+      "el": 2.120327
+     },
+     "diff_deg": 1e-05,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "site": "south-pole-89s",
+     "body": "earth",
+     "utc": "2028-11-20 18:00",
+     "ours": {
+      "az": 143.62452,
+      "el": 0.13727
+     },
+     "reference": {
+      "az": 143.624514,
+      "el": 0.137264
+     },
+     "diff_deg": 6e-06,
+     "tolerance_deg": 0.1,
+     "pass": true
+    }
+   ]
+  },
+  {
+   "id": "browser-engine",
+   "title": "Browser engine vs full SPICE calculation",
+   "method": "Hourly sub-point files (what the web app uses) against Skyfield + SPICE for every curated site",
+   "rows": [
+    {
+     "site": "apollo-11",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 4.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-11",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.2e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-11",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.7e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-11",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.7e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 4.5e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 6.2e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-3",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 5.4e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "im-1",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 5e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "im-1",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 7e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "im-1",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "im-1",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 5.3e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "im-2",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 4.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "im-2",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 7e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "im-2",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "im-2",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 5.4e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "shackleton-rim",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 4.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "shackleton-rim",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 7.2e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "shackleton-rim",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "shackleton-rim",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 5.3e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    }
+   ]
+  },
+  {
+   "id": "dsn-moon",
+   "title": "Moon elevation from Deep Space Network stations vs NASA JPL Horizons",
+   "method": "Goldstone, Madrid, Canberra x 4 times",
+   "rows": [
+    {
+     "station": "Goldstone (USA), DSS-14",
+     "utc": "2027-01-01 00:00",
+     "ours_el": -50.59402,
+     "reference_el": -50.593405,
+     "diff_deg": 0.000619,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Goldstone (USA), DSS-14",
+     "utc": "2027-03-15 06:00",
+     "ours_el": 31.44702,
+     "reference_el": 31.447754,
+     "diff_deg": 0.000733,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Goldstone (USA), DSS-14",
+     "utc": "2027-07-04 12:00",
+     "ours_el": -11.10601,
+     "reference_el": -11.10659,
+     "diff_deg": 0.000582,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Goldstone (USA), DSS-14",
+     "utc": "2028-11-20 18:00",
+     "ours_el": -5.53632,
+     "reference_el": -5.537067,
+     "diff_deg": 0.000742,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Madrid (Spain), DSS-63",
+     "utc": "2027-01-01 00:00",
+     "ours_el": -21.03841,
+     "reference_el": -21.038949,
+     "diff_deg": 0.000536,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Madrid (Spain), DSS-63",
+     "utc": "2027-03-15 06:00",
+     "ours_el": -22.94997,
+     "reference_el": -22.949979,
+     "diff_deg": 1e-05,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Madrid (Spain), DSS-63",
+     "utc": "2027-07-04 12:00",
+     "ours_el": 71.02951,
+     "reference_el": 71.029162,
+     "diff_deg": 0.000346,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Madrid (Spain), DSS-63",
+     "utc": "2028-11-20 18:00",
+     "ours_el": 20.75521,
+     "reference_el": 20.755563,
+     "diff_deg": 0.000348,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Canberra (Australia), DSS-43",
+     "utc": "2027-01-01 00:00",
+     "ours_el": 40.93594,
+     "reference_el": 40.936527,
+     "diff_deg": 0.00059,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Canberra (Australia), DSS-43",
+     "utc": "2027-03-15 06:00",
+     "ours_el": 21.64099,
+     "reference_el": 21.640711,
+     "diff_deg": 0.000277,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Canberra (Australia), DSS-43",
+     "utc": "2027-07-04 12:00",
+     "ours_el": -55.98242,
+     "reference_el": -55.981764,
+     "diff_deg": 0.000658,
+     "tolerance_deg": 0.1,
+     "pass": true
+    },
+    {
+     "station": "Canberra (Australia), DSS-43",
+     "utc": "2028-11-20 18:00",
+     "ours_el": -34.15045,
+     "reference_el": -34.15053,
+     "diff_deg": 7.6e-05,
+     "tolerance_deg": 0.1,
+     "pass": true
+    }
+   ]
+  },
+  {
+   "id": "terrain",
+   "title": "Terrain and illumination vs published values",
+   "method": "LOLA heights and our sunlit share against LROC and peer-reviewed results",
+   "rows": [
+    {
+     "check": "Ground height at the IM-1 Odysseus landing point (80.13 S, 1.44 E)",
+     "ours": 2593,
+     "reference": 2579,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/1360)",
+     "diff": 14,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Best sunlit share on the Shackleton rim at 2 m height (any part of the Sun)",
+     "ours": 90.4,
+     "reference": 92.3,
+     "unit": "%",
+     "reference_source": "Glaser et al. 2014, Icarus: best point on the nearby connecting ridge",
+     "diff": 1.9,
+     "tolerance": 5.0,
+     "pass": true
+    }
+   ]
+  }
+ ]
+}

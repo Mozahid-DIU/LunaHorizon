@@ -1,23 +1,16 @@
 """Our Sun/Earth azimuth-elevation must match JPL Horizons within 0.1 degrees."""
 import json
-from pathlib import Path
 
 import numpy as np
 import pytest
 
 from ephemeris import sun_earth_altaz
 from horizons_ref import horizons_altaz
+from validation import ANGLE_TOL_DEG, HORIZONS_DIR, HORIZONS_SITES, TIMES
 
-FIXTURES = Path(__file__).parent.parent.parent / "nasa-data" / "horizons"
-TOL_DEG = 0.1
-
-# (name, lat, lon) — east-positive longitude, degrees
-SITES = [
-    ("apollo-11", 0.674, 23.473),
-    ("chandrayaan-3", -69.37, 32.32),
-    ("south-pole-89s", -89.45, 222.69),  # polar test point, ~9 km from the Shackleton rim
-]
-TIMES = ["2027-01-01 00:00", "2027-03-15 06:00", "2027-07-04 12:00", "2028-11-20 18:00"]
+FIXTURES = HORIZONS_DIR
+TOL_DEG = ANGLE_TOL_DEG
+SITES = HORIZONS_SITES
 
 
 def angle_diff(a, b):

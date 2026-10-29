@@ -51,16 +51,15 @@
     },
     {
       "id": "shackleton-rim",
-      "name": "Shackleton crater rim (near the south pole)",
+      "name": "Shackleton crater rim (best-lit point)",
       "agency": "-",
       "mission": "Artemis III candidate area (Peak near Shackleton)",
       "category": "artemis",
-      "lat": -89.9851,
-      "lon": -50.22,
+      "lat": -89.7804,
+      "lon": -156.18,
       "landed": null,
-      "provisional": true,
-      "source": "https://planetarynames.wr.usgs.gov/Feature/5450",
-      "source_note": "Point on the rim nearest the pole, derived from the IAU crater centre (89.67S, 129.78E) and diameter (20.92 km). To be replaced in M2 by the best-lit rim pixel from the NASA PGDA LOLA illumination map"
+      "source": "https://pds-geosciences.wustl.edu/missions/lro/lola.htm",
+      "source_note": "Best-lit rim point found by LunaHorizon (pipeline/best_lit_rim.py) from NASA LRO LOLA 20 m polar DEM: Sun centre visible 84.8% of hours 2026-2030 at 2 m height (any part of the Sun 90.4%). Crater centre and size from the IAU Gazetteer (planetarynames.wr.usgs.gov/Feature/5450). Comparable to Glaser et al. (2014, Icarus): 92.3% at the nearby connecting ridge"
     }
   ]
 }

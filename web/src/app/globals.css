@@ -1,0 +1,54 @@
+/* Colour meaning is fixed across the app: gold = Sun / power, blue = Earth / comms, mint = validated / golden. */
+:root {
+  --space: #0a0f22;
+  --ink: #e6e9f2;
+  --muted: #8c95ae;
+  --sun: #f5b841;
+  --earth: #6fb0ff;
+  --mint: #3fc79e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--space);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.placeholder {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.placeholder h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+}
+
+.placeholder p {
+  margin: 0;
+}
+
+.kicker,
+.status {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sun);
+}
+
+.status {
+  color: var(--muted);
+}

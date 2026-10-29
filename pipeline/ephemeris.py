@@ -10,7 +10,8 @@ from pathlib import Path
 from skyfield.api import Loader
 from skyfield.planetarylib import PlanetaryConstants
 
-KERNELS = Path(__file__).parent / "data" / "kernels"
+NASA_DATA = Path(__file__).parent.parent / "nasa-data"
+KERNELS = NASA_DATA / "spice"
 
 
 @lru_cache(maxsize=1)

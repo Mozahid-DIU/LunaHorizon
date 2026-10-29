@@ -1,4 +1,4 @@
-"""Download the NASA NAIF SPICE kernels LunaHorizon needs into pipeline/data/kernels."""
+"""Download the NASA NAIF SPICE kernels LunaHorizon needs into nasa-data/spice."""
 from pathlib import Path
 
 import requests
@@ -10,7 +10,7 @@ FILES = [
     "fk/satellites/moon_080317.tf",          # Moon frame definitions (ME / PA)
     "pck/a_old_versions/pck00008.tpc",       # planetary constants used by Skyfield's Moon frame
 ]
-DEST = Path(__file__).parent / "data" / "kernels"
+DEST = Path(__file__).parent.parent / "nasa-data" / "spice"
 
 
 def main():

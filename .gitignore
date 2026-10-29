@@ -33,9 +33,9 @@ __pycache__/
 .pytest_cache/
 
 # Large NASA data files: download with pipeline/get_kernels.py
-pipeline/data/kernels/*.bsp
-pipeline/data/kernels/*.bpc
-pipeline/data/dem/
+nasa-data/spice/*.bsp
+nasa-data/spice/*.bpc
+nasa-data/lola/
 
 # Web
 web/node_modules/

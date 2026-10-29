@@ -8,7 +8,7 @@ import pytest
 from ephemeris import sun_earth_altaz
 from horizons_ref import horizons_altaz
 
-FIXTURES = Path(__file__).parent / "fixtures"
+FIXTURES = Path(__file__).parent.parent.parent / "nasa-data" / "horizons"
 TOL_DEG = 0.1
 
 # (name, lat, lon) — east-positive longitude, degrees

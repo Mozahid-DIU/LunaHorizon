@@ -112,6 +112,8 @@ NASA open data  →  Position calculation  →  Visualization  →  Plain-langua
 
 ## 🗂️ NASA Data Sources (planned)
 
+All source data is kept in one folder, [nasa-data/](nasa-data/), with a list of every file and where it comes from.
+
 | Source | Use |
 |---|---|
 | [NASA JPL Horizons](https://ssd.jpl.nasa.gov/horizons/) | Sun and Earth positions seen from a point on the Moon |

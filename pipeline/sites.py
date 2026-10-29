@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 
-SITES_FILE = Path(__file__).parent / "data" / "sites.json"
+SITES_FILE = Path(__file__).parent.parent / "nasa-data" / "sites.json"
 
 
 def load_sites() -> list[dict]:

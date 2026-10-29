@@ -1,21 +1,25 @@
-"""Fetch reference azimuth/elevation from the JPL Horizons API for an observer on the Moon."""
+"""Fetch reference azimuth/elevation from the JPL Horizons API for a surface observer."""
 import requests
 
 API = "https://ssd.jpl.nasa.gov/api/horizons.api"
-BODY_ID = {"sun": "10", "earth": "399"}
+BODY_ID = {"sun": "10", "earth": "399", "moon": "301"}
 
 
-def horizons_altaz(body, lat, lon, times):
-    """Return [{"time", "az", "el"}] for each UTC time string, observer at (lat, lon) on the Moon."""
+def horizons_altaz(body, lat, lon, times, observer="moon", alt_km=0.0):
+    """Return [{"time", "az", "el"}] for each UTC time string.
+
+    The observer stands at geodetic (lat, lon, alt_km) on `observer` ("moon" or "earth").
+    Elevation is airless (no refraction), matching Skyfield's default.
+    """
     rows = []
     for t in times:
         params = {
             "format": "json",
             "COMMAND": f"'{BODY_ID[body]}'",
             "EPHEM_TYPE": "'OBSERVER'",
-            "CENTER": "'coord@301'",
+            "CENTER": f"'coord@{BODY_ID[observer]}'",
             "COORD_TYPE": "'GEODETIC'",
-            "SITE_COORD": f"'{lon % 360},{lat},0'",
+            "SITE_COORD": f"'{lon % 360},{lat},{alt_km}'",
             "TLIST": f"'{t}'",
             "TIME_TYPE": "'UT'",
             "QUANTITIES": "'4'",

@@ -8,7 +8,8 @@ All source data LunaHorizon uses lives in this folder. Large files are not store
 | `spice/moon_pa_de421_1900-2050.bpc` | Moon orientation, including libration | NASA JPL / NAIF | No (1.7 MB) | `python pipeline/get_kernels.py` |
 | `spice/moon_080317.tf` | Moon reference frames (Mean Earth / Principal Axis) | NASA JPL / NAIF | Yes | `python pipeline/get_kernels.py` |
 | `spice/pck00008.tpc` | Planetary constants (Moon radius) | NASA JPL / NAIF | Yes | `python pipeline/get_kernels.py` |
-| `horizons/*.json` | Sun and Earth azimuth/elevation seen from lunar sites, used to validate our engine | NASA JPL Horizons API | Yes | Created automatically by `pytest` if missing |
+| `horizons/*.json` | Sun and Earth seen from lunar sites, and the Moon seen from DSN stations; used to validate our engine | NASA JPL Horizons API | Yes | Created automatically by `pytest` if missing |
+| DSN station locations (in `pipeline/dsn.py`) | Goldstone DSS-14, Madrid DSS-63, Canberra DSS-43 | NASA DSN Telecommunications Link Design Handbook 810-005, module 301 | Yes | Coordinates written in the code |
 | `sites.json` | Landing site coordinates, each with its official source | NASA NSSDCA, NASA/ASU LROC, IAU Gazetteer (USGS) | Yes | Curated by the team |
 | `lola/` *(coming)* | LRO LOLA polar elevation maps and SLDEM2015 (LOLA + JAXA Kaguya) | NASA LRO / PDS, JAXA | No (large) | Download script added in M2 |
 

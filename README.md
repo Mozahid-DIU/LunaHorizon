@@ -20,6 +20,8 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [ ] Power, comms and Golden windows; sunset/Earthset countdown; best dates and slip planner
 - [ ] Web app (Sky View, compare, map)
 
+📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
+
 ### Run the pipeline
 
 ```bash

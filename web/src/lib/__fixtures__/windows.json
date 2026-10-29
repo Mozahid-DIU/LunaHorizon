@@ -1,0 +1,1097 @@
+{
+ "source": "brute force, 1-minute SPICE samples (pipeline/windows_fixture.py)",
+ "cases": [
+  {
+   "site": "shackleton-rim",
+   "lat": -89.7804,
+   "lon": -156.18,
+   "start": "2027-01-01T00:00Z",
+   "end": "2027-02-01T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2027-01-01T00:00Z",
+      "end": "2027-02-01T00:00Z",
+      "startClipped": true,
+      "endClipped": true
+     }
+    ],
+    "earth": [
+     {
+      "start": "2027-01-10T08:27Z",
+      "end": "2027-01-23T18:52Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "comms": [
+     {
+      "start": "2027-01-10T08:27Z",
+      "end": "2027-01-10T10:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-10T11:00Z",
+      "end": "2027-01-20T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-20T17:00Z",
+      "end": "2027-01-23T18:52Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "golden": [
+     {
+      "start": "2027-01-10T08:27Z",
+      "end": "2027-01-10T10:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-10T11:00Z",
+      "end": "2027-01-20T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-20T17:00Z",
+      "end": "2027-01-23T18:52Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ]
+   }
+  },
+  {
+   "site": "shackleton-rim",
+   "lat": -89.7804,
+   "lon": -156.18,
+   "start": "2027-12-20T00:00Z",
+   "end": "2028-01-10T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2027-12-20T00:00Z",
+      "end": "2027-12-23T13:15Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-23T19:03Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "earth": [
+     {
+      "start": "2027-12-29T20:59Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "comms": [
+     {
+      "start": "2027-12-29T20:59Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "golden": [
+     {
+      "start": "2027-12-29T20:59Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ]
+   }
+  },
+  {
+   "site": "shackleton-rim",
+   "lat": -89.7804,
+   "lon": -156.18,
+   "start": "2028-02-20T00:00Z",
+   "end": "2028-03-10T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2028-02-20T00:00Z",
+      "end": "2028-02-20T05:00Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-21T23:39Z",
+      "end": "2028-02-24T19:18Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-25T11:13Z",
+      "end": "2028-03-01T13:36Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-03-02T02:02Z",
+      "end": "2028-03-07T13:40Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-03-09T03:24Z",
+      "end": "2028-03-09T15:04Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "earth": [
+     {
+      "start": "2028-02-22T09:59Z",
+      "end": "2028-03-08T02:43Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "comms": [
+     {
+      "start": "2028-02-22T09:59Z",
+      "end": "2028-02-23T07:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-23T08:00Z",
+      "end": "2028-02-26T08:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-26T09:00Z",
+      "end": "2028-03-08T02:43Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "golden": [
+     {
+      "start": "2028-02-22T09:59Z",
+      "end": "2028-02-23T07:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-23T08:00Z",
+      "end": "2028-02-24T19:18Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-25T11:13Z",
+      "end": "2028-02-26T08:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-26T09:00Z",
+      "end": "2028-03-01T13:36Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-03-02T02:02Z",
+      "end": "2028-03-07T13:40Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ]
+   }
+  },
+  {
+   "site": "im-2",
+   "lat": -84.78,
+   "lon": 29.13,
+   "start": "2027-01-01T00:00Z",
+   "end": "2027-02-01T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2027-01-13T23:02Z",
+      "end": "2027-01-28T06:45Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "earth": [
+     {
+      "start": "2027-01-05T20:57Z",
+      "end": "2027-01-27T11:07Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "comms": [
+     {
+      "start": "2027-01-05T20:57Z",
+      "end": "2027-01-06T08:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-06T09:00Z",
+      "end": "2027-01-06T15:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-06T16:00Z",
+      "end": "2027-01-07T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-07T17:00Z",
+      "end": "2027-01-08T09:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-08T10:00Z",
+      "end": "2027-01-10T10:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-10T11:00Z",
+      "end": "2027-01-20T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-20T17:00Z",
+      "end": "2027-01-27T11:07Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "golden": [
+     {
+      "start": "2027-01-13T23:02Z",
+      "end": "2027-01-20T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-20T17:00Z",
+      "end": "2027-01-27T11:07Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ]
+   }
+  },
+  {
+   "site": "im-2",
+   "lat": -84.78,
+   "lon": 29.13,
+   "start": "2027-12-20T00:00Z",
+   "end": "2028-01-10T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2028-01-03T08:21Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "earth": [
+     {
+      "start": "2027-12-20T00:00Z",
+      "end": "2027-12-20T11:28Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-25T13:34Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "comms": [
+     {
+      "start": "2027-12-20T00:00Z",
+      "end": "2027-12-20T11:28Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-25T13:34Z",
+      "end": "2027-12-25T14:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-25T15:00Z",
+      "end": "2027-12-26T15:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-26T16:00Z",
+      "end": "2027-12-27T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-27T17:00Z",
+      "end": "2027-12-28T09:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-28T10:00Z",
+      "end": "2027-12-29T10:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-29T11:00Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "golden": [
+     {
+      "start": "2028-01-03T08:21Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ]
+   }
+  },
+  {
+   "site": "im-2",
+   "lat": -84.78,
+   "lon": 29.13,
+   "start": "2028-02-20T00:00Z",
+   "end": "2028-03-10T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2028-03-03T02:48Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "earth": [
+     {
+      "start": "2028-02-20T00:00Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": true,
+      "endClipped": true
+     }
+    ],
+    "comms": [
+     {
+      "start": "2028-02-20T00:00Z",
+      "end": "2028-02-20T05:00Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-20T06:00Z",
+      "end": "2028-02-21T06:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-21T07:00Z",
+      "end": "2028-02-23T07:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-23T08:00Z",
+      "end": "2028-02-26T08:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-26T09:00Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "golden": [
+     {
+      "start": "2028-03-03T02:48Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ]
+   }
+  },
+  {
+   "site": "im-1",
+   "lat": -80.13,
+   "lon": 1.44,
+   "start": "2027-01-01T00:00Z",
+   "end": "2027-02-01T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2027-01-17T08:37Z",
+      "end": "2027-01-29T06:06Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "earth": [
+     {
+      "start": "2027-01-01T00:00Z",
+      "end": "2027-02-01T00:00Z",
+      "startClipped": true,
+      "endClipped": true
+     }
+    ],
+    "comms": [
+     {
+      "start": "2027-01-01T00:00Z",
+      "end": "2027-01-02T04:00Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-02T05:00Z",
+      "end": "2027-01-03T05:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-03T06:00Z",
+      "end": "2027-01-04T06:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-04T07:00Z",
+      "end": "2027-01-04T13:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-04T14:00Z",
+      "end": "2027-01-05T07:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-05T08:00Z",
+      "end": "2027-01-05T14:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-05T15:00Z",
+      "end": "2027-01-06T08:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-06T09:00Z",
+      "end": "2027-01-06T15:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-06T16:00Z",
+      "end": "2027-01-07T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-07T17:00Z",
+      "end": "2027-01-08T09:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-08T10:00Z",
+      "end": "2027-01-10T10:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-10T11:00Z",
+      "end": "2027-01-20T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-20T17:00Z",
+      "end": "2027-01-30T03:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-30T04:00Z",
+      "end": "2027-01-31T04:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-31T05:00Z",
+      "end": "2027-01-31T11:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-31T12:00Z",
+      "end": "2027-02-01T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "golden": [
+     {
+      "start": "2027-01-17T08:37Z",
+      "end": "2027-01-20T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-20T17:00Z",
+      "end": "2027-01-29T06:06Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ]
+   }
+  },
+  {
+   "site": "im-1",
+   "lat": -80.13,
+   "lon": 1.44,
+   "start": "2027-12-20T00:00Z",
+   "end": "2028-01-10T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2027-12-20T00:00Z",
+      "end": "2027-12-20T08:29Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2028-01-06T17:45Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "earth": [
+     {
+      "start": "2027-12-20T00:00Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": true,
+      "endClipped": true
+     }
+    ],
+    "comms": [
+     {
+      "start": "2027-12-20T00:00Z",
+      "end": "2027-12-21T02:00Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-21T03:00Z",
+      "end": "2027-12-24T13:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-24T14:00Z",
+      "end": "2027-12-25T14:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-25T15:00Z",
+      "end": "2027-12-26T15:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-26T16:00Z",
+      "end": "2027-12-27T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-27T17:00Z",
+      "end": "2027-12-28T09:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-28T10:00Z",
+      "end": "2027-12-29T10:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-29T11:00Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "golden": [
+     {
+      "start": "2027-12-20T00:00Z",
+      "end": "2027-12-20T08:29Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2028-01-06T17:45Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ]
+   }
+  },
+  {
+   "site": "im-1",
+   "lat": -80.13,
+   "lon": 1.44,
+   "start": "2028-02-20T00:00Z",
+   "end": "2028-03-10T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2028-03-06T07:33Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "earth": [
+     {
+      "start": "2028-02-20T00:00Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": true,
+      "endClipped": true
+     }
+    ],
+    "comms": [
+     {
+      "start": "2028-02-20T00:00Z",
+      "end": "2028-02-20T05:00Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-20T06:00Z",
+      "end": "2028-02-21T06:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-21T07:00Z",
+      "end": "2028-02-23T07:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-23T08:00Z",
+      "end": "2028-02-26T08:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-26T09:00Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "golden": [
+     {
+      "start": "2028-03-06T07:33Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ]
+   }
+  },
+  {
+   "site": "apollo-11",
+   "lat": 0.67416,
+   "lon": 23.47314,
+   "start": "2027-01-01T00:00Z",
+   "end": "2027-02-01T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2027-01-13T06:52Z",
+      "end": "2027-01-28T02:40Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "earth": [
+     {
+      "start": "2027-01-01T00:00Z",
+      "end": "2027-02-01T00:00Z",
+      "startClipped": true,
+      "endClipped": true
+     }
+    ],
+    "comms": [
+     {
+      "start": "2027-01-01T00:00Z",
+      "end": "2027-01-02T04:00Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-02T05:00Z",
+      "end": "2027-01-03T05:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-03T06:00Z",
+      "end": "2027-01-04T06:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-04T07:00Z",
+      "end": "2027-01-04T13:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-04T14:00Z",
+      "end": "2027-01-05T07:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-05T08:00Z",
+      "end": "2027-01-05T14:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-05T15:00Z",
+      "end": "2027-01-06T08:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-06T09:00Z",
+      "end": "2027-01-06T15:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-06T16:00Z",
+      "end": "2027-01-07T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-07T17:00Z",
+      "end": "2027-01-08T09:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-08T10:00Z",
+      "end": "2027-01-10T10:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-10T11:00Z",
+      "end": "2027-01-20T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-20T17:00Z",
+      "end": "2027-01-30T03:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-30T04:00Z",
+      "end": "2027-01-31T04:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-31T05:00Z",
+      "end": "2027-01-31T11:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-31T12:00Z",
+      "end": "2027-02-01T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "golden": [
+     {
+      "start": "2027-01-13T06:52Z",
+      "end": "2027-01-20T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-20T17:00Z",
+      "end": "2027-01-28T02:40Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ]
+   }
+  },
+  {
+   "site": "apollo-11",
+   "lat": 0.67416,
+   "lon": 23.47314,
+   "start": "2027-12-20T00:00Z",
+   "end": "2028-01-10T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2028-01-02T14:58Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "earth": [
+     {
+      "start": "2027-12-20T00:00Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": true,
+      "endClipped": true
+     }
+    ],
+    "comms": [
+     {
+      "start": "2027-12-20T00:00Z",
+      "end": "2027-12-21T02:00Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-21T03:00Z",
+      "end": "2027-12-24T13:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-24T14:00Z",
+      "end": "2027-12-25T14:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-25T15:00Z",
+      "end": "2027-12-26T15:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-26T16:00Z",
+      "end": "2027-12-27T16:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-27T17:00Z",
+      "end": "2027-12-28T09:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-28T10:00Z",
+      "end": "2027-12-29T10:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2027-12-29T11:00Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "golden": [
+     {
+      "start": "2028-01-02T14:58Z",
+      "end": "2028-01-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ]
+   }
+  },
+  {
+   "site": "apollo-11",
+   "lat": 0.67416,
+   "lon": 23.47314,
+   "start": "2028-02-20T00:00Z",
+   "end": "2028-03-10T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2028-03-01T19:37Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "earth": [
+     {
+      "start": "2028-02-20T00:00Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": true,
+      "endClipped": true
+     }
+    ],
+    "comms": [
+     {
+      "start": "2028-02-20T00:00Z",
+      "end": "2028-02-20T05:00Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-20T06:00Z",
+      "end": "2028-02-21T06:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-21T07:00Z",
+      "end": "2028-02-23T07:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-23T08:00Z",
+      "end": "2028-02-26T08:00Z",
+      "startClipped": false,
+      "endClipped": false
+     },
+     {
+      "start": "2028-02-26T09:00Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "golden": [
+     {
+      "start": "2028-03-01T19:37Z",
+      "end": "2028-03-10T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ]
+   }
+  },
+  {
+   "site": "custom-180",
+   "lat": -20.0,
+   "lon": 179.9,
+   "start": "2027-01-01T00:00Z",
+   "end": "2027-02-01T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2027-01-01T00:00Z",
+      "end": "2027-01-15T05:52Z",
+      "startClipped": true,
+      "endClipped": false
+     },
+     {
+      "start": "2027-01-30T01:01Z",
+      "end": "2027-02-01T00:00Z",
+      "startClipped": false,
+      "endClipped": true
+     }
+    ],
+    "earth": [],
+    "comms": [],
+    "golden": []
+   }
+  },
+  {
+   "site": "custom-180",
+   "lat": -20.0,
+   "lon": 179.9,
+   "start": "2027-12-20T00:00Z",
+   "end": "2028-01-10T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2027-12-20T18:07Z",
+      "end": "2028-01-04T13:51Z",
+      "startClipped": false,
+      "endClipped": false
+     }
+    ],
+    "earth": [],
+    "comms": [],
+    "golden": []
+   }
+  },
+  {
+   "site": "custom-180",
+   "lat": -20.0,
+   "lon": 179.9,
+   "start": "2028-02-20T00:00Z",
+   "end": "2028-03-10T00:00Z",
+   "windows": {
+    "lit": [
+     {
+      "start": "2028-02-20T00:00Z",
+      "end": "2028-03-03T17:21Z",
+      "startClipped": true,
+      "endClipped": false
+     }
+    ],
+    "earth": [],
+    "comms": [],
+    "golden": []
+   }
+  }
+ ]
+}

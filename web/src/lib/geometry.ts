@@ -76,21 +76,27 @@ export function hourIndex(year: SubpointYear, utcMs: number): number {
   return index;
 }
 
+export function sampleAt(track: Track, i: number): Subpoint {
+  return { lat: track.lat[i], lon: track.lon[i], distKm: track.dist_km[i] };
+}
+
+/** Linear blend of two sub-points (f = 0..1); longitude wraps across ±180°. */
+export function blendSubpoints(a: Subpoint, b: Subpoint, f: number): Subpoint {
+  if (f === 0) return a;
+  const dLon = ((((b.lon - a.lon + 180) % 360) + 360) % 360) - 180;
+  const lon = a.lon + f * dLon;
+  return {
+    lat: a.lat + f * (b.lat - a.lat),
+    lon: lon > 180 ? lon - 360 : lon <= -180 ? lon + 360 : lon,
+    distKm: a.distKm + f * (b.distKm - a.distKm),
+  };
+}
+
 /** Linear interpolation between hourly samples; longitude wraps across ±180°. */
 export function interpolateSubpoint(track: Track, index: number): Subpoint {
   const i0 = Math.floor(index);
   const f = index - i0;
-  if (f === 0) {
-    return { lat: track.lat[i0], lon: track.lon[i0], distKm: track.dist_km[i0] };
-  }
-  const i1 = i0 + 1;
-  const dLon = ((((track.lon[i1] - track.lon[i0] + 180) % 360) + 360) % 360) - 180;
-  const lon = track.lon[i0] + f * dLon;
-  return {
-    lat: track.lat[i0] + f * (track.lat[i1] - track.lat[i0]),
-    lon: lon > 180 ? lon - 360 : lon <= -180 ? lon + 360 : lon,
-    distKm: track.dist_km[i0] + f * (track.dist_km[i1] - track.dist_km[i0]),
-  };
+  return f === 0 ? sampleAt(track, i0) : blendSubpoints(sampleAt(track, i0), sampleAt(track, i0 + 1), f);
 }
 
 export function bodyAltAzAt(year: SubpointYear, body: Body, utcMs: number, site: Site): AltAz {

@@ -6,6 +6,11 @@ at least one DSN complex sees the Moon. The grid uses the LOLA polar stereograph
 lines up with LOLA maps: row 0 is +y (towards longitude 0) and the right column is +x (towards
 longitude 90 E). Values are per mille of hours (0..1000); null marks nodes outside the circle.
 
+Each value is true for the point at that node, checked at the top of every hour; it is not an
+average of the 5 km cell. Isolated dark nodes are small craters, and narrow lit ridges fall
+between nodes (the Shackleton rim point gets 85% sunlight, the nearest node 28%). Use the map
+to find regions, then compute a chosen site from its own horizon.
+
 Usage: python golden_grid.py        -> web/public/data/map/golden-grid.json (uses every CPU core)
 """
 import json

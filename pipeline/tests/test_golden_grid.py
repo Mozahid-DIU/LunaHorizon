@@ -68,6 +68,22 @@ def test_golden_is_lit_and_earth_and_a_dsn_station_hour_by_hour():
     assert 0 < stats["golden"] < min(stats["lit"], stats["earth"])
 
 
+def test_shares_across_a_leap_year_use_each_years_own_tracks_and_mask():
+    profile = np.zeros(360)
+    hours = golden = 0
+    for year in (2027, 2028):
+        data = json.loads((OUT_DIR / f"subpoints-{year}.json").read_text())
+        mask = np.array(json.loads((OUT_DIR / f"dsn-{year}.json").read_text())["mask"])
+        tracks = {b: tuple(np.array(data[b][k]) for k in ("lat", "lon", "dist_km")) for b in ("sun", "earth")}
+        _, sun_el = topocentric_altaz(*tracks["sun"], *IM2)
+        _, earth_el = topocentric_altaz(*tracks["earth"], *IM2)
+        golden += int(np.sum((sun_el > 0) & (earth_el > 0) & (mask > 0)))
+        hours += len(mask)
+
+    assert hours == 8760 + 8784
+    assert site_stats(*IM2, profile, [2027, 2028])["golden"] == pytest.approx(golden / hours, abs=1e-12)
+
+
 def test_build_grid_stores_per_mille_values_and_nulls_outside():
     calls = []
 
@@ -96,12 +112,22 @@ def test_rows_are_stored_north_first():
     assert data["lit"][22] == 1000  # last row, middle column: -y
 
 
+def test_columns_are_stored_west_first():
+    def profile_fn(lat, lon):
+        return HIGH if lon == 90 else LOW  # only the +x arm is walled in
+
+    data = build_grid(profile_fn, radius_km=20, step_km=10, years=[2027])
+    assert data["lit"][14] == 0  # middle row, last column: +x
+    assert data["lit"][10] == 1000  # middle row, first column: -x
+
+
 def test_generated_map_is_sane():
     path = OUT_DIR / "map" / "golden-grid.json"
     if not path.exists():
         pytest.skip("map not generated")
     data = json.loads(path.read_text())
     n = data["size"]
+    assert (n, data["step_km"], data["radius_km"]) == (121, 5, 300)
     for key in ("lit", "earth", "golden"):
         assert len(data[key]) == n * n
     for lit, earth, golden in zip(data["lit"], data["earth"], data["golden"]):
@@ -109,3 +135,14 @@ def test_generated_map_is_sane():
             assert earth is None and golden is None
         else:
             assert 0 <= golden <= min(lit, earth) <= 1000
+    inside = grid_nodes()["inside"].ravel()
+    assert [v is not None for v in data["lit"]] == inside.tolist()
+
+    # real terrain fixes the orientation: 5 km from the pole, +y and -x are sunlit, -y and +x are not
+    lit = np.array(data["lit"], dtype=float).reshape(n, n)
+    mid = n // 2
+    assert lit[mid - 1, mid] > 100 and lit[mid, mid - 1] > 100
+    assert lit[mid + 1, mid] == 0 and lit[mid, mid + 1] == 0
+    # Earth stays over longitude 0: the +y half sees it, the far edge never does
+    earth = np.array(data["earth"], dtype=float).reshape(n, n)
+    assert np.nanmedian(earth[:mid]) > 100 and np.nanmedian(earth[-10:]) == 0

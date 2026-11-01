@@ -1,0 +1,211 @@
+.sky {
+  padding: 24px 40px 40px;
+}
+
+.intro h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+
+.intro p {
+  margin: 6px 0 20px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+}
+
+.stageWrap {
+  display: grid;
+  gap: 12px;
+}
+
+.stage {
+  position: relative;
+  max-width: 2400px;     /* 360 degrees at 7 px per degree is 2520 px */
+  height: clamp(420px, 62vh, 620px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background:
+    radial-gradient(1px 1px at 12% 22%, #ffffffb0, transparent),
+    radial-gradient(1px 1px at 34% 12%, #ffffff80, transparent),
+    radial-gradient(1px 1px at 52% 30%, #ffffffa0, transparent),
+    radial-gradient(1px 1px at 71% 16%, #ffffff90, transparent),
+    radial-gradient(1px 1px at 86% 34%, #ffffff70, transparent),
+    #03050c;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.stage:active {
+  cursor: grabbing;
+}
+
+.stage svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.art {
+  filter: sepia(0.3);
+}
+
+.glow {
+  pointer-events: none;
+}
+
+.compass {
+  fill: var(--ink);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.turn {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.turn button {
+  min-width: 44px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--hover);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--duration-fast);
+}
+
+.turn button:hover {
+  border-color: var(--mint);
+}
+
+.heading {
+  margin-left: auto;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+}
+
+.readouts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.readout {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+.readout h2 {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sun {
+  color: var(--sun);
+}
+
+.earth {
+  color: var(--earth);
+}
+
+.state {
+  margin: 6px 0 12px;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.readout dl {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.readout dl div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.readout dt {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.readout dd {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+}
+
+.hint {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.status {
+  color: var(--muted);
+}
+
+.warning {
+  display: inline-block;
+  margin: 14px 0 0;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #f5b84126;
+  color: var(--sun);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.note {
+  max-width: 760px;
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1279px) {
+  .sky {
+    padding: 20px 16px 24px;
+  }
+
+  .stage {
+    height: 400px;
+  }
+
+  .heading {
+    margin-left: 0;
+  }
+
+  .turn button {
+    height: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  .readouts {
+    grid-template-columns: 1fr;
+  }
+}

@@ -40,6 +40,7 @@ Landing coordinates are facts and are cited for transparency. We do not copy ima
 | Video music: "Lightless Dawn" | CC BY 4.0 | Kevin MacLeod (incompetech.com) |
 | All diagrams, icons and illustrations in the app and docs | MIT (this project) | Team Astral |
 | Atlas relief map | NASA data; image MIT (this project) | Rendered by Team Astral from NASA/GSFC LOLA elevation maps |
+| Sky View terrain art | NASA data; images MIT (this project) | Rendered by Team Astral from LOLA maps and SLDEM2015 (NASA LOLA + JAXA Kaguya) |
 
 ## Rules we follow
 

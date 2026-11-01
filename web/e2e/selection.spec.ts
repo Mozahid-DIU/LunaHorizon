@@ -120,13 +120,13 @@ test("custom coordinates are applied and marked as having no terrain", async ({ 
   await page.getByRole("button", { name: "Apply" }).click();
   await expect(page).toHaveURL(/lat=-85\.25&lon=120$/);
   await expect(siteBox(page)).toHaveValue("custom");
-  await expect(page.getByText("Terrain not included")).toBeVisible();
+  await expect(page.getByText("Terrain not included", { exact: true })).toBeVisible();
 });
 
 test("a curated site shows no terrain warning", async ({ page }) => {
   await page.goto("/sky?site=im-2");
   await expect(siteBox(page)).toHaveValue("im-2");
-  await expect(page.getByText("Terrain not included")).toHaveCount(0);
+  await expect(page.getByText("Terrain not included", { exact: true })).toHaveCount(0);
 });
 
 test("bad custom coordinates are refused and nothing changes", async ({ page }) => {
@@ -183,7 +183,7 @@ test("the header keeps everything inside it at the narrowest desktop width", asy
   test.skip(isMobile, "desktop layout");
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/sky?lat=-85.25&lon=120");
-  await expect(page.getByText("Terrain not included")).toBeVisible();
+  await expect(page.getByText("Terrain not included", { exact: true })).toBeVisible();
   const header = (await page.locator("header").boundingBox())!;
   const brief = (await page.getByRole("link", { name: "Mission Brief" }).boundingBox())!;
   expect(brief.x + brief.width).toBeLessThanOrEqual(header.x + header.width);

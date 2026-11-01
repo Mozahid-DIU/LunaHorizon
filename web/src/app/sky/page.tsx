@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
-import { PagePlaceholder } from "@/components/shell/PagePlaceholder";
+import { Suspense } from "react";
+import { SkyView, SkyViewFallback } from "@/components/sky/SkyView";
+import styles from "@/components/sky/sky.module.css";
 
 export const metadata: Metadata = { title: "Sky" };
 
 export default function SkyPage() {
-  return <PagePlaceholder title="Sky" purpose="See the Sun and Earth from the lander, over the real horizon." />;
+  return (
+    <div className={styles.sky}>
+      <Suspense fallback={<SkyViewFallback />}>
+        <SkyView />
+      </Suspense>
+    </div>
+  );
 }

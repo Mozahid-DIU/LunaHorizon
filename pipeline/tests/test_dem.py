@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from dem import LOLA_DIR, PRODUCTS, height_m, load_dem
+from dem import LOLA_DIR, PRODUCTS, SLDEM_TILES, height_m, load_dem
 
 pytestmark = pytest.mark.skipif(
     not all((LOLA_DIR / f"{p}.img").exists() for p in PRODUCTS),
@@ -55,6 +55,7 @@ def test_outside_coverage_is_nan():
     assert np.isnan(load_dem("ldem_875s_20m").height(np.array([-80.0]), np.array([0.0]))[0])
 
 
+@pytest.mark.skipif(not all((LOLA_DIR / f"{t}.img").exists() for t in SLDEM_TILES), reason="SLDEM2015 not downloaded")
 def test_height_picks_finest_available():
     assert not np.isnan(height_m(np.array([-76.0]), np.array([10.0]))[0])
-    assert np.isnan(height_m(np.array([-60.0]), np.array([10.0]))[0])
+    assert np.isnan(height_m(np.array([-50.0]), np.array([10.0]))[0])

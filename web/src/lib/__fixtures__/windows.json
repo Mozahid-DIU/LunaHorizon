@@ -751,8 +751,8 @@
    "windows": {
     "lit": [
      {
-      "start": "2027-01-13T06:52Z",
-      "end": "2027-01-28T02:40Z",
+      "start": "2027-01-13T06:19Z",
+      "end": "2027-01-27T22:06Z",
       "startClipped": false,
       "endClipped": false
      }
@@ -865,14 +865,14 @@
     ],
     "golden": [
      {
-      "start": "2027-01-13T06:52Z",
+      "start": "2027-01-13T06:19Z",
       "end": "2027-01-20T16:00Z",
       "startClipped": false,
       "endClipped": false
      },
      {
       "start": "2027-01-20T17:00Z",
-      "end": "2027-01-28T02:40Z",
+      "end": "2027-01-27T22:06Z",
       "startClipped": false,
       "endClipped": false
      }
@@ -888,7 +888,7 @@
    "windows": {
     "lit": [
      {
-      "start": "2028-01-02T14:58Z",
+      "start": "2028-01-02T14:26Z",
       "end": "2028-01-10T00:00Z",
       "startClipped": false,
       "endClipped": true
@@ -954,7 +954,7 @@
     ],
     "golden": [
      {
-      "start": "2028-01-02T14:58Z",
+      "start": "2028-01-02T14:26Z",
       "end": "2028-01-10T00:00Z",
       "startClipped": false,
       "endClipped": true
@@ -971,7 +971,7 @@
    "windows": {
     "lit": [
      {
-      "start": "2028-03-01T19:37Z",
+      "start": "2028-03-01T19:05Z",
       "end": "2028-03-10T00:00Z",
       "startClipped": false,
       "endClipped": true
@@ -1019,7 +1019,7 @@
     ],
     "golden": [
      {
-      "start": "2028-03-01T19:37Z",
+      "start": "2028-03-01T19:05Z",
       "end": "2028-03-10T00:00Z",
       "startClipped": false,
       "endClipped": true

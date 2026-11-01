@@ -1,16 +1,19 @@
-"""Download the LRO LOLA south polar elevation maps LunaHorizon needs into nasa-data/lola.
+"""Download the elevation maps LunaHorizon needs into nasa-data/lola.
 
-Three nested polar stereographic grids: fine near the pole, coarser farther out, so a
-150 km horizon ray from any south polar demo site stays on LOLA data.
+Nested LOLA polar grids, fine near the pole and coarser farther out, keep a 150 km horizon ray
+from any south polar site on LOLA data. Two SLDEM2015 tiles (LOLA + JAXA SELENE/Kaguya, 512
+pixels per degree) cover 30 S to 30 N, 0 to 45 E for Apollo 11; it straddles the equator.
 Usage: python get_dem.py
 """
 from pathlib import Path
 
 import requests
 
-from dem import LOLA_DIR, PRODUCTS  # ldem_875s_20m (87.5-90 S, 20 m), ldem_80s_80m, ldem_75s_120m
+from dem import LOLA_DIR, PRODUCTS, SLDEM_TILES
 
-BASE = "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/polar/img"
+PDS = "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data"
+POLAR = f"{PDS}/lola_gdr/polar/img"
+TILES = f"{PDS}/sldem2015/tiles/float_img"
 DEST = LOLA_DIR
 CHUNK = 1 << 20
 
@@ -39,9 +42,9 @@ def download(url: str, target: Path) -> None:
 
 def main() -> None:
     DEST.mkdir(parents=True, exist_ok=True)
-    for name in PRODUCTS:
+    for base, name in [(POLAR, p) for p in PRODUCTS] + [(TILES, t) for t in SLDEM_TILES]:
         for ext in ("lbl", "img"):
-            download(f"{BASE}/{name}.{ext}", DEST / f"{name}.{ext}")
+            download(f"{base}/{name}.{ext}", DEST / f"{name}.{ext}")
 
 
 if __name__ == "__main__":

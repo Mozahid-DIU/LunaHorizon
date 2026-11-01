@@ -4,12 +4,13 @@ For every azimuth (1 deg steps, from north through east) we march along the grea
 to 150 km and keep the highest angle to any terrain point. The angle uses exact spherical
 geometry, so lunar curvature is included. The Moon has no atmosphere: no refraction.
 
-Usage: python horizon.py            -> web/public/data/horizon/<site>.json for sites with LOLA coverage
+Usage: python horizon.py            -> web/public/data/horizon/<site>.json for sites with map coverage
 """
 import json
 
 import numpy as np
 
+from dem import source_for
 from subpoints import MOON_RADIUS_KM, OUT_DIR
 
 MOON_RADIUS_M = MOON_RADIUS_KM * 1000
@@ -64,7 +65,7 @@ def build_site(site: dict, height_fn) -> dict:
         "max_distance_km": MAX_DISTANCE_M / 1000,
         "az_step_deg": 1,
         "elevation_deg": np.round(profile, 3).tolist(),
-        "source": "NASA LRO LOLA polar DEMs (ldem_875s_20m, ldem_80s_80m, ldem_75s_120m)",
+        "source": source_for(site["lat"]),
     }
 
 
@@ -76,7 +77,7 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
     for site in load_sites():
         if not np.isfinite(height_m(np.array([site["lat"]]), np.array([site["lon"]]))[0]):
-            print(f"skip {site['id']}: outside LOLA polar coverage (spherical horizon used)")
+            print(f"skip {site['id']}: outside the elevation maps (spherical horizon used)")
             continue
         data = build_site(site, height_m)
         (out / f"{site['id']}.json").write_text(json.dumps(data, separators=(",", ":")))

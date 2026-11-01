@@ -17,9 +17,11 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Ephemeris engine:** Sun and Earth azimuth/elevation from any point on the Moon (Skyfield + NASA SPICE: DE440, Moon ME frame with libration)
 - [x] **Validated against NASA JPL Horizons:** 24 checks across equatorial (Apollo 11), mid-latitude (Chandrayaan-3) and south pole (89.45°S) sites; all within the 0.1° target, observed difference below 0.0001°
 - [x] **Curated sites with official sources** (NSSDCA, LROC, IAU Gazetteer) and **hourly Sun/Earth sub-points 2026–2030**: any site's az/el reproduces the full SPICE result within 0.00003°
-- [ ] Terrain horizon from LRO LOLA
-- [ ] Power, comms and Golden windows; sunset/Earthset countdown; best dates and slip planner
-- [ ] Web app (Sky View, compare, map)
+- [x] **Terrain horizons** for all 5 demo sites from LRO LOLA and SLDEM2015 (NASA LOLA + JAXA Kaguya)
+- [x] **Calculation engine:** power, comms and Golden windows; sunset/Earthset countdown; best dates and slip planner; battery simulation; landing ellipse data; 3D terrain tiles; Golden Window Map data
+- [x] **58 validation checks** against JPL Horizons and published data, all passing
+- [x] **Website foundation:** nine pages, desktop and phone navigation, and checked data loading
+- [ ] Website features (Atlas, Sky View, compare, dates, power, ellipse, 3D view, proof)
 
 📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
-import { centreFor, degreesFromCentre, elevationToY, skylinePoints, SKY_VIEW } from "@/lib/skyView";
+import { centreFor, degreesFromCentre, elevationToY, followCentre, labelY, skylinePoints, SKY_VIEW } from "@/lib/skyView";
 import type { SiteState } from "@/lib/windows";
 import styles from "./sky.module.css";
 
@@ -17,7 +17,10 @@ const COMPASS: readonly (readonly [number, string])[] = [[0, "N"], [90, "E"], [1
 const normalised = (az: number) => ((az % FULL_TURN) + FULL_TURN) % FULL_TURN;
 
 interface SkyStageProps {
+  /** The moment being shown. */
   state: SiteState;
+  /** The chosen date, which sets where the view first looks. */
+  start: SiteState;
   profile: readonly number[];
   artSrc: string | null;
   /** Changes when the site or time changes, which returns the view to the Sun and Earth. */
@@ -47,7 +50,7 @@ function useSize() {
   return { box, ...size };
 }
 
-export function SkyStage({ state, profile, artSrc, viewKey, onViewChange }: SkyStageProps) {
+export function SkyStage({ state, start, profile, artSrc, viewKey, onViewChange }: SkyStageProps) {
   const { box, width, height } = useSize();
   const [turned, setTurned] = useState<{ key: string; az: number } | null>(null);
   const [failedArt, setFailedArt] = useState<string | null>(null);
@@ -55,7 +58,8 @@ export function SkyStage({ state, profile, artSrc, viewKey, onViewChange }: SkyS
   const pxPerDeg = width >= WIDE_FROM_PX ? WIDE_PX_PER_DEG : NARROW_PX_PER_DEG;
   const spanDeg = width / pxPerDeg;
   const { sun, earth } = state;
-  const centre = turned?.key === viewKey ? turned.az : centreFor(sun.az, earth.az, spanDeg);
+  const startCentre = centreFor(start.sun.az, start.earth.az, spanDeg);
+  const centre = turned?.key === viewKey ? turned.az : followCentre(startCentre, start.sun.az, sun.az);
   const turnTo = (az: number) => setTurned({ key: viewKey, az: normalised(az) });
 
   useEffect(() => {
@@ -145,6 +149,13 @@ export function SkyStage({ state, profile, artSrc, viewKey, onViewChange }: SkyS
             )}
             <circle data-testid="sky-sun" cx={screenX(sun.az)} cy={elevationToY(sun.el, height)} r={10} fill="#fff4d6" />
             <circle data-testid="sky-earth" cx={screenX(earth.az)} cy={elevationToY(earth.el, height)} r={12} fill="#6fb0ff" />
+            {/* drawn under the terrain, so a name sets with its body */}
+            <text data-testid="sky-sun-label" className={styles.bodyName} x={screenX(sun.az)} y={labelY(elevationToY(sun.el, height))} fill="#f5b841">
+              Sun
+            </text>
+            <text data-testid="sky-earth-label" className={styles.bodyName} x={screenX(earth.az)} y={labelY(elevationToY(earth.el, height))} fill="#6fb0ff">
+              Earth
+            </text>
             <g data-testid="sky-terrain">
               {TILES.map((tile) => (
                 <use key={tile} href="#sky-tile" x={originX + tile * tileWidth} />

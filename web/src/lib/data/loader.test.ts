@@ -369,7 +369,12 @@ describe("yearsForRange", () => {
   const ms = Date.parse;
 
   it("covers a range inside one year", () => {
-    expect(yearsForRange(ms("2027-03-01T00:00Z"), ms("2027-04-01T00:00Z"))).toEqual([2027, 2028]);
+    expect(yearsForRange(ms("2027-03-01T00:00Z"), ms("2027-04-01T00:00Z"))).toEqual([2027]);
+  });
+
+  it("reaches the end of a year without the next one, until its last hour", () => {
+    expect(yearsForRange(ms("2027-12-20T00:00Z"), ms("2027-12-31T23:00Z"))).toEqual([2027]);
+    expect(yearsForRange(ms("2027-12-20T00:00Z"), ms("2027-12-31T23:01Z"))).toEqual([2027, 2028]);
   });
 
   it("adds the following year, needed to blend the last hour of a year", () => {
@@ -377,7 +382,7 @@ describe("yearsForRange", () => {
   });
 
   it("covers a range across a new year", () => {
-    expect(yearsForRange(ms("2026-12-20T00:00Z"), ms("2028-01-10T00:00Z"))).toEqual([2026, 2027, 2028, 2029]);
+    expect(yearsForRange(ms("2026-12-20T00:00Z"), ms("2028-01-10T00:00Z"))).toEqual([2026, 2027, 2028]);
   });
 
   it("stops at the last year of data", () => {

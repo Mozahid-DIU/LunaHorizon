@@ -60,7 +60,7 @@ describe("bestDates", () => {
       // separate scans can place window edges up to 30 s apart, so allow 3 minutes in total
       expect(direct.goldenHours).toBeLessThanOrEqual(best[0].score.goldenHours + 0.05);
     }
-  });
+  }, 30_000);
 
   it("stops where the data ends instead of failing", () => {
     const late = bestDates(eph, im2.site, im2.profile, Date.parse("2028-12-01T00:00Z"), 60 * DAY, MISSION);

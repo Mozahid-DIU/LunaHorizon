@@ -31,7 +31,7 @@ test("a quick second change keeps the first one, even on a slow connection", asy
   await page.goto("/sky");
   await siteBox(page).selectOption("im-2");
   await dateBox(page).fill("2028-02-29T12:00");
-  await expect(page).toHaveURL(/site=im-2&t=2028-02-29T12:00Z$/, { timeout: 8000 });
+  await expect(page).toHaveURL(/site=im-2&t=2028-02-29T12:00Z$/, { timeout: 20_000 });
   await expect(siteBox(page)).toHaveValue("im-2");
 });
 

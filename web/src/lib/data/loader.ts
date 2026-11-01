@@ -116,8 +116,8 @@ export function createDataLoader(fetchFn: FetchFn = (input, init) => fetch(input
 }
 
 /**
- * The years needed to evaluate a time range, in order. The year after the range is included
- * when it exists, because the last hour of a year blends into the next year's first sample.
+ * The years needed to evaluate a time range, in order. A range reaching the last hour of a year
+ * also needs the next year when it exists, because that hour blends into its first sample.
  */
 export function yearsForRange(startMs: number, endMs: number): number[] {
   if (!Number.isFinite(startMs) || !Number.isFinite(endMs) || endMs < startMs) return [];
@@ -126,7 +126,8 @@ export function yearsForRange(startMs: number, endMs: number): number[] {
   const first = new Date(startMs).getUTCFullYear();
   if (first < DATA_YEARS[0] || lastInstant > DATA_END_MS) return [];
   const last = new Date(lastInstant).getUTCFullYear();
-  return DATA_YEARS.filter((year) => year >= first && year <= last + 1);
+  const reachesLastHour = lastInstant >= Date.UTC(last, 11, 31, 23);
+  return DATA_YEARS.filter((year) => year >= first && year <= (reachesLastHour ? last + 1 : last));
 }
 
 /** The app's shared loader, so every page reuses files already fetched. */

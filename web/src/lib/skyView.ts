@@ -5,10 +5,19 @@
  * screen exactly when the engine says it sets.
  */
 import art from "@/data/sky-art.json";
+import { DATA_END_MS } from "./dataRange";
 import { horizonAt } from "./windows";
 
 const SKYLINE_STEP_DEG = 0.25;
 const FULL_TURN = 360;
+const MINUTE_MS = 60_000;
+const DAY_MS = 86_400_000;
+const PLAY_DAYS = 14;
+const PLAY_SECONDS = 30;
+const PLAY_RATE = (PLAY_DAYS * DAY_MS) / (PLAY_SECONDS * 1000);
+const LABEL_GAP_PX = 18;
+const LABEL_LINE_PX = 12;
+const LABEL_ROOM_PX = 32;
 
 const softened = (elevation: number) => Math.asinh(elevation / art.softness_deg);
 
@@ -46,6 +55,31 @@ export function centreFor(sunAz: number, earthAz: number, spanDeg: number): numb
   const apart = degreesFromCentre(earthAz, sunAz);
   if (Math.abs(apart) >= spanDeg) return sunAz;
   return (sunAz + apart / 2 + FULL_TURN) % FULL_TURN;
+}
+
+/** Sim time to add after `realMs` of playing, from `offsetMs` into the run. */
+export function advance(offsetMs: number, realMs: number): number {
+  return offsetMs + realMs * PLAY_RATE;
+}
+
+/** Where a run from this time stops: 14 days on, or the end of the data. */
+export function playbackEnd(startMs: number): number {
+  return Math.min(startMs + PLAY_DAYS * DAY_MS, DATA_END_MS);
+}
+
+/** The time shown for a point in a run, always a whole minute that a link can reopen. */
+export function frameTime(startMs: number, offsetMs: number): number {
+  return Math.min(startMs + Math.round(offsetMs / MINUTE_MS) * MINUTE_MS, playbackEnd(startMs));
+}
+
+/** The view that keeps the Sun where it stood on screen when `startCentre` was chosen. */
+export function followCentre(startCentre: number, startSunAz: number, sunAz: number): number {
+  return (startCentre + degreesFromCentre(sunAz, startSunAz) + FULL_TURN) % FULL_TURN;
+}
+
+/** Above a body, or under it when it sits at the top of the view. */
+export function labelY(bodyY: number): number {
+  return bodyY < LABEL_ROOM_PX ? bodyY + LABEL_GAP_PX + LABEL_LINE_PX : bodyY - LABEL_GAP_PX;
 }
 
 /** The engine's horizon, finely sampled so the line drawn on the softened scale stays true. */

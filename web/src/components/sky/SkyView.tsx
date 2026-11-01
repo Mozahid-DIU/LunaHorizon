@@ -7,10 +7,13 @@ import { useSiteData } from "@/lib/data/useSiteData";
 import { formatUtc } from "@/lib/selection";
 import { formatCoordinates } from "@/lib/siteSummary";
 import { shortName, type SelectedSite } from "@/lib/sites";
-import { isBesideView } from "@/lib/skyView";
+import { frameTime, isBesideView, playbackEnd } from "@/lib/skyView";
 import { stateAt, type BodyState } from "@/lib/windows";
 import styles from "./sky.module.css";
 import { SkyStage, type SkySpan } from "./SkyStage";
+import { useReducedMotion, useSkyPlayback, type SkyPlayback } from "./useSkyPlayback";
+
+const HOUR_MS = 3_600_000;
 
 interface BodyReadoutProps {
   name: string;
@@ -44,28 +47,74 @@ function BodyReadout({ name, body, isUp, isOutOfView, tone }: BodyReadoutProps) 
   );
 }
 
+interface PlaybackBarProps {
+  playback: SkyPlayback;
+  lengthMs: number;
+  shownMs: number;
+  isMotionReduced: boolean;
+}
+
+function PlaybackBar({ playback, lengthMs, shownMs, isMotionReduced }: PlaybackBarProps) {
+  return (
+    <div className={styles.playback}>
+      {isMotionReduced ? (
+        <span className={styles.motionNote}>Animation is off for reduced motion. Use the slider.</span>
+      ) : (
+        <button type="button" className={styles.play} onClick={playback.toggle}>
+          {playback.isPlaying ? "Pause" : "Play the next 14 days"}
+        </button>
+      )}
+      <input
+        type="range"
+        aria-label="Time after the chosen date"
+        aria-valuetext={formatUtc(shownMs)}
+        min={0}
+        max={lengthMs / HOUR_MS}
+        step="any"
+        value={playback.offsetMs / HOUR_MS}
+        onChange={(event) => playback.seek(Number(event.target.value) * HOUR_MS)}
+      />
+      <span className={styles.time} data-testid="sky-time">
+        {formatUtc(shownMs)}
+      </span>
+    </div>
+  );
+}
+
 function Sky({ site, timeMs }: { site: SelectedSite; timeMs: number }) {
-  const data = useSiteData({ siteId: site.id, startMs: timeMs, endMs: timeMs });
+  const endMs = playbackEnd(timeMs);
+  const lengthMs = endMs - timeMs;
+  const siteKey = site.id ?? `${site.lat},${site.lon}`;
+  const data = useSiteData({ siteId: site.id, startMs: timeMs, endMs });
+  const isMotionReduced = useReducedMotion();
+  const playback = useSkyPlayback(`${siteKey}|${timeMs}`, lengthMs, isMotionReduced);
+  const shownMs = frameTime(timeMs, playback.offsetMs);
   const [view, setView] = useState<SkySpan | null>(null);
   const isOutOfView = (az: number) => view !== null && isBesideView(az, view.centre, view.span);
-  const state = useMemo(
+  const start = useMemo(
     () => (data.status === "ready" ? stateAt(data.ephemeris, site, data.profile, timeMs) : null),
     [data, site, timeMs],
+  );
+  const state = useMemo(
+    () => (data.status === "ready" ? stateAt(data.ephemeris, site, data.profile, shownMs) : null),
+    [data, site, shownMs],
   );
 
   if (data.status === "loading") return <p className={styles.status}>Calculating…</p>;
   if (data.status === "error") return <DataNotice error={data.error} retry={data.retry} />;
-  if (!state) return null;
+  if (!state || !start) return null;
 
   return (
     <>
       <SkyStage
         state={state}
+        start={start}
         profile={data.profile}
         artSrc={data.hasTerrain && site.id !== null ? `/data/sky/${site.id}.webp` : null}
-        viewKey={`${site.id ?? `${site.lat},${site.lon}`}|${timeMs}`}
+        viewKey={`${siteKey}|${timeMs}`}
         onViewChange={setView}
       />
+      {lengthMs > 0 && <PlaybackBar playback={playback} lengthMs={lengthMs} shownMs={shownMs} isMotionReduced={isMotionReduced} />}
       {!data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
       <div className={styles.readouts}>
         <BodyReadout name="Sun" body={state.sun} isUp={state.lit} isOutOfView={isOutOfView(state.sun.az)} tone={styles.sun} />

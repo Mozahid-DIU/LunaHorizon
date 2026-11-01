@@ -58,6 +58,14 @@
   pointer-events: none;
 }
 
+.bodyName {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: 500;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
 .compass {
   fill: var(--ink);
   font-family: var(--font-mono), monospace;
@@ -91,6 +99,51 @@
   border-color: var(--mint);
 }
 
+.playback {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+}
+
+.playback input {
+  width: 100%;
+  min-width: 0;
+  height: 28px;
+  accent-color: var(--mint);
+}
+
+.play {
+  min-width: 190px;
+  height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--mint);
+  color: var(--on-mint);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.motionNote {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.time {
+  color: var(--ink);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .heading {
   margin-left: auto;
   color: var(--muted);
@@ -103,6 +156,10 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-top: 16px;
+}
+
+.stageWrap + .playback {
+  margin-top: 12px;
 }
 
 .readout {
@@ -197,6 +254,15 @@
 
   .heading {
     margin-left: 0;
+  }
+
+  .playback {
+    grid-template-columns: 1fr;
+  }
+
+  .play {
+    width: 100%;
+    height: 44px;
   }
 
   .turn button {

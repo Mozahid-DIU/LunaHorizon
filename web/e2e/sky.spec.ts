@@ -12,6 +12,161 @@ const topmostAtCentre = (page: Page, testId: string) =>
     return found?.closest("[data-testid]")?.getAttribute("data-testid");
   }, testId);
 
+/** Reopens a moment from its own link, a fresh calculation, and returns both readouts. */
+async function readoutsAt(page: Page, query: string) {
+  await page.goto(`/sky?${query}`);
+  await expect(sun(page)).toBeAttached();
+  return [await readout(page, "Sun").locator("dl").innerText(), await readout(page, "Earth").locator("dl").innerText()];
+}
+
+const shownTime = (page: Page) => page.getByTestId("sky-time");
+const slider = (page: Page) => page.getByLabel("Time after the chosen date");
+
+function linkTime(text: string): string {
+  const match = /^(\d+) (\w{3}) (\d{4}), (\d\d:\d\d) UTC$/.exec(text)!;
+  const month = "JanFebMarAprMayJunJulAugSepOctNovDec".indexOf(match[2]) / 3 + 1;
+  return `${match[3]}-${String(month).padStart(2, "0")}-${match[1].padStart(2, "0")}T${match[4]}Z`;
+}
+
+test("the Sun and Earth are named on the view", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(page.getByTestId("sky-sun-label")).toHaveText("Sun");
+  await expect(page.getByTestId("sky-earth-label")).toHaveText("Earth");
+});
+
+test("moving the slider shows exactly what that moment's own link shows", async ({ page }) => {
+  for (const [hours, time] of [[6, "2027-12-30T03:00Z"], [100, "2028-01-03T01:00Z"], [336, "2028-01-12T21:00Z"]] as const) {
+    const direct = await readoutsAt(page, `t=${time}`);
+    await page.goto("/sky");
+    await expect(sun(page)).toBeAttached();
+    await slider(page).fill(String(hours));
+    await expect(shownTime(page)).toHaveText(new RegExp(`^${Number(time.slice(8, 10))} `));
+    expect([await readout(page, "Sun").locator("dl").innerText(), await readout(page, "Earth").locator("dl").innerText()]).toEqual(direct);
+  }
+});
+
+test("playing moves the Sun, and a paused frame equals the engine at that time", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(sun(page)).toBeAttached();
+  const start = await readout(page, "Sun").locator("dl").innerText();
+  await page.getByRole("button", { name: "Play the next 14 days" }).click();
+  await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
+  await expect.poll(() => readout(page, "Sun").locator("dl").innerText()).not.toBe(start);
+  await page.getByRole("button", { name: "Pause" }).click();
+
+  const frozenTime = (await shownTime(page).textContent())!;
+  const frozen = [await readout(page, "Sun").locator("dl").innerText(), await readout(page, "Earth").locator("dl").innerText()];
+  await page.waitForTimeout(300);
+  await expect(shownTime(page)).toHaveText(frozenTime);
+  expect(await readoutsAt(page, `t=${linkTime(frozenTime)}`)).toEqual(frozen);
+});
+
+test("playing does not change the address or the date picker", async ({ page }) => {
+  await page.goto("/sky?site=im-2");
+  await expect(sun(page)).toBeAttached();
+  await page.getByRole("button", { name: "Play the next 14 days" }).click();
+  await page.waitForTimeout(400);
+  await page.getByRole("button", { name: "Pause" }).click();
+  expect(new URL(page.url()).search).toBe("?site=im-2");
+  await expect(page.getByLabel("Date and time, UTC")).toHaveValue("2027-12-29T21:00");
+});
+
+test("the view follows the Sun while playing, until it is turned by hand", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(sun(page)).toBeAttached();
+  const sunX = async () => (await sun(page).boundingBox())!.x;
+  const before = await sunX();
+  const startTime = await shownTime(page).textContent();
+  await page.getByRole("button", { name: "Play the next 14 days" }).click();
+  await expect(shownTime(page)).not.toHaveText(startTime!);
+  await page.waitForTimeout(1500);
+  await page.getByRole("button", { name: "Pause" }).click();
+  expect(Math.abs((await sunX()) - before)).toBeLessThan(2);
+
+  await page.getByRole("button", { name: "Turn right" }).click();
+  const turned = await sunX();
+  await slider(page).fill("150");
+  await expect.poll(async () => Math.abs((await sunX()) - turned)).toBeGreaterThan(20);
+});
+
+test("the slider crosses the sunset found by the 1-minute SPICE reference", async ({ page }) => {
+  // Shackleton rim: the Sun sets at 2028-01-21 19:44:41 UTC
+  await page.goto("/sky?t=2028-01-15T19:00Z");
+  await expect(sun(page)).toBeAttached();
+  await slider(page).fill("144");
+  await expect(shownTime(page)).toHaveText("21 Jan 2028, 19:00 UTC");
+  await expect(readout(page, "Sun")).toContainText("Above the horizon");
+  await slider(page).fill("145");
+  await expect(shownTime(page)).toHaveText("21 Jan 2028, 20:00 UTC");
+  await expect(readout(page, "Sun")).toContainText("Below the horizon");
+});
+
+test("the slider sits where the shown time is, even part-way through an hour", async ({ page }) => {
+  await page.goto("/sky?t=2030-12-30T23:30Z");
+  await expect(sun(page)).toBeAttached();
+  await expect(slider(page)).toHaveAttribute("max", "23.5");
+  await slider(page).fill("23.5");
+  await expect(shownTime(page)).toHaveText("31 Dec 2030, 23:00 UTC");
+  await expect(slider(page)).toHaveValue("23.5");
+});
+
+test("reduced motion switched on during a run stops it", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(sun(page)).toBeAttached();
+  await page.getByRole("button", { name: "Play the next 14 days" }).click();
+  await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.getByText(/reduced motion/i)).toBeVisible();
+  const frozen = await shownTime(page).textContent();
+  await page.waitForTimeout(400);
+  await expect(shownTime(page)).toHaveText(frozen!);
+});
+
+test("going back to a site starts at the beginning and does not resume playing", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(sun(page)).toBeAttached();
+  await page.getByRole("button", { name: "Play the next 14 days" }).click();
+  await page.getByLabel("Landing site").selectOption("im-2");
+  await expect(page).toHaveURL(/site=im-2/);
+  await expect(sun(page)).toBeAttached();
+  await page.getByLabel("Landing site").selectOption("shackleton-rim");
+  await expect(page).toHaveURL(/\/sky$/);
+  await expect(sun(page)).toBeAttached();
+  await expect(page.getByRole("button", { name: "Play the next 14 days" })).toBeVisible();
+  await expect(slider(page)).toHaveValue("0");
+});
+
+test("changing the site returns playback to the start", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(sun(page)).toBeAttached();
+  await slider(page).fill("100");
+  await page.getByLabel("Landing site").selectOption("im-2");
+  await expect(page).toHaveURL(/site=im-2/);
+  await expect(slider(page)).toHaveValue("0");
+});
+
+test("a chosen date near the end of the data plays only as far as the data goes", async ({ page }) => {
+  await page.goto("/sky?t=2030-12-31T00:00Z");
+  await expect(sun(page)).toBeAttached();
+  await expect(slider(page)).toHaveAttribute("max", "23");
+  await page.goto("/sky?t=2030-12-31T22:30Z");
+  await expect(sun(page)).toBeAttached();
+  await expect(slider(page)).toHaveAttribute("max", "0.5");
+  await page.goto("/sky?t=2030-12-31T23:00Z");
+  await expect(sun(page)).toBeAttached();
+  await expect(slider(page)).toHaveCount(0);
+});
+
+test("reduced motion replaces Play with the slider", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/sky");
+  await expect(sun(page)).toBeAttached();
+  await expect(page.getByRole("button", { name: "Play the next 14 days" })).toHaveCount(0);
+  await expect(page.getByText(/reduced motion/i)).toBeVisible();
+  await slider(page).fill("24");
+  await expect(shownTime(page)).toHaveText("30 Dec 2027, 21:00 UTC");
+});
+
 test("the default view shows the engine's positions for Shackleton rim", async ({ page }) => {
   await page.goto("/sky");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Shackleton crater rim");

@@ -25,7 +25,8 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Website foundation:** nine pages, desktop and phone navigation, checked data loading, shareable site and date links, and a live deployment
 - [x] **Atlas:** south polar relief map from LOLA, Golden / Sunlight / Earth layers, site pins and a site card computed from each site's own horizon
 - [x] **Sky View:** the lander's view of each site, with the Sun and Earth over the real skyline
-- [ ] Website features (Sky animation, countdown, timeline, compare, dates, power, ellipse, 3D view, proof)
+- [x] **Sky animation:** play the next 14 days or move through them with a slider
+- [ ] Website features (countdown, timeline, compare, dates, power, ellipse, 3D view, proof)
 
 📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
 

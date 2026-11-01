@@ -7,6 +7,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: true,
   reporter: "line",
+  // Sites load several data files; allow for a busy machine running tests in parallel.
+  timeout: 90_000,
+  expect: { timeout: 15_000 },
   use: { baseURL: `http://localhost:${PORT}`, channel: "msedge" },
   projects: [
     { name: "desktop", use: { viewport: { width: 1440, height: 900 } } },

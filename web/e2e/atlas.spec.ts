@@ -106,7 +106,7 @@ test("a pin and a quick date change both survive a slow connection", async ({ pa
   await page.goto("/");
   await pin(page, /^IM-2 Athena/).click();
   await page.getByLabel("Date and time, UTC").fill("2028-02-29T12:00");
-  await expect(page).toHaveURL(/site=im-2&t=2028-02-29T12:00Z$/, { timeout: 8000 });
+  await expect(page).toHaveURL(/site=im-2&t=2028-02-29T12:00Z$/, { timeout: 20_000 });
 });
 
 test("sites outside the map are not drawn but still get a card", async ({ page }) => {

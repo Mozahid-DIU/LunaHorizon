@@ -3,7 +3,8 @@
  * the ranges are physical limits, so swapped Sun and Earth data or a damaged value cannot pass.
  */
 import type { SubpointYear, Track } from "../geometry";
-import type { CuratedSite } from "../sites";
+import { TERRAIN_COVERAGE_LAT, type CuratedSite } from "../sites";
+import type { HeightManifest } from "../terrain/customTerrain";
 import type { DsnYear } from "../windows";
 
 const PROFILE_POINTS = 360;
@@ -15,6 +16,11 @@ const MAP_SIZE = 121;
 const MAP_STEP_KM = 5;
 const MAP_RADIUS_KM = 300;
 const PER_MILLE = 1000;
+const HEIGHT_TILE_CELLS = 512;
+const HEIGHT_NEAR_RADIUS_M = 10_000;
+const HEIGHT_MID_RADIUS_M = 40_000;
+/** Finest first: the order in which a point looks for its height. */
+const HEIGHT_PRODUCTS = ["ldem_875s_20m", "ldem_80s_80m", "ldem_75s_120m", "ldem_60s_240m", "far"];
 
 export interface HorizonFile {
   site: string;
@@ -130,6 +136,37 @@ function requireMapLayer(value: unknown, name: string): (number | null)[] {
     }
   });
   return value as (number | null)[];
+}
+
+export function parseHeightManifest(raw: unknown): HeightManifest {
+  const data = requireObject(raw, "file");
+  requireEqual(data.tile_cells, HEIGHT_TILE_CELLS, "tile_cells");
+  requireEqual(data.coverage_lat, TERRAIN_COVERAGE_LAT, "coverage_lat");
+  requireEqual(data.near_radius_m, HEIGHT_NEAR_RADIUS_M, "near_radius_m");
+  requireEqual(data.mid_radius_m, HEIGHT_MID_RADIUS_M, "mid_radius_m");
+  if (!Array.isArray(data.products) || data.products.length !== HEIGHT_PRODUCTS.length) {
+    throw new Error(`products must have ${HEIGHT_PRODUCTS.length} entries`);
+  }
+  (data.products as unknown[]).forEach((entry, i) => {
+    const product = requireObject(entry, "product");
+    const name = HEIGHT_PRODUCTS[i];
+    requireEqual(product.name, name, `products[${i}].name`);
+    const lines = requireNumber(product.lines, 2, 1e6, `${name}.lines`);
+    const samples = requireNumber(product.samples, 2, 1e6, `${name}.samples`);
+    requireNumber(product.scale_m, 1, 1000, `${name}.scale_m`);
+    requireNumber(product.scaling, 0.01, 10, `${name}.scaling`);
+    requireNumber(product.max_lat, -90, 0, `${name}.max_lat`);
+    requireNumber(product.line_offset, 0, lines, `${name}.line_offset`);
+    requireNumber(product.sample_offset, 0, samples, `${name}.sample_offset`);
+    if (!Array.isArray(product.tiles) || product.tiles.length === 0) throw new Error(`${name} has no tiles`);
+    for (const tile of product.tiles as unknown[]) {
+      const [row, column] = Array.isArray(tile) ? (tile as unknown[]) : [];
+      if (!Number.isInteger(row) || !Number.isInteger(column) || (row as number) * HEIGHT_TILE_CELLS >= lines || (column as number) * HEIGHT_TILE_CELLS >= samples) {
+        throw new Error(`${name} lists a tile outside the map`);
+      }
+    }
+  });
+  return data as unknown as HeightManifest;
 }
 
 export function parseMapGrid(raw: unknown): MapGrid {

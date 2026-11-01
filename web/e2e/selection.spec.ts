@@ -53,12 +53,12 @@ test("the date box follows the address after going back", async ({ page }) => {
 });
 
 test("custom coordinates can be changed again", async ({ page }) => {
-  await page.goto("/sky?lat=-85.25&lon=120");
+  await page.goto("/sky?lat=10.5&lon=120");
   await page.getByRole("button", { name: "Edit coordinates" }).click();
-  await expect(page.getByLabel("Latitude")).toHaveValue("-85.25");
+  await expect(page.getByLabel("Latitude")).toHaveValue("10.5");
   await page.getByLabel("Longitude").fill("121");
   await page.getByRole("button", { name: "Apply" }).click();
-  await expect(page).toHaveURL(/lat=-85\.25&lon=121$/);
+  await expect(page).toHaveURL(/lat=10\.5&lon=121$/);
 });
 
 test("the custom form manages focus and links its errors", async ({ page }) => {
@@ -115,10 +115,10 @@ test("the choice stays while moving between pages on a phone", async ({ page, is
 test("custom coordinates are applied and marked as having no terrain", async ({ page }) => {
   await page.goto("/sky");
   await siteBox(page).selectOption("custom");
-  await page.getByLabel("Latitude").fill("-85.25");
+  await page.getByLabel("Latitude").fill("10.5");
   await page.getByLabel("Longitude").fill("120");
   await page.getByRole("button", { name: "Apply" }).click();
-  await expect(page).toHaveURL(/lat=-85\.25&lon=120$/);
+  await expect(page).toHaveURL(/lat=10\.5&lon=120$/);
   await expect(siteBox(page)).toHaveValue("custom");
   await expect(page.getByText("Terrain not included", { exact: true })).toBeVisible();
 });
@@ -164,7 +164,7 @@ test("a bad link says so and falls back", async ({ page }) => {
 
 test("every width stays inside the screen with the pickers", async ({ page, isMobile }) => {
   test.skip(isMobile, "viewport test");
-  await page.goto("/sky?lat=-85.25&lon=120");
+  await page.goto("/sky?lat=10.5&lon=120");
   for (const width of [320, 375, 768, 1279, 1280, 1920]) {
     await page.setViewportSize({ width, height: 800 });
     await expect(siteBox(page)).toBeVisible();
@@ -182,7 +182,7 @@ test("every width stays inside the screen with the pickers", async ({ page, isMo
 test("the header keeps everything inside it at the narrowest desktop width", async ({ page, isMobile }) => {
   test.skip(isMobile, "desktop layout");
   await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto("/sky?lat=-85.25&lon=120");
+  await page.goto("/sky?lat=10.5&lon=120");
   await expect(page.getByText("Terrain not included", { exact: true })).toBeVisible();
   const header = (await page.locator("header").boundingBox())!;
   const brief = (await page.getByRole("link", { name: "Mission Brief" }).boundingBox())!;

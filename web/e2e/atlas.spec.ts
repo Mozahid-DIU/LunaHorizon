@@ -117,9 +117,16 @@ test("sites outside the map are not drawn but still get a card", async ({ page }
   await expect(pin(page, /^Apollo 11/)).toHaveCount(0);
 });
 
-test("a custom site on the map gets a pin and a terrain warning, but no share", async ({ page }) => {
-  await page.goto("/?lat=-85.25&lon=120");
+test("a custom site beyond the height tiles says it has no terrain", async ({ page }) => {
+  await page.goto("/?lat=10&lon=100");
   await expect(card(page)).toContainText("Flat horizon: terrain not included");
+});
+
+test("a custom site on the map gets a pin and real terrain, but no share", async ({ page }) => {
+  await page.goto("/?lat=-85.25&lon=120");
+  await expect(card(page)).toContainText("computed in your browser");
+  await expect(card(page)).toContainText("of 14 days");
+  await expect(card(page)).not.toContainText("Flat horizon");
   const customPin = page.getByRole("img", { name: "Custom site, 85.25°S 120.00°E" });
   await expect(customPin).toBeVisible();
   await expect(customPin).not.toContainText("%");

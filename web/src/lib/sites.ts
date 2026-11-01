@@ -19,12 +19,19 @@ export interface CustomSite {
   name: string;
   lat: number;
   lon: number;
-  has_terrain: false;
+  has_terrain: boolean;
 }
+
+/** Height tiles reach 60 S; rays run 5 degrees, so a whole horizon needs a site south of this. */
+export const TERRAIN_COVERAGE_LAT = -65;
 
 export type SelectedSite = CuratedSite | CustomSite;
 
 export const SITES: readonly CuratedSite[] = siteList;
+
+export function hasHeightTiles(lat: number): boolean {
+  return lat <= TERRAIN_COVERAGE_LAT;
+}
 
 export function findSite(id: string): CuratedSite | undefined {
   return SITES.find((site) => site.id === id);

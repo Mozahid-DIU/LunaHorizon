@@ -3,7 +3,7 @@
  * Parts of a link that cannot be trusted are refused and reported, never guessed at.
  */
 import { DATA_END_MS, DATA_START_MS } from "./dataRange";
-import { findSite, type CuratedSite, type SelectedSite } from "./sites";
+import { findSite, hasHeightTiles, type CuratedSite, type SelectedSite } from "./sites";
 
 export const DEFAULT_SITE_ID = "shackleton-rim";
 /** The engine's best 2027 landing date for the default site. */
@@ -34,7 +34,7 @@ interface QueryValues {
 const defaultSite = (): CuratedSite => findSite(DEFAULT_SITE_ID) as CuratedSite;
 
 export function customSite(lat: number, lon: number): SelectedSite {
-  return { id: null, name: "Custom site", lat, lon, has_terrain: false };
+  return { id: null, name: "Custom site", lat, lon, has_terrain: hasHeightTiles(lat) };
 }
 
 /** A plain decimal within ±max, rounded to 4 decimals (about 3 metres on the Moon); null if invalid. */

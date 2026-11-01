@@ -31,10 +31,13 @@ describe("parseSelection", () => {
     expect(problems).toEqual([]);
   });
 
-  it("reads custom coordinates with no terrain", () => {
+  it("reads custom coordinates, with terrain only inside the height tiles", () => {
     const { selection, problems } = parse("lat=-85.25&lon=120");
-    expect(selection.site).toMatchObject({ id: null, lat: -85.25, lon: 120, has_terrain: false });
+    expect(selection.site).toMatchObject({ id: null, lat: -85.25, lon: 120, has_terrain: true });
     expect(problems).toEqual([]);
+    expect(parse("lat=-65&lon=0").selection.site.has_terrain).toBe(true);
+    expect(parse("lat=-64.9999&lon=0").selection.site.has_terrain).toBe(false);
+    expect(parse("lat=10&lon=120").selection.site.has_terrain).toBe(false);
   });
 
   it("accepts the limits of each range", () => {

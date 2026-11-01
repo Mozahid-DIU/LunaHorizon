@@ -114,7 +114,7 @@ export function SelectionBar() {
       <div className={`${styles.notes} ${hasNotes ? styles.notesShown : ""}`}>
         {isCustomShown && (
           <div className={styles.customInfo}>
-            <span className={styles.tag}>Terrain not included</span>
+            {!site.has_terrain && <span className={styles.tag}>Terrain not included</span>}
             <button type="button" className={styles.edit} onClick={openCustomForm}>
               Edit coordinates
             </button>
@@ -151,7 +151,7 @@ export function SelectionBar() {
             />
           </label>
           {isLonBad && <p id="lon-error">Longitude must be between -180 and 180.</p>}
-          <p className={styles.hint}>Custom sites have no terrain, so Sun and Earth are shown over a flat horizon.</p>
+          <p className={styles.hint}>South of 65° S, terrain comes from NASA height maps. Elsewhere, Sun and Earth are shown over a flat horizon.</p>
           <div className={styles.actions}>
             <button type="submit">Apply</button>
             <button type="button" onClick={closeCustomForm}>

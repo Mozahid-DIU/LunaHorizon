@@ -292,8 +292,23 @@ test("the view can be turned with the arrow keys", async ({ page }) => {
   await expect.poll(async () => (await sun(page).boundingBox())!.x).toBeLessThan(before);
 });
 
-test("a custom site shows a flat horizon and says so", async ({ page }) => {
+test("a custom site south of 65 S gets real terrain and says how it was made", async ({ page }) => {
   await page.goto("/sky?lat=-85.25&lon=120");
+  await expect(page.getByText(/computed in your browser/)).toBeVisible();
+  await expect(page.getByText(/not included/i)).toHaveCount(0);
+  await expect(page.getByTestId("sky-art")).toHaveAttribute("href", /^blob:/, { timeout: 30_000 });
+  await expect(readout(page, "Sun")).toContainText("Skyline there");
+});
+
+test("a custom site with broken tiles shows a notice and no sky", async ({ page }) => {
+  await page.route("**/*.i2z", (route) => route.fulfill({ status: 404, body: "" }));
+  await page.goto("/sky?lat=-85.25&lon=120");
+  await expect(page.getByRole("alert").filter({ hasText: "A data file is missing." })).toBeVisible();
+  await expect(sun(page)).toHaveCount(0);
+});
+
+test("a custom site beyond the height tiles shows a flat horizon and says so", async ({ page }) => {
+  await page.goto("/sky?lat=10&lon=120");
   await expect(page.getByText("Flat horizon: terrain not included", { exact: false })).toBeVisible();
   await expect(page.getByTestId("sky-art")).toHaveCount(0);
   await expect(page.getByTestId("sky-terrain")).toBeVisible();

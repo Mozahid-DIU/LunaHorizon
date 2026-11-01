@@ -11,6 +11,7 @@ import { frameTime, isBesideView, playbackEnd } from "@/lib/skyView";
 import { stateAt, type BodyState } from "@/lib/windows";
 import styles from "./sky.module.css";
 import { SkyStage, type SkySpan } from "./SkyStage";
+import { useCustomArt } from "./useCustomArt";
 import { useReducedMotion, useSkyPlayback, type SkyPlayback } from "./useSkyPlayback";
 
 const HOUR_MS = 3_600_000;
@@ -85,7 +86,9 @@ function Sky({ site, timeMs }: { site: SelectedSite; timeMs: number }) {
   const endMs = playbackEnd(timeMs);
   const lengthMs = endMs - timeMs;
   const siteKey = site.id ?? `${site.lat},${site.lon}`;
-  const data = useSiteData({ siteId: site.id, startMs: timeMs, endMs });
+  const data = useSiteData({ site, startMs: timeMs, endMs });
+  const heightAt = data.status === "ready" ? data.heightAt : null;
+  const customArt = useCustomArt(heightAt, site.lat, site.lon);
   const isMotionReduced = useReducedMotion();
   const playback = useSkyPlayback(`${siteKey}|${timeMs}`, lengthMs, isMotionReduced);
   const shownMs = frameTime(timeMs, playback.offsetMs);
@@ -110,12 +113,18 @@ function Sky({ site, timeMs }: { site: SelectedSite; timeMs: number }) {
         state={state}
         start={start}
         profile={data.profile}
-        artSrc={data.hasTerrain && site.id !== null ? `/data/sky/${site.id}.webp` : null}
+        artSrc={site.id !== null ? `/data/sky/${site.id}.webp` : customArt}
         viewKey={`${siteKey}|${timeMs}`}
         onViewChange={setView}
       />
       {lengthMs > 0 && <PlaybackBar playback={playback} lengthMs={lengthMs} shownMs={shownMs} isMotionReduced={isMotionReduced} />}
       {!data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
+      {data.heightAt && (
+        <p className={styles.note}>
+          This horizon is computed in your browser from NASA LOLA height tiles: full map detail close by, 480 m detail beyond
+          40 km. At 32 test points it stayed within 0.1° of the full maps.
+        </p>
+      )}
       <div className={styles.readouts}>
         <BodyReadout name="Sun" body={state.sun} isUp={state.lit} isOutOfView={isOutOfView(state.sun.az)} tone={styles.sun} />
         <BodyReadout name="Earth" body={state.earth} isUp={state.earthVisible} isOutOfView={isOutOfView(state.earth.az)} tone={styles.earth} />

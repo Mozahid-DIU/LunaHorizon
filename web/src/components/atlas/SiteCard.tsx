@@ -47,7 +47,14 @@ function Countdown({ outlook, rises, sets, landingMs, isSearchCut }: CountdownPr
   );
 }
 
-function Results({ summary, landingMs, hasTerrain }: { summary: SiteSummary; landingMs: number; hasTerrain: boolean }) {
+interface ResultsProps {
+  summary: SiteSummary;
+  landingMs: number;
+  hasTerrain: boolean;
+  isFromTiles: boolean;
+}
+
+function Results({ summary, landingMs, hasTerrain, isFromTiles }: ResultsProps) {
   return (
     <>
       <p className={styles.headline}>
@@ -64,12 +71,13 @@ function Results({ summary, landingMs, hasTerrain }: { summary: SiteSummary; lan
         <Countdown outlook={summary.sun} rises="sunrise" sets="sunset" landingMs={landingMs} isSearchCut={summary.isSearchCut} />
       </div>
       {!hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
+      {isFromTiles && <p className={styles.note}>Horizon computed in your browser from NASA LOLA height tiles.</p>}
     </>
   );
 }
 
 function CardBody({ site, timeMs }: { site: SelectedSite; timeMs: number }) {
-  const data = useSiteData({ siteId: site.id, startMs: timeMs, endMs: Math.min(timeMs + DEFAULT_SEARCH_MS, DATA_END_MS) });
+  const data = useSiteData({ site, startMs: timeMs, endMs: Math.min(timeMs + DEFAULT_SEARCH_MS, DATA_END_MS) });
   const summary = useMemo(
     () => (data.status === "ready" ? siteSummary(data.ephemeris, site, data.profile, timeMs) : null),
     [data, site, timeMs],
@@ -80,7 +88,7 @@ function CardBody({ site, timeMs }: { site: SelectedSite; timeMs: number }) {
   if (!summary) {
     return <p className={styles.status}>A {MISSION_DAYS}-day mission from this date runs past our data, which ends in 2030. Choose an earlier date.</p>;
   }
-  return <Results summary={summary} landingMs={timeMs} hasTerrain={data.hasTerrain} />;
+  return <Results summary={summary} landingMs={timeMs} hasTerrain={data.hasTerrain} isFromTiles={data.heightAt !== null} />;
 }
 
 export function SiteCard() {

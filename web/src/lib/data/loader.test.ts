@@ -216,6 +216,13 @@ describe("corrupted DSN files", () => {
 describe("corrupted horizon files", () => {
   const load = (fetchFn: ReturnType<typeof corrupt>) => failure(createDataLoader(fetchFn).loadHorizon("im-2"));
 
+  it("refuses another site's terrain under this site's name", async () => {
+    const error = await load(corrupt("im-2.json", (d) => {
+      d.lat = -80.13;
+    }));
+    expect(error.message).toMatch(/lat is -80.13, expected -84.78/);
+  });
+
   it("refuses the wrong site", async () => {
     const error = await load(corrupt("im-2.json", (d) => {
       d.site = "im-1";
@@ -255,7 +262,7 @@ describe("corrupted horizon files", () => {
 describe("what may be requested", () => {
   it("refuses a site id that is not a plain name, without any request", async () => {
     const fetchFn = diskFetch();
-    for (const id of ["../validation", "a/b", "IM-2", "", "x.json"]) {
+    for (const id of ["../validation", "a/b", "IM-2", "", "x.json", "im-1-ellipse", "mars"]) {
       expect((await failure(createDataLoader(fetchFn).loadHorizon(id))).kind).toBe("unavailable");
     }
     expect(fetchFn).not.toHaveBeenCalled();

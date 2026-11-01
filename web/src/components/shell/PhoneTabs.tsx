@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useSelection } from "@/components/selection/useSelection";
 import { isActivePage, PHONE_MORE, PHONE_TABS } from "@/lib/routes";
+import { withQuery } from "@/lib/selection";
 import styles from "./shell.module.css";
 
-export function PhoneTabs() {
+function TabBar({ query }: { query: string }) {
   const pathname = usePathname();
   // Remembering the page it was opened on closes the sheet on any route change, such as Back.
   const [openedOn, setOpenedOn] = useState<string | null>(null);
@@ -60,7 +62,7 @@ export function PhoneTabs() {
     <>
       <nav aria-label="Main" className={styles.phoneTabs}>
         {PHONE_TABS.map(({ href, label }) => (
-          <Link key={href} href={href} aria-current={isActivePage(pathname, href) ? "page" : undefined}>
+          <Link key={href} href={withQuery(href, query)} aria-current={isActivePage(pathname, href) ? "page" : undefined}>
             {label}
           </Link>
         ))}
@@ -82,7 +84,7 @@ export function PhoneTabs() {
             {PHONE_MORE.map(({ href, label }) => (
               <Link
                 key={href}
-                href={href}
+                href={withQuery(href, query)}
                 aria-current={isActivePage(pathname, href) ? "page" : undefined}
                 onClick={closeForNavigation}
               >
@@ -93,5 +95,17 @@ export function PhoneTabs() {
         </>
       )}
     </>
+  );
+}
+
+function LiveTabBar() {
+  return <TabBar query={useSelection().query} />;
+}
+
+export function PhoneTabs() {
+  return (
+    <Suspense fallback={<TabBar query="" />}>
+      <LiveTabBar />
+    </Suspense>
   );
 }

@@ -2,16 +2,15 @@
  * Loads the generated data files on demand. Each file is fetched once, checked by validate.ts,
  * and kept only if it passes, so a failed or damaged file can be tried again.
  */
+import { DATA_END_MS } from "../dataRange";
+import { findSite } from "../sites";
 import { Ephemeris, type DsnYear, type YearData } from "../windows";
 import type { SubpointYear } from "../geometry";
 import { type HorizonFile, parseDsnYear, parseHorizon, parseSubpointYear } from "./validate";
 
 export const DATA_YEARS = [2026, 2027, 2028, 2029, 2030] as const;
 
-/** The final hourly sample; nothing after it can be interpolated. */
-const DATA_END_MS = Date.UTC(2030, 11, 31, 23);
 const TIMEOUT_MS = 20_000;
-const SITE_ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 export type DataFailure = "missing" | "network" | "timeout" | "invalid" | "unavailable";
 
@@ -101,8 +100,9 @@ export function createDataLoader(fetchFn: FetchFn = (input, init) => fetch(input
     },
 
     async loadHorizon(siteId) {
-      if (!SITE_ID.test(siteId)) throw new DataFileError("unavailable", "horizon", "unknown site");
-      return load(`horizon/${siteId}.json`, (raw) => parseHorizon(raw, siteId));
+      const site = findSite(siteId);
+      if (!site?.has_terrain) throw new DataFileError("unavailable", "horizon", "no terrain for this site");
+      return load(`horizon/${site.id}.json`, (raw) => parseHorizon(raw, site));
     },
   };
 }

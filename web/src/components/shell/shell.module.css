@@ -101,9 +101,10 @@
   text-transform: uppercase;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
   .top {
     position: static;
+    flex-wrap: wrap;
     height: auto;
     padding: 18px 20px 0;
     background: none;

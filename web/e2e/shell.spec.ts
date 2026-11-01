@@ -147,15 +147,15 @@ test("tapping outside closes More and returns focus", async ({ page, isMobile })
   await expect(more).toBeFocused();
 });
 
-test("the layout switches cleanly at 1023 and 1024 pixels", async ({ page, isMobile }) => {
+test("the layout switches cleanly at 1279 and 1280 pixels", async ({ page, isMobile }) => {
   test.skip(isMobile, "viewport test");
-  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/sky");
   await expect(page.getByRole("navigation", { name: "Main" }).getByRole("link")).toHaveCount(8);
   await expect(page.getByRole("button", { name: "More" })).toBeHidden();
   expect(await noSidewaysScroll(page)).toBe(true);
 
-  await page.setViewportSize({ width: 1023, height: 800 });
+  await page.setViewportSize({ width: 1279, height: 800 });
   await expect(page.getByRole("navigation", { name: "Main" }).getByRole("link")).toHaveCount(3);
   await expect(page.getByRole("button", { name: "More" })).toBeVisible();
   expect(await noSidewaysScroll(page)).toBe(true);

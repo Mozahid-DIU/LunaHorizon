@@ -10,6 +10,7 @@
   --sun: #f5b841;
   --earth: #6fb0ff;
   --mint: #46e6b4;
+  --danger: #ff8a7a;
   --on-mint: #04221a;
   --duration-fast: 150ms;
 }
@@ -92,7 +93,7 @@ main:focus {
   cursor: pointer;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
   html {
     scroll-padding-bottom: calc(84px + env(safe-area-inset-bottom));
   }

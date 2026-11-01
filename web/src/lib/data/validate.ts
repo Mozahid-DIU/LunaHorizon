@@ -3,6 +3,7 @@
  * the ranges are physical limits, so swapped Sun and Earth data or a damaged value cannot pass.
  */
 import type { SubpointYear, Track } from "../geometry";
+import type { CuratedSite } from "../sites";
 import type { DsnYear } from "../windows";
 
 const PROFILE_POINTS = 360;
@@ -83,15 +84,17 @@ export function parseDsnYear(raw: unknown, year: number): DsnYear {
   return { start: data.start as string, step_hours: 1, mask };
 }
 
-export function parseHorizon(raw: unknown, siteId: string): HorizonFile {
+export function parseHorizon(raw: unknown, site: CuratedSite): HorizonFile {
   const data = requireObject(raw, "file");
-  requireEqual(data.site, siteId, "site");
+  requireEqual(data.site, site.id, "site");
+  requireEqual(data.lat, site.lat, "lat");
+  requireEqual(data.lon, site.lon, "lon");
   requireEqual(data.az_step_deg, 1, "az_step_deg");
   if (typeof data.source !== "string") throw new Error("source is missing");
   return {
-    site: siteId,
-    lat: requireNumber(data.lat, -90, 90, "lat"),
-    lon: requireNumber(data.lon, -180, 180, "lon"),
+    site: site.id,
+    lat: site.lat,
+    lon: site.lon,
     ground_m: requireNumber(data.ground_m, -20_000, 20_000, "ground_m"),
     observer_height_m: requireNumber(data.observer_height_m, 0, 100, "observer_height_m"),
     elevation_deg: requireSeries(data.elevation_deg, PROFILE_POINTS, -90, 90, "elevation_deg"),

@@ -40,3 +40,6 @@ nasa-data/lola/
 # Web
 web/node_modules/
 web/.next/
+
+# Design mockups (working files)
+design-mockups/

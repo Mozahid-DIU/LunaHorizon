@@ -23,7 +23,8 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Calculation engine:** power, comms and Golden windows; sunset/Earthset countdown; best dates and slip planner; battery simulation; landing ellipse data; 3D terrain tiles; Golden Window Map data
 - [x] **58 validation checks** against JPL Horizons and published data, all passing
 - [x] **Website foundation:** nine pages, desktop and phone navigation, checked data loading, shareable site and date links, and a live deployment
-- [ ] Website features (Atlas, Sky View, compare, dates, power, ellipse, 3D view, proof)
+- [x] **Atlas:** south polar relief map from LOLA, Golden / Sunlight / Earth layers, site pins and a site card computed from each site's own horizon
+- [ ] Website features (Sky View, compare, dates, power, ellipse, 3D view, proof)
 
 📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
 

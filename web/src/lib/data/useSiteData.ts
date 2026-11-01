@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Ephemeris } from "../windows";
-import { dataLoader, DataFileError, yearsForRange } from "./loader";
+import { asDataError, dataLoader, type DataFileError, yearsForRange } from "./loader";
 
 /** A flat horizon for custom sites, which have no terrain file. */
 const NO_TERRAIN: readonly number[] = Array.from({ length: 360 }, () => 0);
@@ -22,11 +22,6 @@ export type SiteData =
 type Settled =
   | { key: string; ok: true; ephemeris: Ephemeris; profile: readonly number[]; hasTerrain: boolean }
   | { key: string; ok: false; error: DataFileError };
-
-const asDataError = (error: unknown): DataFileError =>
-  error instanceof DataFileError
-    ? error
-    : new DataFileError("invalid", "data", error instanceof Error ? error.message : "could not be read");
 
 /** Loads what a page needs for one site and time range, and never returns partial data. */
 export function useSiteData({ siteId, startMs, endMs }: SiteDataRequest): SiteData {

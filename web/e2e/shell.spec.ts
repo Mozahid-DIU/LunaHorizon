@@ -21,7 +21,7 @@ for (const [href, title] of PAGES) {
   test(`${href} opens cleanly`, async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto(href);
-    await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: href === "/" ? /right time/ : title })).toBeVisible();
     await expect(page).toHaveTitle(href === "/" ? "LunaHorizon" : `${title} · LunaHorizon`);
     expect(await noSidewaysScroll(page)).toBe(true);
     expect(errors).toEqual([]);

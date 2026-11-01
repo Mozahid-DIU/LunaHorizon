@@ -11,6 +11,10 @@ const STATIONS = 3;
 const MAX_MASK = 2 ** STATIONS - 1;
 const SUN_KM: readonly [number, number] = [1.3e8, 1.7e8];
 const EARTH_KM: readonly [number, number] = [3e5, 4.5e5];
+const MAP_SIZE = 121;
+const MAP_STEP_KM = 5;
+const MAP_RADIUS_KM = 300;
+const PER_MILLE = 1000;
 
 export interface HorizonFile {
   site: string;
@@ -20,6 +24,16 @@ export interface HorizonFile {
   observer_height_m: number;
   elevation_deg: readonly number[];
   source: string;
+}
+
+/** Shares of hours in per mille at each node; null marks nodes outside the map's circle. */
+export interface MapGrid {
+  size: number;
+  step_km: number;
+  radius_km: number;
+  lit: readonly (number | null)[];
+  earth: readonly (number | null)[];
+  golden: readonly (number | null)[];
 }
 
 type Fields = Record<string, unknown>;
@@ -100,4 +114,34 @@ export function parseHorizon(raw: unknown, site: CuratedSite): HorizonFile {
     elevation_deg: requireSeries(data.elevation_deg, PROFILE_POINTS, -90, 90, "elevation_deg"),
     source: data.source,
   };
+}
+
+function requireMapLayer(value: unknown, name: string): (number | null)[] {
+  const nodes = MAP_SIZE * MAP_SIZE;
+  if (!Array.isArray(value) || value.length !== nodes) throw new Error(`${name} must have ${nodes} values`);
+  value.forEach((item: unknown, i) => {
+    const column = i % MAP_SIZE;
+    const row = Math.floor(i / MAP_SIZE);
+    const isInside = Math.hypot(column * MAP_STEP_KM - MAP_RADIUS_KM, row * MAP_STEP_KM - MAP_RADIUS_KM) <= MAP_RADIUS_KM;
+    if (!isInside) {
+      requireEqual(item, null, `${name}[${i}]`);
+    } else if (!Number.isInteger(requireNumber(item, 0, PER_MILLE, `${name}[${i}]`))) {
+      throw new Error(`${name}[${i}] is ${String(item)}, not a whole number`);
+    }
+  });
+  return value as (number | null)[];
+}
+
+export function parseMapGrid(raw: unknown): MapGrid {
+  const data = requireObject(raw, "file");
+  requireEqual(data.size, MAP_SIZE, "size");
+  requireEqual(data.step_km, MAP_STEP_KM, "step_km");
+  requireEqual(data.radius_km, MAP_RADIUS_KM, "radius_km");
+  const lit = requireMapLayer(data.lit, "lit");
+  const earth = requireMapLayer(data.earth, "earth");
+  const golden = requireMapLayer(data.golden, "golden");
+  golden.forEach((value, i) => {
+    if (value !== null && value > Math.min(lit[i]!, earth[i]!)) throw new Error(`golden[${i}] is above its lit or earth value`);
+  });
+  return { size: MAP_SIZE, step_km: MAP_STEP_KM, radius_km: MAP_RADIUS_KM, lit, earth, golden };
 }

@@ -29,3 +29,8 @@ export const SITES: readonly CuratedSite[] = siteList;
 export function findSite(id: string): CuratedSite | undefined {
   return SITES.find((site) => site.id === id);
 }
+
+/** The name without its bracketed detail, for labels. */
+export function shortName(site: SelectedSite): string {
+  return site.name.split(" (")[0];
+}

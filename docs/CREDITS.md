@@ -24,6 +24,7 @@ Landing coordinates are facts and are cited for transparency. We do not copy ima
 | Skyfield, jplephem, sgp4 | MIT |
 | NumPy | BSD-3-Clause |
 | requests | Apache-2.0 |
+| Pillow | MIT-CMU |
 | pytest | MIT |
 | Next.js, React | MIT |
 | d3-scale | ISC |
@@ -38,6 +39,7 @@ Landing coordinates are facts and are cited for transparency. We do not copy ima
 | IBM Plex Sans, Sans Condensed, Mono | SIL Open Font License 1.1 | IBM |
 | Video music: "Lightless Dawn" | CC BY 4.0 | Kevin MacLeod (incompetech.com) |
 | All diagrams, icons and illustrations in the app and docs | MIT (this project) | Team Astral |
+| Atlas relief map | NASA data; image MIT (this project) | Rendered by Team Astral from NASA/GSFC LOLA elevation maps |
 
 ## Rules we follow
 

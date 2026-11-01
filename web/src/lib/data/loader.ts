@@ -6,7 +6,7 @@ import { DATA_END_MS } from "../dataRange";
 import { findSite } from "../sites";
 import { Ephemeris, type DsnYear, type YearData } from "../windows";
 import type { SubpointYear } from "../geometry";
-import { type HorizonFile, parseDsnYear, parseHorizon, parseSubpointYear } from "./validate";
+import { type HorizonFile, type MapGrid, parseDsnYear, parseHorizon, parseMapGrid, parseSubpointYear } from "./validate";
 
 export const DATA_YEARS = [2026, 2027, 2028, 2029, 2030] as const;
 
@@ -25,6 +25,11 @@ export class DataFileError extends Error {
     this.name = "DataFileError";
   }
 }
+
+export const asDataError = (error: unknown): DataFileError =>
+  error instanceof DataFileError
+    ? error
+    : new DataFileError("invalid", "data", error instanceof Error ? error.message : "could not be read");
 
 type FetchFn = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 
@@ -54,6 +59,7 @@ async function readJson(fetchFn: FetchFn, baseUrl: string, file: string): Promis
 export interface DataLoader {
   loadEphemeris(years: readonly number[]): Promise<Ephemeris>;
   loadHorizon(siteId: string): Promise<HorizonFile>;
+  loadMapGrid(): Promise<MapGrid>;
 }
 
 export function createDataLoader(fetchFn: FetchFn = (input, init) => fetch(input, init), baseUrl = "/data"): DataLoader {
@@ -104,6 +110,8 @@ export function createDataLoader(fetchFn: FetchFn = (input, init) => fetch(input
       if (!site?.has_terrain) throw new DataFileError("unavailable", "horizon", "no terrain for this site");
       return load(`horizon/${site.id}.json`, (raw) => parseHorizon(raw, site));
     },
+
+    loadMapGrid: () => load("map/golden-grid.json", parseMapGrid),
   };
 }
 

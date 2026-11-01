@@ -19,7 +19,7 @@ export interface SiteInput {
   profile: readonly number[];
 }
 
-function totalHours(windows: Window[]): number {
+export function totalHours(windows: Window[]): number {
   return windows.reduce((sum, w) => sum + (w.end - w.start), 0) / HOUR_MS;
 }
 

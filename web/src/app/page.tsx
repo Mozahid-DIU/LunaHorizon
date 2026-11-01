@@ -1,5 +1,5 @@
-import { PagePlaceholder } from "@/components/shell/PagePlaceholder";
+import { AtlasView } from "@/components/atlas/AtlasView";
 
 export default function AtlasPage() {
-  return <PagePlaceholder title="Atlas" purpose="Explore the south polar map and choose a landing site." />;
+  return <AtlasView />;
 }

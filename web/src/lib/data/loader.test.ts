@@ -213,6 +213,54 @@ describe("corrupted DSN files", () => {
   });
 });
 
+describe("the map grid", () => {
+  const load = (fetchFn: ReturnType<typeof corrupt>) => failure(createDataLoader(fetchFn).loadMapGrid());
+  const FILE = "golden-grid.json";
+  const CENTRE = 60 * 121 + 60;
+  const set = (name: string, index: number, value: unknown) => (d: Record<string, unknown>) => {
+    (d[name] as unknown[])[index] = value;
+  };
+
+  it("accepts the real file", async () => {
+    const grid = await createDataLoader(diskFetch()).loadMapGrid();
+    expect(grid.size).toBe(121);
+    expect(grid.golden[CENTRE]).toBeTypeOf("number");
+  });
+
+  it("refuses a value above 100%", async () => {
+    expect((await load(corrupt(FILE, set("lit", CENTRE, 1001)))).message).toMatch(/lit\[7320\] is 1001/);
+  });
+
+  it("refuses a fraction", async () => {
+    expect((await load(corrupt(FILE, set("earth", CENTRE, 500.5)))).message).toMatch(/not a whole number/);
+  });
+
+  it("refuses a gap inside the circle", async () => {
+    expect((await load(corrupt(FILE, set("golden", CENTRE, null)))).message).toMatch(/golden\[7320\]/);
+  });
+
+  it("refuses a value outside the circle", async () => {
+    expect((await load(corrupt(FILE, set("golden", 0, 10)))).message).toMatch(/golden\[0\] is 10, expected null/);
+  });
+
+  it("refuses Golden above sunlight, which is physically impossible", async () => {
+    const error = await load(corrupt(FILE, (d) => {
+      (d.lit as number[])[CENTRE] = 0;
+      (d.golden as number[])[CENTRE] = 1;
+    }));
+    expect(error.message).toMatch(/golden\[7320\] is above/);
+  });
+
+  it("refuses a grid of another shape", async () => {
+    expect((await load(corrupt(FILE, (d) => {
+      d.step_km = 10;
+    }))).message).toMatch(/step_km is 10/);
+    expect((await load(corrupt(FILE, (d) => {
+      (d.lit as number[]).pop();
+    }))).message).toMatch(/lit must have 14641 values/);
+  });
+});
+
 describe("corrupted horizon files", () => {
   const load = (fetchFn: ReturnType<typeof corrupt>) => failure(createDataLoader(fetchFn).loadHorizon("im-2"));
 

@@ -10,6 +10,12 @@ interface SelectionState extends ParsedSelection {
   update: (change: Partial<Selection>) => void;
 }
 
+/**
+ * The address updates after a delay, so a quick second change must build on the first.
+ * Shared, because the header and the map pins each use this hook.
+ */
+let pendingSelection: Selection | null = null;
+
 /** Reads the choice from the address and writes changes back to it. Use inside Suspense. */
 export function useSelection(): SelectionState {
   const params = useSearchParams();
@@ -17,19 +23,24 @@ export function useSelection(): SelectionState {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const parsed = useMemo(() => parseSelection(params), [params]);
-  // The address updates after a delay, so a quick second change must build on the first.
-  const latest = useRef<Selection | null>(null);
+
+  const hasStarted = useRef(false);
 
   useEffect(() => {
-    if (!isPending) latest.current = null;
+    if (isPending) {
+      hasStarted.current = true;
+    } else if (hasStarted.current) {
+      hasStarted.current = false;
+      pendingSelection = null;
+    }
   }, [isPending]);
 
   return {
     ...parsed,
     query: selectionQuery(parsed.selection),
     update: (change) => {
-      const next = { ...(latest.current ?? parsed.selection), ...change };
-      latest.current = next;
+      const next = { ...(pendingSelection ?? parsed.selection), ...change };
+      pendingSelection = next;
       startTransition(() => router.replace(withQuery(pathname, selectionQuery(next)), { scroll: false }));
     },
   };

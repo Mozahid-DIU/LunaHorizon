@@ -1,0 +1,27 @@
+{
+ "apollo-11": {
+  "lit": 494,
+  "earth": 1000,
+  "golden": 486
+ },
+ "chandrayaan-3": {
+  "lit": 478,
+  "earth": 1000,
+  "golden": 471
+ },
+ "im-1": {
+  "lit": 395,
+  "earth": 1000,
+  "golden": 388
+ },
+ "im-2": {
+  "lit": 449,
+  "earth": 815,
+  "golden": 369
+ },
+ "shackleton-rim": {
+  "lit": 848,
+  "earth": 528,
+  "golden": 454
+ }
+}

@@ -1,0 +1,231 @@
+.dates {
+  padding: 24px 40px 40px;
+}
+
+.intro {
+  margin-bottom: 24px;
+}
+
+.intro h1 {
+  max-width: 1100px;
+  margin: 0;
+  font-size: clamp(2.25rem, 4.6vw, 4.25rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.intro em {
+  color: var(--mint);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.caveat {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.caveat a {
+  color: var(--ink);
+}
+
+.searching {
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.intro h1:focus {
+  outline: none;
+}
+
+.warning {
+  display: inline-block;
+  margin: 12px 0 0;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #f5b84126;
+  color: var(--sun);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* the dates lead; the plan's changes sit beside them as a quieter answer */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.layout h2 {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bestList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bestRow {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+}
+
+.bestChosen {
+  border-color: var(--mint);
+}
+
+.rank {
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.bestMain strong {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.bestMain p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+}
+
+.meter {
+  height: 6px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--hover);
+}
+
+.meter i {
+  display: block;
+  height: 100%;
+  background: var(--mint);
+}
+
+.bestActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 13px;
+}
+
+.bestActions a {
+  color: var(--ink);
+}
+
+.bestActions button {
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--duration-fast);
+}
+
+.bestActions button:hover {
+  border-color: var(--mint);
+}
+
+.chosen {
+  color: var(--mint);
+  font-weight: 500;
+}
+
+.slip {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.slip th,
+.slip td {
+  padding: 11px 8px 11px 0;
+  border-bottom: 1px solid var(--line);
+  font-weight: 400;
+  text-align: left;
+}
+
+.slip thead th {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.slip td {
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.worse {
+  color: var(--danger);
+}
+
+.note {
+  max-width: 760px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1279px) {
+  .dates {
+    padding: 20px 16px 24px;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bestRow {
+    grid-template-columns: 24px minmax(0, 1fr);
+  }
+
+  .bestActions {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .bestActions button {
+    height: 44px;
+  }
+}

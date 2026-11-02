@@ -6,6 +6,7 @@ const MESSAGES: Record<DataFailure, string> = {
   timeout: "The data is taking too long to download.",
   invalid: "A data file failed its accuracy checks.",
   unavailable: "This site or date range cannot be calculated. Our data covers 2026 to 2030.",
+  stopped: "The calculation stopped before it finished.",
 };
 
 interface DataNoticeProps {

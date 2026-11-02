@@ -30,7 +30,8 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Sky headline and countdown:** Golden days for the chosen date, and the next sunset, sunrise, Earthset or Earthrise
 - [x] **30-day timeline:** Sun, Earth, DSN, Comms and Golden windows for the chosen date, with every window listed
 - [x] **Compare:** up to three sites or dates side by side, each a direct calculation, with a shareable link
-- [ ] Website features (dates, power, ellipse, 3D view, proof)
+- [x] **Dates:** the best landings in the next 12 months, and what a delay or a nearby site would change, searched in the background
+- [ ] Website features (power, ellipse, 3D view, proof)
 
 📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
 

@@ -26,7 +26,7 @@ const TIMEOUT_MS = 20_000;
 const MAX_CACHED_SITES = 4;
 const MAX_CACHED_TILES = 150;
 
-export type DataFailure = "missing" | "network" | "timeout" | "invalid" | "unavailable";
+export type DataFailure = "missing" | "network" | "timeout" | "invalid" | "unavailable" | "stopped";
 
 /** Why a data file could not be used; the app shows this in place of any result. */
 export class DataFileError extends Error {

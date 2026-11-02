@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
-import { PagePlaceholder } from "@/components/shell/PagePlaceholder";
+import { Suspense } from "react";
+import { CompareView, CompareViewFallback } from "@/components/compare/CompareView";
+import styles from "@/components/compare/compare.module.css";
 
 export const metadata: Metadata = { title: "Compare" };
 
 export default function ComparePage() {
-  return <PagePlaceholder title="Compare" purpose="Compare up to three landing sites side by side." />;
+  return (
+    <div className={styles.compare}>
+      <Suspense fallback={<CompareViewFallback />}>
+        <CompareView />
+      </Suspense>
+    </div>
+  );
 }

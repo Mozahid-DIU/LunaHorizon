@@ -27,7 +27,7 @@ export interface ParsedSelection {
   problems: string[];
 }
 
-interface QueryValues {
+export interface QueryValues {
   getAll(name: string): string[];
 }
 
@@ -89,11 +89,16 @@ function parseSite(query: QueryValues, problems: string[]): SelectedSite {
   return defaultSite();
 }
 
+/** A time as written in a link, or null if it is malformed or has no data. */
+export function parseLinkTime(text: string): number | null {
+  const match = LINK_TIME.exec(text);
+  return match ? fromDateInput(match[1]) : null;
+}
+
 function parseTime(query: QueryValues, problems: string[]): number {
   const times = query.getAll("t");
   if (times.length === 0) return DEFAULT_TIME_MS;
-  const match = times.length === 1 ? LINK_TIME.exec(times[0]) : null;
-  const ms = match ? fromDateInput(match[1]) : null;
+  const ms = times.length === 1 ? parseLinkTime(times[0]) : null;
   if (ms !== null) return ms;
   problems.push("The link's date is not valid or has no data, so the default date is shown.");
   return DEFAULT_TIME_MS;

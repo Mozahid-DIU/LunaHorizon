@@ -28,7 +28,8 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Sky animation:** play the next 14 days or move through them with a slider
 - [x] **Custom sites:** south of 65° S, any point gets a real horizon, computed in the browser from LOLA height tiles and checked against the full maps
 - [x] **Sky headline and countdown:** Golden days for the chosen date, and the next sunset, sunrise, Earthset or Earthrise
-- [ ] Website features (timeline, compare, dates, power, ellipse, 3D view, proof)
+- [x] **30-day timeline:** Sun, Earth, DSN, Comms and Golden windows for the chosen date, with every window listed
+- [ ] Website features (compare, dates, power, ellipse, 3D view, proof)
 
 📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
 

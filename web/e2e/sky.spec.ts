@@ -117,6 +117,63 @@ test("the headline number sits beside the Landing Ellipse warning", async ({ pag
   await expect(page.getByRole("link", { name: /Landing Ellipse/ })).toHaveAttribute("href", "/ellipse?site=im-2");
 });
 
+const timeline = (page: Page) => page.getByRole("region", { name: "Next 30 days" });
+
+test("the timeline shows the five rows and its axis", async ({ page }) => {
+  await page.goto("/sky");
+  for (const name of ["Sun", "Earth", "DSN", "Comms", "Golden"]) await expect(timeline(page).getByText(name, { exact: true }).first()).toBeVisible();
+  for (const tick of ["+0d", "+7d", "+14d", "+21d", "+28d"]) await expect(timeline(page).getByText(tick, { exact: true })).toBeVisible();
+  await expect(timeline(page).getByText("14-day mission")).toBeVisible();
+});
+
+test("every bar sits where its window's times say", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(timeline(page)).toBeVisible();
+  const bars = await timeline(page).locator("[data-start]").evaluateAll((items) =>
+    items.map((item) => {
+      const box = item.getBoundingClientRect();
+      const track = item.parentElement!.getBoundingClientRect();
+      return { start: Number(item.getAttribute("data-start")), end: Number(item.getAttribute("data-end")), left: box.left - track.left, right: box.right - track.left, width: track.width };
+    }),
+  );
+  expect(bars.length).toBeGreaterThan(10);
+  const origin = Date.UTC(2027, 11, 29, 21);
+  const span = 30 * 86_400_000;
+  for (const bar of bars) {
+    expect(Math.abs(bar.left - ((bar.start - origin) / span) * bar.width)).toBeLessThan(1);
+    expect(Math.abs(bar.right - ((bar.end - origin) / span) * bar.width)).toBeLessThan(2);
+  }
+});
+
+test("the list of windows shows the published Earthset time", async ({ page }) => {
+  await page.goto("/sky");
+  await timeline(page).getByText("List every window").click();
+  const earth = timeline(page).getByRole("row", { name: /^Earth/ }).first();
+  await expect(earth).toContainText("13 Jan 00:34");
+});
+
+test("near the end of the data the timeline says where it stops", async ({ page }) => {
+  await page.goto("/sky?t=2030-12-20T00:00Z");
+  await expect(timeline(page)).toContainText("Our data ends on 31 Dec 2030.");
+  await expect(page.getByTestId("timeline-cut")).toBeAttached();
+});
+
+test("a window cut by the range says so instead of showing a false time", async ({ page }) => {
+  await page.goto("/sky");
+  await timeline(page).getByText("List every window").click();
+  await expect(timeline(page).getByRole("row", { name: /^Sun/ }).first()).toContainText("already open");
+});
+
+test("the time marker follows the slider", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(timeline(page)).toBeVisible();
+  const marker = page.getByTestId("timeline-now");
+  const left = () => marker.evaluate((el) => el.style.left);
+  expect(await left()).toBe("0%");
+  await slider(page).fill("180");
+  await expect.poll(left).toBe("25%");
+});
+
 test("the Sun and Earth are named on the view", async ({ page }) => {
   await page.goto("/sky");
   await expect(page.getByTestId("sky-sun-label")).toHaveText("Sun");

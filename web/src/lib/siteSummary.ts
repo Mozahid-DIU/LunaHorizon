@@ -25,7 +25,7 @@ export interface BodyOutlook {
   eventMs: number | null;
 }
 
-type MissionKind = Exclude<WindowKind, "earth">;
+type MissionKind = Exclude<WindowKind, "earth" | "dsn">;
 
 export interface SiteOutlook {
   sun: BodyOutlook;

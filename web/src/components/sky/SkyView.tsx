@@ -11,9 +11,11 @@ import { eventWindows, goldenStatus, outlookAt, skyDataEnd, skyHeadline, type Go
 import { formatCoordinates, formatDuration, MISSION_DAYS, outlookFrom, siteSummary, type BodyOutlook, type SiteSummary } from "@/lib/siteSummary";
 import { shortName, type SelectedSite } from "@/lib/sites";
 import { frameTime, isBesideView, playbackEnd } from "@/lib/skyView";
+import { timelineCut, timelineRows } from "@/lib/timeline";
 import { stateAt, type BodyState } from "@/lib/windows";
 import styles from "./sky.module.css";
 import { SkyStage, type SkySpan } from "./SkyStage";
+import { SkyTimeline } from "./SkyTimeline";
 import { useCustomArt } from "./useCustomArt";
 import { useReducedMotion, useSkyPlayback, type SkyPlayback } from "./useSkyPlayback";
 
@@ -184,6 +186,10 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
     () => (data.status === "ready" ? eventWindows(data.ephemeris, site, data.profile, timeMs) : null),
     [data, site, timeMs],
   );
+  const timeline = useMemo(
+    () => (data.status === "ready" ? timelineRows(data.ephemeris, site, data.profile, timeMs) : null),
+    [data, site, timeMs],
+  );
   // moving frames read from the run's windows; a frame that has settled asks the engine directly
   const { isPlaying } = playback;
   const settledMs = useDeferredValue(shownMs);
@@ -193,7 +199,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
   );
   const outlook = stillOutlook && settledMs === shownMs ? stillOutlook : events && state && outlookAt(events, shownMs, state);
 
-  if (data.status === "loading" || data.status === "error" || !state || !start || !outlook) {
+  if (data.status === "loading" || data.status === "error" || !state || !start || !outlook || !timeline) {
     return (
       <>
         <SkyIntro site={site} timeMs={timeMs} query={query} summary={null} status={null} />
@@ -219,6 +225,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
         <CountdownItem name="Earth" outlook={outlook.earth} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="Earthrise" sets="Earthset" tone={styles.earth} />
         <CountdownItem name="Sun" outlook={outlook.sun} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="sunrise" sets="sunset" tone={styles.sun} />
       </section>
+      <SkyTimeline rows={timeline} startMs={timeMs} shownMs={shownMs} cutMs={timelineCut(data.ephemeris, timeMs)} />
       {data.heightAt && (
         <p className={styles.note}>
           This horizon is computed in your browser from NASA LOLA height tiles: full map detail close by, 480 m detail beyond

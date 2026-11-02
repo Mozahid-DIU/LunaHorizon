@@ -83,6 +83,167 @@
   background: var(--panel);
 }
 
+.timeline {
+  margin-top: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+.timeline h2 {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chart {
+  --name-width: 62px;
+  --hours-width: 58px;
+  position: relative;
+  display: grid;
+  gap: 10px;
+}
+
+.timelineRow {
+  display: grid;
+  grid-template-columns: var(--name-width) 1fr var(--hours-width);
+  align-items: center;
+}
+
+.rowName {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.rowHours {
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  text-align: right;
+}
+
+.timelineTrack {
+  position: relative;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--hover);
+}
+
+.timelineTrack i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  min-width: 1px;
+}
+
+.barSun {
+  background: var(--sun);
+}
+
+.barEarth {
+  background: var(--earth);
+}
+
+.barDsn {
+  background: #8d96ad;
+}
+
+.barGolden {
+  background: var(--mint);
+}
+
+.overlay {
+  position: absolute;
+  top: -4px;
+  right: var(--hours-width);
+  bottom: -4px;
+  left: var(--name-width);
+  pointer-events: none;
+}
+
+.overlay b {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+}
+
+.noData {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(135deg, #ffffff12 0 4px, transparent 4px 8px);
+}
+
+.missionEnd {
+  border-left: 1px dashed var(--ink);
+}
+
+.nowMarker {
+  border-left: 2px solid var(--ink);
+}
+
+.axis {
+  position: relative;
+  height: 20px;
+  margin: 6px 58px 0 62px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+}
+
+.axis div {
+  position: relative;
+}
+
+.axis span {
+  position: absolute;
+}
+
+.axisNote {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.windowList {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.windowList summary {
+  cursor: pointer;
+}
+
+.windowList table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+}
+
+.windowList th,
+.windowList td {
+  padding: 5px 8px 5px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-weight: 400;
+}
+
+.windowList thead th {
+  color: var(--muted);
+}
+
 .countdownItem {
   display: grid;
   gap: 2px;
@@ -342,6 +503,15 @@
 
   .stage {
     height: 400px;
+  }
+
+  .chart {
+    --name-width: 56px;
+    --hours-width: 48px;
+  }
+
+  .axis {
+    margin: 6px 48px 0 56px;
   }
 
   .heading {

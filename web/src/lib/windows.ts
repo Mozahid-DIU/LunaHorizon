@@ -23,7 +23,7 @@ const SCAN_STEP_MS = 10 * 60_000;
 const REFINE_TO_MS = 30_000;
 const SUN_RADIUS_KM = 695_700;
 
-export type WindowKind = "lit" | "earth" | "comms" | "golden";
+export type WindowKind = "lit" | "earth" | "dsn" | "comms" | "golden";
 
 export interface DsnYear {
   start: string;
@@ -157,6 +157,8 @@ function flag(state: SiteState, kind: WindowKind): boolean {
       return state.lit;
     case "earth":
       return state.earthVisible;
+    case "dsn":
+      return state.dsnMask > 0;
     case "comms":
       return state.comms;
     case "golden":

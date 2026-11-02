@@ -44,7 +44,9 @@ test("the headline and countdown show the engine's result for the default date",
 test("after sunset the countdown looks to sunrise and the status says why", async ({ page }) => {
   await page.goto("/sky?t=2028-01-22T04:00Z");
   await expect(countdownBox(page)).toContainText("to sunrise");
-  await expect(page.getByText("Sun below the horizon")).toBeVisible();
+  // on this date Earth has set too
+  await expect(page.getByText("Sun and Earth below the horizon")).toBeVisible();
+  await expect(countdownBox(page)).toContainText("to Earthrise");
 });
 
 test("with no event ahead the countdown says so", async ({ page }) => {
@@ -76,7 +78,8 @@ test("the countdown runs down during playback, and a paused frame equals that mo
   const frozenTime = (await shownTime(page).textContent())!;
   const frozen = await countdownBox(page).innerText();
   await page.goto(`/sky?t=${linkTime(frozenTime)}`);
-  await expect(countdownBox(page)).toHaveText(frozen);
+  await expect(sun(page)).toBeAttached();
+  await expect.poll(() => countdownBox(page).innerText()).toBe(frozen);
 });
 
 test("playing stays smooth, so heavy results are not worked out again on each frame", async ({ page, isMobile }) => {

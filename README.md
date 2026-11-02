@@ -31,7 +31,8 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **30-day timeline:** Sun, Earth, DSN, Comms and Golden windows for the chosen date, with every window listed
 - [x] **Compare:** up to three sites or dates side by side, each a direct calculation, with a shareable link
 - [x] **Dates:** the best landings in the next 12 months, and what a delay or a nearby site would change, searched in the background
-- [ ] Website features (power, ellipse, 3D view, proof)
+- [x] **Proof:** every validation check with its difference and limit, read straight from `validation.json`
+- [ ] Website features (power, ellipse, 3D view)
 
 📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
 

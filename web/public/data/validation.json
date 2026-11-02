@@ -679,7 +679,7 @@
      "ours": 90.4,
      "reference": 92.3,
      "unit": "%",
-     "reference_source": "Glaser et al. 2014, Icarus: best point on the nearby connecting ridge",
+     "reference_source": "Glaser et al. 2014, Icarus: best point on the nearby connecting ridge, a different spot from ours",
      "diff": 1.9,
      "tolerance": 5.0,
      "pass": true

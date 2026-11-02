@@ -18,7 +18,17 @@ import {
 } from "../terrain/customTerrain";
 import { Ephemeris, type DsnYear, type YearData } from "../windows";
 import type { SubpointYear } from "../geometry";
-import { type HorizonFile, type MapGrid, parseDsnYear, parseHeightManifest, parseHorizon, parseMapGrid, parseSubpointYear } from "./validate";
+import {
+  type HorizonFile,
+  type MapGrid,
+  type ValidationFile,
+  parseDsnYear,
+  parseHeightManifest,
+  parseHorizon,
+  parseMapGrid,
+  parseSubpointYear,
+  parseValidation,
+} from "./validate";
 
 export const DATA_YEARS = [2026, 2027, 2028, 2029, 2030] as const;
 
@@ -77,6 +87,7 @@ export interface DataLoader {
   loadEphemeris(years: readonly number[]): Promise<Ephemeris>;
   loadHorizon(siteId: string): Promise<HorizonFile>;
   loadMapGrid(): Promise<MapGrid>;
+  loadValidation(): Promise<ValidationFile>;
   loadHeightManifest(): Promise<HeightManifest>;
   loadCustomTerrain(lat: number, lon: number): Promise<CustomTerrain>;
 }
@@ -162,6 +173,8 @@ export function createDataLoader(fetchFn: FetchFn = (input, init) => fetch(input
     },
 
     loadMapGrid: () => load("map/golden-grid.json", parseMapGrid),
+
+    loadValidation: () => load("validation.json", parseValidation),
 
     loadHeightManifest,
 

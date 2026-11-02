@@ -78,7 +78,7 @@ export function AtlasView() {
             priority
           />
           <div className={styles.tint} />
-          {map.status === "ready" && <MapOverlay grid={map.grid} layer={layer} />}
+          {map.status === "ready" && <MapOverlay grid={map.value} layer={layer} />}
         </div>
         <Suspense>
           <SitePins layer={layer} />

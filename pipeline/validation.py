@@ -109,7 +109,7 @@ def _terrain_rows() -> list[dict]:
          "diff": round(abs(im1 - 2579)), "tolerance": 150, "pass": bool(abs(im1 - 2579) < 150)},
         {"check": "Best sunlit share on the Shackleton rim at 2 m height (any part of the Sun)",
          "ours": round(lit * 100, 1), "reference": 92.3, "unit": "%",
-         "reference_source": "Glaser et al. 2014, Icarus: best point on the nearby connecting ridge",
+         "reference_source": "Glaser et al. 2014, Icarus: best point on the nearby connecting ridge, a different spot from ours",
          "diff": round(abs(lit * 100 - 92.3), 1), "tolerance": 5.0, "pass": bool(abs(lit * 100 - 92.3) < 5.0)},
     ]
 

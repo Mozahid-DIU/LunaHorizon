@@ -2,18 +2,110 @@
   padding: 24px 40px 40px;
 }
 
-.intro h1 {
-  margin: 0;
-  font-size: clamp(2rem, 3.2vw, 3rem);
-  font-weight: 300;
-  letter-spacing: -0.03em;
+.intro {
+  margin-bottom: 20px;
 }
 
-.intro p {
-  margin: 6px 0 20px;
+.intro h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 5.4vw, 5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.intro em {
+  color: var(--mint);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
   color: var(--muted);
   font-family: var(--font-mono), monospace;
   font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.statusOpen {
+  color: var(--mint);
+}
+
+.statusOpen i {
+  background: var(--mint);
+  box-shadow: 0 0 10px var(--mint);
+}
+
+.place {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+}
+
+.lead {
+  max-width: 620px;
+  margin: 10px 0 0;
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.ellipse {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.ellipse a {
+  color: var(--ink);
+}
+
+.countdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+.countdownItem {
+  display: grid;
+  gap: 2px;
+}
+
+.countdownName {
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.countdownItem strong {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.countdownTo {
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .stageWrap {
@@ -220,7 +312,7 @@
   font-size: 13px;
 }
 
-.status {
+.calculating {
   color: var(--muted);
 }
 

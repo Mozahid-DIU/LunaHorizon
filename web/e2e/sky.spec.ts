@@ -28,6 +28,92 @@ function linkTime(text: string): string {
   return `${match[3]}-${String(month).padStart(2, "0")}-${match[1].padStart(2, "0")}T${match[4]}Z`;
 }
 
+const countdownBox = (page: Page) => page.getByRole("region", { name: "Countdown" });
+
+test("the headline and countdown show the engine's result for the default date", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Golden for all 14 days.");
+  await expect(page.getByText("336 of 336 mission hours")).toBeVisible();
+  await expect(page.getByText("Golden window open")).toBeVisible();
+  await expect(countdownBox(page)).toContainText("14d 3h");
+  await expect(countdownBox(page)).toContainText("to Earthset");
+  await expect(countdownBox(page)).toContainText("22d 22h");
+  await expect(countdownBox(page)).toContainText("to sunset");
+});
+
+test("after sunset the countdown looks to sunrise and the status says why", async ({ page }) => {
+  await page.goto("/sky?t=2028-01-22T04:00Z");
+  await expect(countdownBox(page)).toContainText("to sunrise");
+  await expect(page.getByText("Sun below the horizon")).toBeVisible();
+});
+
+test("with no event ahead the countdown says so", async ({ page }) => {
+  await page.goto("/sky?lat=0&lon=180");
+  await expect(countdownBox(page)).toContainText("Not in 60 days");
+  await expect(countdownBox(page)).toContainText("to Earthrise");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("No Golden hours in 14 days.");
+});
+
+test("near the end of the data the countdown never claims a full search", async ({ page }) => {
+  await page.goto("/sky?t=2030-12-10T00:00Z");
+  await expect(countdownBox(page)).toBeVisible();
+  await expect(countdownBox(page)).not.toContainText("Not in 60 days");
+});
+
+test("a date too late for a full mission gets no headline number", async ({ page }) => {
+  await page.goto("/sky?t=2030-12-25T00:00Z");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Sky from Shackleton crater rim");
+  await expect(page.getByText("runs past our data")).toBeVisible();
+});
+
+test("the countdown runs down during playback, and a paused frame equals that moment's link", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(countdownBox(page)).toContainText("14d 3h");
+  await page.getByRole("button", { name: "Play the next 14 days" }).click();
+  await expect(countdownBox(page)).not.toContainText("14d 3h");
+  await page.getByRole("button", { name: "Pause" }).click();
+  await page.waitForTimeout(150);
+  const frozenTime = (await shownTime(page).textContent())!;
+  const frozen = await countdownBox(page).innerText();
+  await page.goto(`/sky?t=${linkTime(frozenTime)}`);
+  await expect(countdownBox(page)).toHaveText(frozen);
+});
+
+test("playing stays smooth, so heavy results are not worked out again on each frame", async ({ page, isMobile }) => {
+  test.skip(isMobile, "measured once, at desktop size");
+  await page.addInitScript(() => {
+    const frames = { count: 0 };
+    Object.assign(window, { frames });
+    const tick = () => {
+      frames.count += 1;
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  const frameCount = () => page.evaluate(() => (window as unknown as { frames: { count: number } }).frames.count);
+  await page.goto("/sky");
+  await expect(countdownBox(page)).toContainText("14d 3h");
+  await page.getByRole("button", { name: "Play the next 14 days" }).click();
+  await page.waitForTimeout(300);
+  const before = await frameCount();
+  await page.waitForTimeout(3000);
+  // about 58 per second on a free machine; 5 was the rate when results were redone on each frame
+  expect(((await frameCount()) - before) / 3).toBeGreaterThan(15);
+});
+
+test("the headline stays on the chosen date while the slider moves", async ({ page }) => {
+  await page.goto("/sky");
+  await expect(sun(page)).toBeAttached();
+  await slider(page).fill("200");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Golden for all 14 days.");
+});
+
+test("the headline number sits beside the Landing Ellipse warning", async ({ page }) => {
+  await page.goto("/sky?site=im-2");
+  await expect(page.getByText("For this exact point; ground nearby can differ.")).toBeVisible();
+  await expect(page.getByRole("link", { name: /Landing Ellipse/ })).toHaveAttribute("href", "/ellipse?site=im-2");
+});
+
 test("the Sun and Earth are named on the view", async ({ page }) => {
   await page.goto("/sky");
   await expect(page.getByTestId("sky-sun-label")).toHaveText("Sun");
@@ -169,7 +255,7 @@ test("reduced motion replaces Play with the slider", async ({ page }) => {
 
 test("the default view shows the engine's positions for Shackleton rim", async ({ page }) => {
   await page.goto("/sky");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Shackleton crater rim");
+  await expect(page.getByText(/^Shackleton crater rim ·/)).toBeVisible();
   await expect(readout(page, "Sun")).toContainText("Above the horizon");
   await expect(readout(page, "Earth")).toContainText("Above the horizon");
   await expect(sun(page)).toBeVisible();

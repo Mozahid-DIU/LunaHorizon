@@ -64,8 +64,11 @@ export function useSiteData({ site, startMs, endMs }: SiteDataRequest): SiteData
     };
   }, [key, site, years]);
 
-  if (settled?.key !== key) return { status: "loading" };
-  if (!settled.ok) return { status: "error", error: settled.error, retry: () => setAttempt((n) => n + 1) };
-  const { ephemeris, profile, hasTerrain, heightAt } = settled;
-  return { status: "ready", ephemeris, profile, hasTerrain, heightAt };
+  // the same object for the same data, so pages can keep heavy results between renders
+  return useMemo(() => {
+    if (settled?.key !== key) return { status: "loading" };
+    if (!settled.ok) return { status: "error", error: settled.error, retry: () => setAttempt((n) => n + 1) };
+    const { ephemeris, profile, hasTerrain, heightAt } = settled;
+    return { status: "ready", ephemeris, profile, hasTerrain, heightAt };
+  }, [key, settled]);
 }

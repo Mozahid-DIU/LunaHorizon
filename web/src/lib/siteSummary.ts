@@ -2,7 +2,7 @@
  * What the Atlas site card shows, taken straight from the engine: a 14-day mission from the
  * landing time, and the next change of Sun and Earth. Nothing here does its own astronomy.
  */
-import { countdown, DEFAULT_SEARCH_MS } from "./countdown";
+import { countdown, DEFAULT_SEARCH_MS, type Countdown } from "./countdown";
 import type { Site } from "./geometry";
 import { totalHours } from "./planning";
 import { type Ephemeris, type Window, type WindowKind, findWindows } from "./windows";
@@ -27,13 +27,25 @@ export interface BodyOutlook {
 
 type MissionKind = Exclude<WindowKind, "earth">;
 
-export interface SiteSummary {
-  hours: Record<MissionKind, number>;
-  spans: Record<MissionKind, Span[]>;
+export interface SiteOutlook {
   sun: BodyOutlook;
   earth: BodyOutlook;
   /** The data ended before the full search, so a missing event may still happen. */
   isSearchCut: boolean;
+}
+
+export interface SiteSummary extends SiteOutlook {
+  hours: Record<MissionKind, number>;
+  spans: Record<MissionKind, Span[]>;
+}
+
+/** What comes next, from the engine's countdown: a setting if the body is up, else a rising. */
+export function outlookFrom(clock: Countdown): SiteOutlook {
+  return {
+    sun: { isUp: clock.now.lit, eventMs: clock.now.lit ? clock.nextSunset : clock.nextSunrise },
+    earth: { isUp: clock.now.earthVisible, eventMs: clock.now.earthVisible ? clock.nextEarthset : clock.nextEarthrise },
+    isSearchCut: clock.searchedUntil < clock.now.utcMs + DEFAULT_SEARCH_MS,
+  };
 }
 
 /** The engine's answer for this site and time, or null if the mission runs past the data. */
@@ -47,13 +59,10 @@ export function siteSummary(eph: Ephemeris, site: Site, profile: readonly number
     windows.map((w) => ({ from: (w.start - landingMs) / missionMs, to: (w.end - landingMs) / missionMs }));
 
   const [lit, comms, golden] = [windowsOf("lit"), windowsOf("comms"), windowsOf("golden")];
-  const clock = countdown(eph, site, profile, landingMs);
   return {
+    ...outlookFrom(countdown(eph, site, profile, landingMs)),
     hours: { lit: totalHours(lit), comms: totalHours(comms), golden: totalHours(golden) },
     spans: { lit: toSpans(lit), comms: toSpans(comms), golden: toSpans(golden) },
-    isSearchCut: clock.searchedUntil < landingMs + DEFAULT_SEARCH_MS,
-    sun: { isUp: clock.now.lit, eventMs: clock.now.lit ? clock.nextSunset : clock.nextSunrise },
-    earth: { isUp: clock.now.earthVisible, eventMs: clock.now.earthVisible ? clock.nextEarthset : clock.nextEarthrise },
   };
 }
 

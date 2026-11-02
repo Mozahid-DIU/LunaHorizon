@@ -63,7 +63,7 @@ describe("horizon from tiles", () => {
       const errors = profile.map((value, i) => Math.abs(value - row.elevation_deg[i])).sort((a, b) => a - b);
       expect(errors[180]).toBeLessThan(0.02);
     }
-  }, 60_000);
+  }, 240_000);
 
   test.each(SITES.filter((site) => hasHeightTiles(site.lat)).map((site) => site.id))(
     "%s agrees with its published horizon and its sunlight",

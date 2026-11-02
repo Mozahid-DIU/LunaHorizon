@@ -1,11 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useDeferredValue, useMemo, useState } from "react";
 import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
+import { countdown, DEFAULT_SEARCH_MS } from "@/lib/countdown";
 import { useSiteData } from "@/lib/data/useSiteData";
-import { formatUtc } from "@/lib/selection";
-import { formatCoordinates } from "@/lib/siteSummary";
+import { formatUtc, withQuery } from "@/lib/selection";
+import { eventWindows, goldenStatus, outlookAt, skyDataEnd, skyHeadline, type GoldenStatus } from "@/lib/skyOutlook";
+import { formatCoordinates, formatDuration, MISSION_DAYS, outlookFrom, siteSummary, type BodyOutlook, type SiteSummary } from "@/lib/siteSummary";
 import { shortName, type SelectedSite } from "@/lib/sites";
 import { frameTime, isBesideView, playbackEnd } from "@/lib/skyView";
 import { stateAt, type BodyState } from "@/lib/windows";
@@ -15,6 +18,17 @@ import { useCustomArt } from "./useCustomArt";
 import { useReducedMotion, useSkyPlayback, type SkyPlayback } from "./useSkyPlayback";
 
 const HOUR_MS = 3_600_000;
+const DAY_MS = 24 * HOUR_MS;
+
+interface CountdownItemProps {
+  name: string;
+  outlook: BodyOutlook;
+  isSearchCut: boolean;
+  shownMs: number;
+  rises: string;
+  sets: string;
+  tone: string;
+}
 
 interface BodyReadoutProps {
   name: string;
@@ -82,11 +96,70 @@ function PlaybackBar({ playback, lengthMs, shownMs, isMotionReduced }: PlaybackB
   );
 }
 
-function Sky({ site, timeMs }: { site: SelectedSite; timeMs: number }) {
+interface SkyIntroProps {
+  site: SelectedSite;
+  timeMs: number;
+  query: string;
+  summary: SiteSummary | null;
+  status: GoldenStatus | null;
+}
+
+function SkyIntro({ site, timeMs, query, summary, status }: SkyIntroProps) {
+  const headline = summary && skyHeadline(summary.hours.golden);
+  return (
+    <div className={styles.intro}>
+      {status && (
+        <p className={`${styles.status} ${status.isOpen ? styles.statusOpen : ""}`}>
+          <i aria-hidden="true" />
+          {status.text}
+        </p>
+      )}
+      <h1>
+        {headline ? (
+          <>
+            {headline.lead}
+            <em>{headline.emphasis}</em>
+          </>
+        ) : (
+          `Sky from ${shortName(site)}`
+        )}
+      </h1>
+      <p className={styles.place}>
+        {shortName(site)} · {formatCoordinates(site.lat, site.lon)} · {formatUtc(timeMs)}
+      </p>
+      {headline && (
+        <p className={styles.lead}>
+          Land at this time and {headline.hours} of {MISSION_DAYS * 24} mission hours have sunlight, Earth in view and a DSN
+          station listening.
+        </p>
+      )}
+      {headline && (
+        <p className={styles.ellipse}>
+          For this exact point; ground nearby can differ. <Link href={withQuery("/ellipse", query)}>See the Landing Ellipse</Link>
+        </p>
+      )}
+      {status && !summary && <p className={styles.lead}>A {MISSION_DAYS}-day mission from this date runs past our data, which ends in 2030.</p>}
+    </div>
+  );
+}
+
+function CountdownItem({ name, outlook, isSearchCut, shownMs, rises, sets, tone }: CountdownItemProps) {
+  const { isUp, eventMs } = outlook;
+  const noEvent = isSearchCut ? "Beyond our data" : `Not in ${DEFAULT_SEARCH_MS / DAY_MS} days`;
+  return (
+    <div className={styles.countdownItem}>
+      <span className={styles.countdownName}>{name}</span>
+      <strong className={tone}>{eventMs === null ? noEvent : formatDuration(eventMs - shownMs)}</strong>
+      <span className={styles.countdownTo}>to {isUp ? sets : rises}</span>
+    </div>
+  );
+}
+
+function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; query: string }) {
   const endMs = playbackEnd(timeMs);
   const lengthMs = endMs - timeMs;
   const siteKey = site.id ?? `${site.lat},${site.lon}`;
-  const data = useSiteData({ site, startMs: timeMs, endMs });
+  const data = useSiteData({ site, startMs: timeMs, endMs: skyDataEnd(timeMs) });
   const heightAt = data.status === "ready" ? data.heightAt : null;
   const customArt = useCustomArt(heightAt, site.lat, site.lon);
   const isMotionReduced = useReducedMotion();
@@ -103,12 +176,36 @@ function Sky({ site, timeMs }: { site: SelectedSite; timeMs: number }) {
     [data, site, shownMs],
   );
 
-  if (data.status === "loading") return <p className={styles.status}>Calculating…</p>;
-  if (data.status === "error") return <DataNotice error={data.error} retry={data.retry} />;
-  if (!state || !start) return null;
+  const summary = useMemo(
+    () => (data.status === "ready" ? siteSummary(data.ephemeris, site, data.profile, timeMs) : null),
+    [data, site, timeMs],
+  );
+  const events = useMemo(
+    () => (data.status === "ready" ? eventWindows(data.ephemeris, site, data.profile, timeMs) : null),
+    [data, site, timeMs],
+  );
+  // moving frames read from the run's windows; a frame that has settled asks the engine directly
+  const { isPlaying } = playback;
+  const settledMs = useDeferredValue(shownMs);
+  const stillOutlook = useMemo(
+    () => (data.status === "ready" && !isPlaying ? outlookFrom(countdown(data.ephemeris, site, data.profile, settledMs)) : null),
+    [data, isPlaying, site, settledMs],
+  );
+  const outlook = stillOutlook && settledMs === shownMs ? stillOutlook : events && state && outlookAt(events, shownMs, state);
+
+  if (data.status === "loading" || data.status === "error" || !state || !start || !outlook) {
+    return (
+      <>
+        <SkyIntro site={site} timeMs={timeMs} query={query} summary={null} status={null} />
+        {data.status === "error" ? <DataNotice error={data.error} retry={data.retry} /> : <p className={styles.calculating}>Calculating…</p>}
+      </>
+    );
+  }
 
   return (
     <>
+      <SkyIntro site={site} timeMs={timeMs} query={query} summary={summary} status={goldenStatus(state)} />
+      {!data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
       <SkyStage
         state={state}
         start={start}
@@ -118,7 +215,10 @@ function Sky({ site, timeMs }: { site: SelectedSite; timeMs: number }) {
         onViewChange={setView}
       />
       {lengthMs > 0 && <PlaybackBar playback={playback} lengthMs={lengthMs} shownMs={shownMs} isMotionReduced={isMotionReduced} />}
-      {!data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
+      <section className={styles.countdown} aria-label="Countdown">
+        <CountdownItem name="Earth" outlook={outlook.earth} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="Earthrise" sets="Earthset" tone={styles.earth} />
+        <CountdownItem name="Sun" outlook={outlook.sun} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="sunrise" sets="sunset" tone={styles.sun} />
+      </section>
       {data.heightAt && (
         <p className={styles.note}>
           This horizon is computed in your browser from NASA LOLA height tiles: full map detail close by, 480 m detail beyond
@@ -138,27 +238,15 @@ function Sky({ site, timeMs }: { site: SelectedSite; timeMs: number }) {
 }
 
 export function SkyView() {
-  const { selection } = useSelection();
-  const { site, timeMs } = selection;
-
-  return (
-    <>
-      <div className={styles.intro}>
-        <h1>Sky from {shortName(site)}</h1>
-        <p>
-          {formatCoordinates(site.lat, site.lon)} · {formatUtc(timeMs)}
-        </p>
-      </div>
-      <Sky site={site} timeMs={timeMs} />
-    </>
-  );
+  const { selection, query } = useSelection();
+  return <Sky site={selection.site} timeMs={selection.timeMs} query={query} />;
 }
 
 export function SkyViewFallback() {
   return (
     <div className={styles.intro}>
       <h1>Sky</h1>
-      <p>Calculating…</p>
+      <p className={styles.place}>Calculating…</p>
     </div>
   );
 }

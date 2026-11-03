@@ -84,12 +84,61 @@
 }
 
 .insight {
-  margin-top: 16px;
+  margin: -4px 0 20px;
+  scroll-margin: 100px 0 120px;
+}
+
+.insight:focus {
+  outline: none;
+}
+
+.insightOpen {
+  max-width: 900px;
   padding: 18px 20px;
   border: 1px solid var(--line);
   border-left: 3px solid var(--mint);
   border-radius: 16px;
   background: var(--panel);
+}
+
+/* the one call to action under the headline; mint because the answer explains the Golden figure */
+.explain,
+.explainFloating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: var(--mint);
+  color: var(--on-mint);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.explain {
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.explain:hover,
+.explainFloating:hover {
+  box-shadow: 0 0 0 4px #46e6b433;
+  transform: translateY(-1px);
+}
+
+.explainFloating {
+  position: fixed;
+  z-index: 20;
+  right: 24px;
+  bottom: 24px;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 24px;
+  font-size: 15px;
+  box-shadow: 0 10px 30px #0009;
 }
 
 .insight h2 {
@@ -118,6 +167,9 @@
 }
 
 .insightActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 12px;
 }
 
@@ -577,6 +629,16 @@
 
   .heading {
     margin-left: 0;
+  }
+
+  .explain {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .explainFloating {
+    right: 16px;
+    bottom: calc(96px + env(safe-area-inset-bottom));
   }
 
   .playback {

@@ -214,6 +214,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
   return (
     <>
       <SkyIntro site={site} timeMs={timeMs} query={query} summary={summary} status={goldenStatus(state)} />
+      {facts && <SkyInsight facts={facts} />}
       {!data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
       <SkyStage
         state={state}
@@ -228,7 +229,6 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
         <CountdownItem name="Earth" outlook={outlook.earth} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="Earthrise" sets="Earthset" tone={styles.earth} />
         <CountdownItem name="Sun" outlook={outlook.sun} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="sunrise" sets="sunset" tone={styles.sun} />
       </section>
-      {facts && <SkyInsight facts={facts} />}
       <SkyTimeline rows={timeline} startMs={timeMs} shownMs={shownMs} cutMs={timelineCut(data.ephemeris, timeMs)} />
       {data.heightAt && (
         <p className={styles.note}>

@@ -83,6 +83,67 @@
   background: var(--panel);
 }
 
+.insight {
+  margin-top: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--mint);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+.insight h2 {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.insightText {
+  max-width: 820px;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.insightSource {
+  max-width: 820px;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.insightActions {
+  margin-top: 12px;
+}
+
+.insightActions button {
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--mint);
+  border-radius: 10px;
+  background: none;
+  color: var(--mint);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--duration-fast);
+}
+
+.insightActions button:hover:not(:disabled) {
+  background: #46e6b41a;
+}
+
+.insightActions button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
 .timeline {
   margin-top: 16px;
   padding: 18px 20px;

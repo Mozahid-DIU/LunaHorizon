@@ -6,6 +6,7 @@ import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
 import { countdown, DEFAULT_SEARCH_MS } from "@/lib/countdown";
 import { useSiteData } from "@/lib/data/useSiteData";
+import { factsFrom } from "@/lib/insight";
 import { formatUtc, withQuery } from "@/lib/selection";
 import { eventWindows, goldenStatus, outlookAt, skyDataEnd, skyHeadline, type GoldenStatus } from "@/lib/skyOutlook";
 import { formatCoordinates, formatDuration, MISSION_DAYS, outlookFrom, siteSummary, type BodyOutlook, type SiteSummary } from "@/lib/siteSummary";
@@ -14,6 +15,7 @@ import { frameTime, isBesideView, playbackEnd } from "@/lib/skyView";
 import { timelineCut, timelineRows } from "@/lib/timeline";
 import { stateAt, type BodyState } from "@/lib/windows";
 import styles from "./sky.module.css";
+import { SkyInsight } from "./SkyInsight";
 import { SkyStage, type SkySpan } from "./SkyStage";
 import { SkyTimeline } from "./SkyTimeline";
 import { useCustomArt } from "./useCustomArt";
@@ -182,6 +184,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
     () => (data.status === "ready" ? siteSummary(data.ephemeris, site, data.profile, timeMs) : null),
     [data, site, timeMs],
   );
+  const facts = useMemo(() => (summary && data.status === "ready" ? factsFrom(site, timeMs, summary, data.hasTerrain) : null), [data, site, summary, timeMs]);
   const events = useMemo(
     () => (data.status === "ready" ? eventWindows(data.ephemeris, site, data.profile, timeMs) : null),
     [data, site, timeMs],
@@ -225,6 +228,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
         <CountdownItem name="Earth" outlook={outlook.earth} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="Earthrise" sets="Earthset" tone={styles.earth} />
         <CountdownItem name="Sun" outlook={outlook.sun} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="sunrise" sets="sunset" tone={styles.sun} />
       </section>
+      {facts && <SkyInsight facts={facts} />}
       <SkyTimeline rows={timeline} startMs={timeMs} shownMs={shownMs} cutMs={timelineCut(data.ephemeris, timeMs)} />
       {data.heightAt && (
         <p className={styles.note}>

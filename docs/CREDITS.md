@@ -32,6 +32,14 @@ Landing coordinates are facts and are cited for transparency. We do not copy ima
 | Vitest | MIT |
 | Playwright | Apache-2.0 |
 
+## AI model in the app
+
+| Model | Licence | Served by |
+|---|---|---|
+| gpt-oss-120b (OpenAI, open-weight) | Apache-2.0 | Groq API, free plan |
+
+The model only rewords figures our engine computed. It receives those figures and nothing a visitor types. Groq says it does not keep inputs by default, but may log them for up to 30 days to check reliability and abuse.
+
 ## Fonts and media
 
 | Item | Licence | Credit |

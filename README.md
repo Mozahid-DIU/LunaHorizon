@@ -32,6 +32,7 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Compare:** up to three sites or dates side by side, each a direct calculation, with a shareable link
 - [x] **Dates:** the best landings in the next 12 months, and what a delay or a nearby site would change, searched in the background
 - [x] **Proof:** every validation check with its difference and limit, read straight from `validation.json`
+- [x] **Plain-language summary:** rule-based from the engine's numbers, with an optional AI rewording whose numbers are checked
 - [ ] Website features (power, ellipse, 3D view)
 
 📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
@@ -169,7 +170,7 @@ Following NASA Space Apps rules, we disclose our AI use:
 
 - This README and our pitch material were drafted with help from an AI assistant (Claude by Anthropic) and reviewed and edited by the team.
 - We use AI-assisted development (Claude Code) for code generation and review. Every AI-assisted change, with the prompt, the output and how we verified it, is logged in [docs/ai-use.md](docs/ai-use.md).
-- In the app, AI only explains numbers that our own code computed. It never calculates positions or windows.
+- In the app, AI only explains numbers that our own code computed. It never calculates positions or windows. The "Explain with AI" button sends our engine's figures (nothing a visitor types) to the open-weight model gpt-oss-120b on Groq, and an answer is shown only if every figure in it, with its unit, came from our engine. A rule-based summary is always shown first and works without the AI.
 - Any AI-generated images or video will carry a visible watermark.
 - This project uses no NASA logos, flags or mission insignia.
 

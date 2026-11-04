@@ -2,7 +2,8 @@
 
 The points are the target plus 8 compass directions on 3 rings, so the app can show a 100 m,
 500 m or 1 km landing zone. The rings are circles: a real ellipse depends on the approach
-direction, which is not known for a general site.
+direction, which is not known for a general site. Where a lander is known to have come down
+away from its target (IM-2 Athena), that point gets a horizon too.
 
 Usage: python ellipse.py            -> web/public/data/horizon/<site>-ellipse.json
 """
@@ -10,7 +11,7 @@ import json
 
 import numpy as np
 
-from horizon import LANDER_HEIGHT_M, MAX_DISTANCE_M, destination, horizon_profile
+from horizon import LANDER_HEIGHT_M, MAX_DISTANCE_M, MOON_RADIUS_M, destination, horizon_profile
 from subpoints import OUT_DIR
 
 RINGS_M = (100, 500, 1000)
@@ -42,7 +43,31 @@ def _with_horizon(point: dict, height_fn) -> dict:
     }
 
 
+def _distance_and_bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> tuple[int, int]:
+    """Great-circle distance in whole metres and initial bearing in whole degrees from north."""
+    p1, p2, dl = np.radians(lat1), np.radians(lat2), np.radians(lon2 - lon1)
+    a = np.sin((p2 - p1) / 2) ** 2 + np.cos(p1) * np.cos(p2) * np.sin(dl / 2) ** 2
+    distance = 2 * MOON_RADIUS_M * np.arcsin(np.sqrt(a))
+    bearing = np.degrees(np.arctan2(np.sin(dl) * np.cos(p2), np.cos(p1) * np.sin(p2) - np.sin(p1) * np.cos(p2) * np.cos(dl))) % 360
+    return int(round(float(distance))), int(round(float(bearing))) % 360
+
+
+def _touchdown(site: dict, height_fn) -> dict:
+    point = site["touchdown"]
+    distance_m, bearing_deg = _distance_and_bearing(site["lat"], site["lon"], point["lat"], point["lon"])
+    return {
+        **_with_horizon({"lat": point["lat"], "lon": point["lon"]}, height_fn),
+        "lat": point["lat"],
+        "lon": point["lon"],
+        "distance_m": distance_m,
+        "bearing_deg": bearing_deg,
+        "date": point["date"],
+        "source": point["source"],
+    }
+
+
 def build_ellipse(site: dict, height_fn) -> dict:
+    extra = {"touchdown": _touchdown(site, height_fn)} if "touchdown" in site else {}
     return {
         "site": site["id"],
         "lat": site["lat"],
@@ -53,6 +78,7 @@ def build_ellipse(site: dict, height_fn) -> dict:
         "az_step_deg": 1,
         "points": [_with_horizon(p, height_fn) for p in ellipse_points(site["lat"], site["lon"])],
         "source": "NASA LRO LOLA polar DEMs (ldem_875s_20m, ldem_80s_80m, ldem_75s_120m)",
+        **extra,
     }
 
 

@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
-import { PagePlaceholder } from "@/components/shell/PagePlaceholder";
+import { Suspense } from "react";
+import { EllipseView, EllipseViewFallback } from "@/components/ellipse/EllipseView";
+import styles from "@/components/ellipse/ellipse.module.css";
 
 export const metadata: Metadata = { title: "Ellipse" };
 
 export default function EllipsePage() {
-  return <PagePlaceholder title="Ellipse" purpose="See what changes if the lander touches down off target." />;
+  return (
+    <div className={styles.ellipse}>
+      <Suspense fallback={<EllipseViewFallback />}>
+        <EllipseView />
+      </Suspense>
+    </div>
+  );
 }

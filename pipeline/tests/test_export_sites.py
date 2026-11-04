@@ -10,7 +10,7 @@ def test_site_list_copies_each_curated_site_exactly():
     exported = build_site_list(load_sites())
     assert [s["id"] for s in exported] == [s["id"] for s in load_sites()]
     for out, source in zip(exported, load_sites()):
-        assert set(out) == set(FIELDS) | {"has_terrain", "is_coarse_terrain"}
+        assert set(out) == set(FIELDS) | {"has_terrain", "is_coarse_terrain", "has_ellipse"}
         assert all(out[key] == source.get(key) for key in FIELDS)
 
 
@@ -31,6 +31,11 @@ def test_coarse_flag_marks_sites_whose_close_ground_is_on_the_global_map():
     for site in exported.values():
         horizon = json.loads((OUT_DIR / "horizon" / f"{site['id']}.json").read_text())
         assert site["is_coarse_terrain"] == ("global map" in horizon["near_source"])
+
+
+def test_ellipse_flag_follows_the_ellipse_file():
+    exported = {s["id"]: s for s in build_site_list(load_sites())}
+    assert {id for id, s in exported.items() if s["has_ellipse"]} == {"im-1", "im-2", "shackleton-rim"}
 
 
 def test_file_in_the_website_is_up_to_date():

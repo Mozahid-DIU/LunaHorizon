@@ -19,10 +19,12 @@ import {
 import { Ephemeris, type DsnYear, type YearData } from "../windows";
 import type { SubpointYear } from "../geometry";
 import {
+  type EllipseFile,
   type HorizonFile,
   type MapGrid,
   type ValidationFile,
   parseDsnYear,
+  parseEllipse,
   parseHeightManifest,
   parseHorizon,
   parseMapGrid,
@@ -86,6 +88,7 @@ async function readJson(fetchFn: FetchFn, baseUrl: string, file: string): Promis
 export interface DataLoader {
   loadEphemeris(years: readonly number[]): Promise<Ephemeris>;
   loadHorizon(siteId: string): Promise<HorizonFile>;
+  loadEllipse(siteId: string): Promise<EllipseFile>;
   loadMapGrid(): Promise<MapGrid>;
   loadValidation(): Promise<ValidationFile>;
   loadHeightManifest(): Promise<HeightManifest>;
@@ -170,6 +173,12 @@ export function createDataLoader(fetchFn: FetchFn = (input, init) => fetch(input
       const site = findSite(siteId);
       if (!site?.has_terrain) throw new DataFileError("unavailable", "horizon", "no terrain for this site");
       return load(`horizon/${site.id}.json`, (raw) => parseHorizon(raw, site));
+    },
+
+    async loadEllipse(siteId) {
+      const site = findSite(siteId);
+      if (!site?.has_ellipse) throw new DataFileError("unavailable", "ellipse", "no landing zone data for this site");
+      return load(`horizon/${site.id}-ellipse.json`, (raw) => parseEllipse(raw, site));
     },
 
     loadMapGrid: () => load("map/golden-grid.json", parseMapGrid),

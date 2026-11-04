@@ -1,0 +1,294 @@
+.ellipse {
+  padding: 24px 40px 40px;
+}
+
+.intro h1 {
+  max-width: 1100px;
+  margin: 0;
+  font-size: clamp(2.25rem, 4.2vw, 4rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.intro em {
+  color: var(--mint);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.caveat,
+.note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.rings {
+  display: inline-flex;
+  gap: 4px;
+  margin: 18px 0 0;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+}
+
+.rings button {
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--duration-fast), color var(--duration-fast);
+}
+
+.rings button:hover {
+  color: var(--ink);
+}
+
+.rings button[aria-pressed="true"] {
+  background: var(--mint);
+  color: var(--on-mint);
+}
+
+/* the picture carries the idea; the four figures beside it carry the answer */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 380px) minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  margin-top: 22px;
+}
+
+.figure {
+  margin: 0;
+}
+
+.figure figcaption {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.plot {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ringOn,
+.ringOff {
+  fill: none;
+  stroke-width: 1;
+}
+
+.ringOn {
+  stroke: var(--line);
+  stroke-dasharray: none;
+}
+
+.ringOff {
+  stroke: var(--line);
+  stroke-dasharray: 3 4;
+}
+
+.ringLabel,
+.north {
+  fill: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+}
+
+.north {
+  text-anchor: middle;
+  font-weight: 600;
+}
+
+.dot,
+.dotOut {
+  fill: var(--mint);
+  stroke: var(--mint);
+  stroke-width: 1.2;
+}
+
+.dotOut {
+  stroke: var(--muted);
+  stroke-dasharray: 2 2;
+}
+
+.athena path {
+  stroke: var(--danger);
+  stroke-width: 2.5;
+}
+
+.athena text {
+  fill: var(--danger);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.card {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+}
+
+.card dt {
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card dd {
+  display: grid;
+  gap: 2px;
+  margin: 6px 0 0;
+}
+
+.card strong {
+  font-size: 30px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.card span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.story {
+  max-width: 900px;
+  margin-top: 24px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--danger);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+.story h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.story p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.story a {
+  color: var(--ink);
+}
+
+.story .note {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.story .athenaHours {
+  margin-top: 10px;
+}
+
+.list {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.list summary {
+  cursor: pointer;
+}
+
+.list table {
+  width: 100%;
+  max-width: 640px;
+  margin-top: 10px;
+  border-collapse: collapse;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+}
+
+.list th,
+.list td {
+  padding: 6px 12px 6px 0;
+  border-bottom: 1px solid var(--line);
+  font-weight: 400;
+  text-align: left;
+}
+
+.list thead th {
+  color: var(--muted);
+}
+
+.unavailable {
+  margin-top: 14px;
+  font-size: 16px;
+}
+
+.unavailable a {
+  color: var(--ink);
+}
+
+.limits {
+  max-width: 900px;
+  margin: 28px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1279px) {
+  .ellipse {
+    padding: 20px 16px 24px;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plot {
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .rings {
+    display: flex;
+  }
+
+  .rings button {
+    flex: 1;
+    height: 44px;
+    padding: 0 8px;
+  }
+}

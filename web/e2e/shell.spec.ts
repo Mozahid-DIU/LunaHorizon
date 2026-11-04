@@ -13,6 +13,7 @@ const HEADLINES: Record<string, RegExp | string> = {
   "/dates": /best in 12 months/,
   "/power": /^Survives|^Runs out of power/,
   "/proof": /checks passed/,
+  "/ellipse": /^Within 500 m of the target/,
 };
 
 function watchErrors(page: Page): string[] {

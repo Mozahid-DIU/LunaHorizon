@@ -104,3 +104,37 @@ def test_generated_file_centre_equals_the_published_site_horizon(site):
         assert stored["lat"] == pytest.approx(expected["lat"], abs=1e-6)
         assert stored["lon"] == pytest.approx(expected["lon"], abs=1e-6)
         assert len(stored["elevation_deg"]) == 360
+
+
+def test_a_known_touchdown_gets_its_own_horizon_and_distance():
+    site = {"id": "test", "lat": SITE[0], "lon": SITE[1],
+            "touchdown": {"lat": SITE[0] - 0.003, "lon": SITE[1], "date": "2025-03-06", "source": "https://example.org/a"}}
+    data = build_ellipse(site, flat)
+    touchdown = data["touchdown"]
+    assert touchdown["distance_m"] == pytest.approx(arc_m(SITE[0], SITE[1], SITE[0] - 0.003, SITE[1]), abs=1)
+    assert touchdown["bearing_deg"] == 180
+    assert len(touchdown["elevation_deg"]) == 360
+    assert (touchdown["date"], touchdown["source"]) == ("2025-03-06", "https://example.org/a")
+
+
+def test_a_site_without_a_touchdown_has_none():
+    assert "touchdown" not in build_ellipse({"id": "test", "lat": SITE[0], "lon": SITE[1]}, flat)
+
+
+def test_athena_came_down_369_m_from_its_target():
+    data = json.loads((OUT_DIR / "horizon" / "im-2-ellipse.json").read_text())
+    touchdown = data["touchdown"]
+    # LROC places the lander at 84.7906 S, 29.1957 E; the target was 84.78 S, 29.13 E
+    assert (touchdown["lat"], touchdown["lon"]) == (-84.7906, 29.1957)
+    assert touchdown["distance_m"] == 369
+    assert touchdown["bearing_deg"] == 151
+    assert touchdown["elevation_deg"] == pytest.approx(horizon_profile(-84.7906, 29.1957, _height_m()), abs=0.001)
+    for other in ("im-1", "shackleton-rim"):
+        assert "touchdown" not in json.loads((OUT_DIR / "horizon" / f"{other}-ellipse.json").read_text())
+
+
+def _height_m():
+    from dem import height_m
+
+    return height_m
+

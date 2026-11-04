@@ -179,7 +179,14 @@
       "lon": 29.13,
       "landed": "2025-03-06",
       "source": "https://lroc.im-ldi.com/images/1401",
-      "source_note": "LROC: IM-2 Landing Region, planned target. Athena touched down a few hundred metres away (see Landing Ellipse feature)"
+      "source_note": "LROC: IM-2 Landing Region, planned target. Athena touched down a few hundred metres away (see Landing Ellipse feature)",
+      "touchdown": {
+        "lat": -84.7906,
+        "lon": 29.1957,
+        "date": "2025-03-06",
+        "source": "https://lroc.im-ldi.com/images/1408",
+        "note": "LROC: Athena at 84.7906S, 29.1957E, on its side within a 20-meter diameter crater (NASA/GSFC/Arizona State University)"
+      }
     },
     {
       "id": "luna-16",

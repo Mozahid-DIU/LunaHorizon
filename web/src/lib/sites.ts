@@ -14,6 +14,8 @@ export interface CuratedSite {
   has_terrain: boolean;
   /** Part of the horizon comes from LOLA's 237 m global map, which smooths close ground. */
   is_coarse_terrain: boolean;
+  /** Horizons exist for 25 points around the target, for the Ellipse page. */
+  has_ellipse: boolean;
 }
 
 export interface CustomSite {

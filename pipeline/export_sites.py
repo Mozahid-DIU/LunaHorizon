@@ -25,6 +25,7 @@ def build_site_list(sites: list[dict]) -> list[dict]:
             **{key: site.get(key) for key in FIELDS},
             "has_terrain": near is not None,
             "is_coarse_terrain": near is not None and "global map" in near,
+            "has_ellipse": (OUT_DIR / "horizon" / f"{site['id']}-ellipse.json").exists(),
         })
     return listed
 

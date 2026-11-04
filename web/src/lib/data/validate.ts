@@ -2,7 +2,7 @@
  * Checks each generated data file before the engine may use it. A wrong file must stop here:
  * the ranges are physical limits, so swapped Sun and Earth data or a damaged value cannot pass.
  */
-import type { SubpointYear, Track } from "../geometry";
+import { MOON_RADIUS_KM, type SubpointYear, type Track } from "../geometry";
 import { findSite, TERRAIN_COVERAGE_LAT, type CuratedSite } from "../sites";
 import type { HeightManifest } from "../terrain/customTerrain";
 import type { DsnYear } from "../windows";
@@ -404,3 +404,120 @@ export function parseValidation(raw: unknown): ValidationFile {
     sections,
   };
 }
+
+export interface EllipsePoint {
+  ring_m: number;
+  bearing_deg: number;
+  lat: number;
+  lon: number;
+  ground_m: number;
+  elevation_deg: readonly number[];
+}
+
+export interface Touchdown {
+  lat: number;
+  lon: number;
+  ground_m: number;
+  elevation_deg: readonly number[];
+  distance_m: number;
+  bearing_deg: number;
+  date: string;
+  source: string;
+}
+
+export interface EllipseFile {
+  site: string;
+  points: EllipsePoint[];
+  /** Where the lander really came down, when that is known; null otherwise. */
+  touchdown: Touchdown | null;
+}
+
+const ELLIPSE_RINGS_M = [100, 500, 1000];
+const ELLIPSE_BEARINGS_DEG = [0, 45, 90, 135, 180, 225, 270, 315];
+/** The file rounds positions to 6 decimals, about 3 cm; a metre covers that and any rounding of the distance. */
+const ELLIPSE_DISTANCE_TOLERANCE_M = 1;
+
+/** Initial bearing from the first point to the second, degrees from north through east. */
+function bearingDeg(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const rad = Math.PI / 180;
+  const dl = (lon2 - lon1) * rad;
+  const y = Math.sin(dl) * Math.cos(lat2 * rad);
+  const x = Math.cos(lat1 * rad) * Math.sin(lat2 * rad) - Math.sin(lat1 * rad) * Math.cos(lat2 * rad) * Math.cos(dl);
+  return ((Math.atan2(y, x) / rad) % 360 + 360) % 360;
+}
+
+/** The pipeline rounds bearings to whole degrees, so a degree covers rounding and nothing more. */
+const ELLIPSE_BEARING_TOLERANCE_DEG = 1;
+
+function requireBearing(site: CuratedSite, lat: number, lon: number, stated: number, name: string): void {
+  const gap = Math.abs(((bearingDeg(site.lat, site.lon, lat, lon) - stated + 540) % 360) - 180);
+  if (gap > ELLIPSE_BEARING_TOLERANCE_DEG) throw new Error(`${name} is not in the direction it says`);
+}
+
+function surfaceDistanceM(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const rad = Math.PI / 180;
+  const h = Math.sin(((lat2 - lat1) * rad) / 2) ** 2 + Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(((lon2 - lon1) * rad) / 2) ** 2;
+  return 2 * MOON_RADIUS_KM * 1000 * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+function parseEllipsePoint(value: unknown, name: string): EllipsePoint {
+  const point = requireObject(value, name);
+  return {
+    ring_m: requireNumber(point.ring_m, 0, 1000, `${name}.ring_m`),
+    bearing_deg: requireNumber(point.bearing_deg, 0, 359, `${name}.bearing_deg`),
+    lat: requireNumber(point.lat, -90, 90, `${name}.lat`),
+    lon: requireNumber(point.lon, -180, 180, `${name}.lon`),
+    ground_m: requireNumber(point.ground_m, -20_000, 20_000, `${name}.ground_m`),
+    elevation_deg: requireSeries(point.elevation_deg, PROFILE_POINTS, -90, 90, `${name}.elevation_deg`),
+  };
+}
+
+function parseTouchdown(value: unknown, site: CuratedSite): Touchdown {
+  const raw = requireObject(value, "touchdown");
+  const point = parseEllipsePoint({ ...raw, ring_m: 0, bearing_deg: 0 }, "touchdown");
+  const distance_m = requireNumber(raw.distance_m, 0, 100_000, "touchdown.distance_m");
+  if (Math.abs(surfaceDistanceM(site.lat, site.lon, point.lat, point.lon) - distance_m) > ELLIPSE_DISTANCE_TOLERANCE_M) {
+    throw new Error("touchdown distance does not match its position");
+  }
+  if (typeof raw.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(raw.date)) throw new Error("touchdown date is not valid");
+  if (typeof raw.source !== "string" || !raw.source.startsWith("https://")) throw new Error("touchdown source is not valid");
+  const bearing_deg = requireNumber(raw.bearing_deg, 0, 359, "touchdown.bearing_deg");
+  requireBearing(site, point.lat, point.lon, bearing_deg, "touchdown");
+  return {
+    lat: point.lat,
+    lon: point.lon,
+    ground_m: point.ground_m,
+    elevation_deg: point.elevation_deg,
+    distance_m,
+    bearing_deg,
+    date: raw.date,
+    source: raw.source,
+  };
+}
+
+/** A site's 25 landing-zone horizons: the target, then 8 directions on each ring, each the ring's distance away. */
+export function parseEllipse(raw: unknown, site: CuratedSite): EllipseFile {
+  const data = requireObject(raw, "file");
+  requireEqual(data.site, site.id, "site");
+  requireEqual(data.lat, site.lat, "lat");
+  requireEqual(data.lon, site.lon, "lon");
+  requireEqual(data.az_step_deg, 1, "az_step_deg");
+  const expected = 1 + ELLIPSE_RINGS_M.length * ELLIPSE_BEARINGS_DEG.length;
+  if (!Array.isArray(data.points) || data.points.length !== expected) throw new Error(`points must have ${expected} entries`);
+  const points = data.points.map((point, i) => parseEllipsePoint(point, `points[${i}]`));
+
+  const [centre, ...ringed] = points;
+  if (centre.ring_m !== 0 || centre.lat !== site.lat || centre.lon !== site.lon) throw new Error("the first point is not the site");
+  for (const ring of ELLIPSE_RINGS_M) {
+    const bearings = ringed.filter((point) => point.ring_m === ring).map((point) => point.bearing_deg).sort((a, b) => a - b);
+    if (bearings.join() !== ELLIPSE_BEARINGS_DEG.join()) throw new Error(`ring ${ring} m does not have the 8 compass directions`);
+  }
+  for (const point of ringed) {
+    if (Math.abs(surfaceDistanceM(site.lat, site.lon, point.lat, point.lon) - point.ring_m) > ELLIPSE_DISTANCE_TOLERANCE_M) {
+      throw new Error(`a point on the ${point.ring_m} m ring is not ${point.ring_m} m from the site`);
+    }
+    requireBearing(site, point.lat, point.lon, point.bearing_deg, `the ${point.ring_m} m ring's ${point.bearing_deg} degree point`);
+  }
+  return { site: site.id, points, touchdown: data.touchdown === undefined ? null : parseTouchdown(data.touchdown, site) };
+}
+

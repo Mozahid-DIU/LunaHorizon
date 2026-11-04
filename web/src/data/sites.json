@@ -10,7 +10,8 @@
   "landed": "1969-07-20",
   "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
   "has_terrain": true,
-  "is_coarse_terrain": false
+  "is_coarse_terrain": false,
+  "has_ellipse": false
  },
  {
   "id": "apollo-12",
@@ -23,7 +24,8 @@
   "landed": "1969-11-19",
   "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
   "has_terrain": true,
-  "is_coarse_terrain": true
+  "is_coarse_terrain": true,
+  "has_ellipse": false
  },
  {
   "id": "apollo-14",
@@ -36,7 +38,8 @@
   "landed": "1971-02-05",
   "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
   "has_terrain": true,
-  "is_coarse_terrain": true
+  "is_coarse_terrain": true,
+  "has_ellipse": false
  },
  {
   "id": "apollo-15",
@@ -49,7 +52,8 @@
   "landed": "1971-07-30",
   "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
   "has_terrain": true,
-  "is_coarse_terrain": false
+  "is_coarse_terrain": false,
+  "has_ellipse": false
  },
  {
   "id": "apollo-16",
@@ -62,7 +66,8 @@
   "landed": "1972-04-21",
   "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
   "has_terrain": true,
-  "is_coarse_terrain": false
+  "is_coarse_terrain": false,
+  "has_ellipse": false
  },
  {
   "id": "apollo-17",
@@ -75,7 +80,8 @@
   "landed": "1972-12-11",
   "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
   "has_terrain": true,
-  "is_coarse_terrain": false
+  "is_coarse_terrain": false,
+  "has_ellipse": false
  },
  {
   "id": "blue-ghost-1",
@@ -88,7 +94,8 @@
   "landed": "2025-03-02",
   "source": "https://lroc.im-ldi.com/images/1407",
   "has_terrain": true,
-  "is_coarse_terrain": true
+  "is_coarse_terrain": true,
+  "has_ellipse": false
  },
  {
   "id": "chandrayaan-2",
@@ -101,7 +108,8 @@
   "landed": null,
   "source": "https://lroc.im-ldi.com/images/1131",
   "has_terrain": true,
-  "is_coarse_terrain": false
+  "is_coarse_terrain": false,
+  "has_ellipse": false
  },
  {
   "id": "chandrayaan-3",
@@ -114,7 +122,8 @@
   "landed": "2023-08-23",
   "source": "https://lroc.im-ldi.com/images/1314",
   "has_terrain": true,
-  "is_coarse_terrain": false
+  "is_coarse_terrain": false,
+  "has_ellipse": false
  },
  {
   "id": "change-3",
@@ -127,7 +136,8 @@
   "landed": "2013-12-14",
   "source": "https://lroc.im-ldi.com/images/637",
   "has_terrain": true,
-  "is_coarse_terrain": true
+  "is_coarse_terrain": true,
+  "has_ellipse": false
  },
  {
   "id": "change-4",
@@ -140,7 +150,8 @@
   "landed": "2019-01-03",
   "source": "https://lroc.im-ldi.com/images/1100",
   "has_terrain": true,
-  "is_coarse_terrain": true
+  "is_coarse_terrain": true,
+  "has_ellipse": false
  },
  {
   "id": "change-5",
@@ -153,7 +164,8 @@
   "landed": "2020-12-01",
   "source": "https://lroc.im-ldi.com/images/1172",
   "has_terrain": true,
-  "is_coarse_terrain": true
+  "is_coarse_terrain": true,
+  "has_ellipse": false
  },
  {
   "id": "change-6",
@@ -166,7 +178,8 @@
   "landed": "2024-06-01",
   "source": "https://lroc.im-ldi.com/images/1374",
   "has_terrain": true,
-  "is_coarse_terrain": true
+  "is_coarse_terrain": true,
+  "has_ellipse": false
  },
  {
   "id": "im-1",
@@ -179,7 +192,8 @@
   "landed": "2024-02-22",
   "source": "https://lroc.im-ldi.com/images/1360",
   "has_terrain": true,
-  "is_coarse_terrain": false
+  "is_coarse_terrain": false,
+  "has_ellipse": true
  },
  {
   "id": "im-2",
@@ -192,7 +206,8 @@
   "landed": "2025-03-06",
   "source": "https://lroc.im-ldi.com/images/1401",
   "has_terrain": true,
-  "is_coarse_terrain": false
+  "is_coarse_terrain": false,
+  "has_ellipse": true
  },
  {
   "id": "luna-16",
@@ -205,7 +220,8 @@
   "landed": "1970-09-20",
   "source": "https://lroc.im-ldi.com/images/938",
   "has_terrain": true,
-  "is_coarse_terrain": true
+  "is_coarse_terrain": true,
+  "has_ellipse": false
  },
  {
   "id": "luna-17",
@@ -218,7 +234,8 @@
   "landed": "1970-11-17",
   "source": "https://lroc.im-ldi.com/images/938",
   "has_terrain": true,
-  "is_coarse_terrain": true
+  "is_coarse_terrain": true,
+  "has_ellipse": false
  },
  {
   "id": "shackleton-rim",
@@ -231,7 +248,8 @@
   "landed": null,
   "source": "https://pds-geosciences.wustl.edu/missions/lro/lola.htm",
   "has_terrain": true,
-  "is_coarse_terrain": false
+  "is_coarse_terrain": false,
+  "has_ellipse": true
  },
  {
   "id": "slim",
@@ -244,7 +262,8 @@
   "landed": "2024-01-19",
   "source": "https://lroc.im-ldi.com/images/1358",
   "has_terrain": true,
-  "is_coarse_terrain": false
+  "is_coarse_terrain": false,
+  "has_ellipse": false
  },
  {
   "id": "surveyor-3",
@@ -257,6 +276,7 @@
   "landed": "1967-04-20",
   "source": "https://lroc.im-ldi.com/images/938",
   "has_terrain": true,
-  "is_coarse_terrain": true
+  "is_coarse_terrain": true,
+  "has_ellipse": false
  }
 ]

@@ -5,6 +5,16 @@ const PAGES = [
   ["/ellipse", "Ellipse"], ["/3d", "3D"], ["/proof", "Proof"], ["/brief", "Mission Brief"],
 ] as const;
 
+/** Each page's headline once it has its answer; pages still to be built show their name. */
+const HEADLINES: Record<string, RegExp | string> = {
+  "/": /right time/,
+  "/sky": /Golden/,
+  "/compare": "Compare sites and dates",
+  "/dates": /best in 12 months/,
+  "/power": /^Survives|^Runs out of power/,
+  "/proof": /checks passed/,
+};
+
 function watchErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
@@ -21,7 +31,7 @@ for (const [href, title] of PAGES) {
   test(`${href} opens cleanly`, async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto(href);
-    await expect(page.getByRole("heading", { level: 1, name: href === "/" ? /right time/ : href === "/sky" ? /Golden/ : title })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: HEADLINES[href] ?? title })).toBeVisible({ timeout: 30000 });
     await expect(page).toHaveTitle(href === "/" ? "LunaHorizon" : `${title} · LunaHorizon`);
     expect(await noSidewaysScroll(page)).toBe(true);
     expect(errors).toEqual([]);

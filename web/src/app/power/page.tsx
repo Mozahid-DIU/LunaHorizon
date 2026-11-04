@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
-import { PagePlaceholder } from "@/components/shell/PagePlaceholder";
+import { Suspense } from "react";
+import { PowerView, PowerViewFallback } from "@/components/power/PowerView";
+import styles from "@/components/power/power.module.css";
 
 export const metadata: Metadata = { title: "Power" };
 
 export default function PowerPage() {
-  return <PagePlaceholder title="Power" purpose="Test whether the battery lasts through the dark." />;
+  return (
+    <div className={styles.power}>
+      <Suspense fallback={<PowerViewFallback />}>
+        <PowerView />
+      </Suspense>
+    </div>
+  );
 }

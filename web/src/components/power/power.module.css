@@ -1,0 +1,342 @@
+.power {
+  padding: 24px 40px 40px;
+}
+
+.intro {
+  margin-bottom: 24px;
+}
+
+.intro h1 {
+  max-width: 1100px;
+  margin: 0;
+  font-size: clamp(2.25rem, 4.6vw, 4.25rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.intro em {
+  font-style: normal;
+  font-weight: 500;
+}
+
+.good {
+  color: var(--mint);
+}
+
+.bad {
+  color: var(--danger);
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.caveat,
+.note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.caveat a {
+  color: var(--ink);
+}
+
+.warning {
+  display: inline-block;
+  margin: 12px 0 0;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #f5b84126;
+  color: var(--sun);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* the controls are the tool; the result is what the eye should land on, so it gets the room */
+.layout {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.form fieldset {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+}
+
+.form legend {
+  padding: 0 6px;
+  color: var(--sun);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.form fieldset + fieldset legend {
+  color: var(--mint);
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.inputWrap {
+  position: relative;
+  display: block;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  height: 38px;
+  padding: 0 40px 0 10px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--hover);
+  color: var(--ink);
+  color-scheme: dark;
+  font: inherit;
+  font-size: 14px;
+}
+
+.field select {
+  padding-right: 10px;
+}
+
+.field option {
+  background: var(--panel);
+}
+
+.field input[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.field small {
+  font-size: 12px;
+}
+
+.fieldError {
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.inputWrap em {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-style: normal;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.reset {
+  justify-self: start;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--duration-fast);
+}
+
+.reset:hover {
+  border-color: var(--mint);
+}
+
+.results {
+  min-width: 0;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+}
+
+.problems {
+  margin: 0 0 6px;
+  color: var(--danger);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.grid {
+  stroke: var(--line);
+}
+
+.axisLeft,
+.axisRight,
+.axisBottom {
+  fill: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+}
+
+.axisLeft {
+  text-anchor: end;
+}
+
+.axisBottom {
+  text-anchor: middle;
+}
+
+.solarArea {
+  fill: #f5b84126;
+}
+
+.solarLine {
+  fill: none;
+  stroke: var(--sun);
+  stroke-width: 1.5;
+}
+
+.loadLine {
+  stroke: var(--ink);
+  stroke-dasharray: 6 5;
+  stroke-width: 1.2;
+}
+
+.chargeLine {
+  fill: none;
+  stroke: var(--mint);
+  stroke-width: 2.5;
+}
+
+.emptyLine {
+  stroke: var(--danger);
+  stroke-width: 2;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 10px 0 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 13px;
+  list-style: none;
+}
+
+.legend li::before {
+  display: inline-block;
+  width: 16px;
+  height: 3px;
+  margin-right: 6px;
+  vertical-align: middle;
+  content: "";
+}
+
+.keySolar::before {
+  background: var(--sun);
+}
+
+.keyLoad::before {
+  border-top: 2px dashed var(--ink);
+}
+
+.keyCharge::before {
+  background: var(--mint);
+}
+
+.keyEmpty::before {
+  background: var(--danger);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin: 18px 0 0;
+}
+
+.stats dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.stats dd {
+  margin: 2px 0 0;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.limits {
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1279px) {
+  .power {
+    padding: 20px 16px 24px;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* on a phone the answer comes first; the controls follow for anyone who wants to change them.
+     The height is kept while a field is being retyped, so the form does not jump under the finger */
+  .results {
+    order: -1;
+    min-height: 720px;
+  }
+
+  .field input,
+  .field select,
+  .reset {
+    height: 44px;
+  }
+
+  .results {
+    padding: 14px;
+  }
+}
+
+/* the chart scales down with the screen, so its labels are drawn larger to stay readable */
+@media (max-width: 640px) {
+  .axisLeft,
+  .axisRight,
+  .axisBottom {
+    font-size: 28px;
+  }
+}

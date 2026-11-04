@@ -34,7 +34,8 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Proof:** every validation check with its difference and limit, read straight from `validation.json`
 - [x] **Plain-language summary:** rule-based from the engine's numbers, with an optional AI rewording whose numbers are checked
 - [x] **20 curated sites:** Apollo 11–17 (except 13), Chang'e 3–6 (two on the far side), SLIM, Blue Ghost 1, Luna 16 and 17, Surveyor 3, Chandrayaan-2 and -3, IM-1, IM-2 and the Shackleton rim, each with an official source and a terrain horizon; 11 landers' ground heights checked against LROC
-- [ ] Website features (power, ellipse, 3D view)
+- [x] **Power:** an example lander's solar panel and battery over 14 or 30 days, with the battery's charge on a chart and the model's limits on screen
+- [ ] Website features (ellipse, 3D view)
 
 📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
 

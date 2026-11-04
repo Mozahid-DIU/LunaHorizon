@@ -1,8 +1,8 @@
 {
- "generated": "2026-10-29",
+ "generated": "2026-11-04",
  "summary": {
-  "checks": 58,
-  "passed": 58,
+  "checks": 128,
+  "passed": 128,
   "max_angle_diff_deg": 0.000742
  },
  "sections": [
@@ -431,6 +431,202 @@
      "pass": true
     },
     {
+     "site": "apollo-12",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 5.6e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-12",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-12",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-12",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.7e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-14",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 5e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-14",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-14",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-14",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.7e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-15",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 4.6e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-15",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.6e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-15",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-15",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.3e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-16",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 3.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-16",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-16",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-16",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-17",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 4.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-17",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.6e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-17",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 2.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "apollo-17",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.5e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "blue-ghost-1",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 3.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "blue-ghost-1",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.5e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "blue-ghost-1",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.3e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "blue-ghost-1",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.6e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-2",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 4.7e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-2",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 6.5e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-2",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "chandrayaan-2",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 5.3e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
      "site": "chandrayaan-3",
      "utc": "2027-01-01 00:00",
      "diff_deg": 4.5e-05,
@@ -455,6 +651,118 @@
      "site": "chandrayaan-3",
      "utc": "2028-11-20 18:00",
      "diff_deg": 5.4e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-3",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 6.2e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-3",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.2e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-3",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.6e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-3",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.3e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-4",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 4.2e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-4",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 6.6e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-4",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 4e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-4",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 4.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-5",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 7.5e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-5",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 5e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-5",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.1e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-5",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-6",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 5.3e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-6",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 7.5e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-6",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "change-6",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 4.1e-05,
      "tolerance_deg": 0.02,
      "pass": true
     },
@@ -515,6 +823,62 @@
      "pass": true
     },
     {
+     "site": "luna-16",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 3.4e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "luna-16",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.4e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "luna-16",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "luna-16",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.7e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "luna-17",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 7.1e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "luna-17",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.7e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "luna-17",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.2e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "luna-17",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.6e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
      "site": "shackleton-rim",
      "utc": "2027-01-01 00:00",
      "diff_deg": 4.9e-05,
@@ -539,6 +903,62 @@
      "site": "shackleton-rim",
      "utc": "2028-11-20 18:00",
      "diff_deg": 5.3e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "slim",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 4.1e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "slim",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 5.1e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "slim",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "slim",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "surveyor-3",
+     "utc": "2027-01-01 00:00",
+     "diff_deg": 5.6e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "surveyor-3",
+     "utc": "2027-03-15 06:00",
+     "diff_deg": 4.8e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "surveyor-3",
+     "utc": "2027-07-04 12:00",
+     "diff_deg": 3.9e-05,
+     "tolerance_deg": 0.02,
+     "pass": true
+    },
+    {
+     "site": "surveyor-3",
+     "utc": "2028-11-20 18:00",
+     "diff_deg": 3.7e-05,
      "tolerance_deg": 0.02,
      "pass": true
     }
@@ -662,7 +1082,7 @@
   {
    "id": "terrain",
    "title": "Terrain and illumination vs published values",
-   "method": "LOLA heights and our sunlit share against LROC and peer-reviewed results",
+   "method": "Our reading of the LOLA maps against ground heights LROC published at landers (LROC's own maps are also built from LOLA, so these check how we read the maps, not the maps themselves), and our sunlit share against a peer-reviewed result",
    "rows": [
     {
      "check": "Ground height at the IM-1 Odysseus landing point (80.13 S, 1.44 E)",
@@ -671,6 +1091,106 @@
      "unit": "m",
      "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/1360)",
      "diff": 14,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Ground height at the Chang'e 3 lander",
+     "ours": -2634,
+     "reference": -2640,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/637)",
+     "diff": 6,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Ground height at the Chang'e 4 lander",
+     "ours": -5930,
+     "reference": -5927,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/1100)",
+     "diff": 3,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Ground height at the Chang'e 5 lander",
+     "ours": -2542,
+     "reference": -2570,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/1172)",
+     "diff": 28,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Ground height at the Chang'e 6 landing site",
+     "ours": -5253,
+     "reference": -5256,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/1374)",
+     "diff": 3,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Ground height at the SLIM lander",
+     "ours": -912,
+     "reference": -912,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/1358)",
+     "diff": 0,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Ground height at the Blue Ghost Mission 1 lander",
+     "ours": -3650,
+     "reference": -3650,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/1407)",
+     "diff": 0,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Ground height at the Chandrayaan-2 Vikram impact site",
+     "ours": 837,
+     "reference": 834,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/1131)",
+     "diff": 3,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Ground height at the Luna 16 lander",
+     "ours": -2450,
+     "reference": -2452,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/938)",
+     "diff": 2,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Ground height at the Luna 17 lander",
+     "ours": -2473,
+     "reference": -2471,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/938)",
+     "diff": 2,
+     "tolerance": 150,
+     "pass": true
+    },
+    {
+     "check": "Ground height at the Surveyor 3 lander",
+     "ours": -1425,
+     "reference": -1433,
+     "unit": "m",
+     "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/938)",
+     "diff": 8,
      "tolerance": 150,
      "pass": true
     },

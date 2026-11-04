@@ -14,6 +14,90 @@
       "source_note": "NSSDCA Apollo landing site coordinates (LM position, updated 2017 from LRO, ME/DE421)"
     },
     {
+      "id": "apollo-12",
+      "name": "Apollo 12 (Ocean of Storms)",
+      "agency": "NASA",
+      "mission": "Apollo 12",
+      "category": "apollo",
+      "lat": -3.0128,
+      "lon": -23.4219,
+      "landed": "1969-11-19",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+      "source_note": "NSSDCA Apollo landing site coordinates (LM position, updated 2017 from LRO, ME/DE421)"
+    },
+    {
+      "id": "apollo-14",
+      "name": "Apollo 14 (Fra Mauro)",
+      "agency": "NASA",
+      "mission": "Apollo 14",
+      "category": "apollo",
+      "lat": -3.64589,
+      "lon": -17.47194,
+      "landed": "1971-02-05",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+      "source_note": "NSSDCA Apollo landing site coordinates (LM position, updated 2017 from LRO, ME/DE421)"
+    },
+    {
+      "id": "apollo-15",
+      "name": "Apollo 15 (Hadley-Apennine)",
+      "agency": "NASA",
+      "mission": "Apollo 15",
+      "category": "apollo",
+      "lat": 26.13239,
+      "lon": 3.6333,
+      "landed": "1971-07-30",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+      "source_note": "NSSDCA Apollo landing site coordinates (LM position, updated 2017 from LRO, ME/DE421)"
+    },
+    {
+      "id": "apollo-16",
+      "name": "Apollo 16 (Descartes Highlands)",
+      "agency": "NASA",
+      "mission": "Apollo 16",
+      "category": "apollo",
+      "lat": -8.9734,
+      "lon": 15.5011,
+      "landed": "1972-04-21",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+      "source_note": "NSSDCA Apollo landing site coordinates (LM position, updated 2017 from LRO, ME/DE421)"
+    },
+    {
+      "id": "apollo-17",
+      "name": "Apollo 17 (Taurus-Littrow)",
+      "agency": "NASA",
+      "mission": "Apollo 17",
+      "category": "apollo",
+      "lat": 20.1911,
+      "lon": 30.7723,
+      "landed": "1972-12-11",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+      "source_note": "NSSDCA Apollo landing site coordinates (LM position, updated 2017 from LRO, ME/DE421)"
+    },
+    {
+      "id": "blue-ghost-1",
+      "name": "Blue Ghost Mission 1 (Mare Crisium)",
+      "agency": "NASA CLPS / Firefly Aerospace",
+      "mission": "Blue Ghost Mission 1",
+      "category": "clps",
+      "lat": 18.5623,
+      "lon": 61.8103,
+      "landed": "2025-03-02",
+      "source": "https://lroc.im-ldi.com/images/1407",
+      "source_note": "LROC: Blue Ghost lander at 18.5623N, 61.8103E (NASA/GSFC/Arizona State University). Landing date from Firefly Aerospace"
+    },
+    {
+      "id": "chandrayaan-2",
+      "name": "Chandrayaan-2 Vikram (impact site)",
+      "agency": "ISRO",
+      "mission": "Chandrayaan-2 Vikram",
+      "category": "other-nations",
+      "lat": -70.881,
+      "lon": 22.784,
+      "landed": null,
+      "source": "https://lroc.im-ldi.com/images/1131",
+      "source_note": "LROC: Vikram impact site at 70.8810S, 22.7840E (NASA/GSFC/Arizona State University). The lander crashed on 6 September 2019 (UTC), so this is where it hit, not a landing"
+    },
+    {
       "id": "chandrayaan-3",
       "name": "Chandrayaan-3 (Shiv Shakti point)",
       "agency": "ISRO",
@@ -24,6 +108,54 @@
       "landed": "2023-08-23",
       "source": "https://lroc.im-ldi.com/images/1314",
       "source_note": "LROC: Chandrayaan-3 Landing Site (NASA/GSFC/Arizona State University)"
+    },
+    {
+      "id": "change-3",
+      "name": "Chang'e 3 (Mare Imbrium)",
+      "agency": "CNSA",
+      "mission": "Chang'e 3",
+      "category": "other-nations",
+      "lat": 44.1214,
+      "lon": -19.5116,
+      "landed": "2013-12-14",
+      "source": "https://lroc.im-ldi.com/images/637",
+      "source_note": "LROC: Chang'e 3 lander at 44.1214N, 340.4884E (NASA/GSFC/Arizona State University)"
+    },
+    {
+      "id": "change-4",
+      "name": "Chang'e 4 (Von Karman crater, far side)",
+      "agency": "CNSA",
+      "mission": "Chang'e 4",
+      "category": "other-nations",
+      "lat": -45.4561,
+      "lon": 177.5885,
+      "landed": "2019-01-03",
+      "source": "https://lroc.im-ldi.com/images/1100",
+      "source_note": "LROC: Chang'e 4 lander at 45.4561S, 177.5885E (NASA/GSFC/Arizona State University)"
+    },
+    {
+      "id": "change-5",
+      "name": "Chang'e 5 (Mons Rumker region)",
+      "agency": "CNSA",
+      "mission": "Chang'e 5",
+      "category": "other-nations",
+      "lat": 43.0576,
+      "lon": -51.9161,
+      "landed": "2020-12-01",
+      "source": "https://lroc.im-ldi.com/images/1172",
+      "source_note": "LROC: Chang'e 5 lander at 43.0576N, 308.0839E, about 20 m accuracy (NASA/GSFC/Arizona State University)"
+    },
+    {
+      "id": "change-6",
+      "name": "Chang'e 6 (Apollo basin, far side)",
+      "agency": "CNSA",
+      "mission": "Chang'e 6",
+      "category": "other-nations",
+      "lat": -41.6385,
+      "lon": -153.9852,
+      "landed": "2024-06-01",
+      "source": "https://lroc.im-ldi.com/images/1374",
+      "source_note": "LROC: Chang'e 6 landing site at 41.6385S, 206.0148E (NASA/GSFC/Arizona State University)"
     },
     {
       "id": "im-1",
@@ -50,6 +182,30 @@
       "source_note": "LROC: IM-2 Landing Region, planned target. Athena touched down a few hundred metres away (see Landing Ellipse feature)"
     },
     {
+      "id": "luna-16",
+      "name": "Luna 16 (Mare Fecunditatis)",
+      "agency": "USSR",
+      "mission": "Luna 16",
+      "category": "other-nations",
+      "lat": -0.5137,
+      "lon": 56.3638,
+      "landed": "1970-09-20",
+      "source": "https://lroc.im-ldi.com/images/938",
+      "source_note": "LROC: Spacecraft Related Coordinates, 2016 Update (NASA/GSFC/Arizona State University); mean Earth/polar axis system, about 15 m uncertainty"
+    },
+    {
+      "id": "luna-17",
+      "name": "Luna 17 / Lunokhod 1 (Mare Imbrium)",
+      "agency": "USSR",
+      "mission": "Luna 17",
+      "category": "other-nations",
+      "lat": 38.23764,
+      "lon": -35.00163,
+      "landed": "1970-11-17",
+      "source": "https://lroc.im-ldi.com/images/938",
+      "source_note": "LROC: Spacecraft Related Coordinates, 2016 Update (NASA/GSFC/Arizona State University); mean Earth/polar axis system, about 15 m uncertainty. The lander's position; the same table puts the Lunokhod 1 rover's final position about 2.4 km to the north"
+    },
+    {
       "id": "shackleton-rim",
       "name": "Shackleton crater rim (best-lit point)",
       "agency": "-",
@@ -60,6 +216,30 @@
       "landed": null,
       "source": "https://pds-geosciences.wustl.edu/missions/lro/lola.htm",
       "source_note": "Best-lit rim point found by LunaHorizon (pipeline/best_lit_rim.py) from NASA LRO LOLA 20 m polar DEM: Sun centre visible 84.8% of hours 2026-2030 at 2 m height (any part of the Sun 90.4%). Crater centre and size from the IAU Gazetteer (planetarynames.wr.usgs.gov/Feature/5450). Comparable to Glaser et al. (2014, Icarus): 92.3% at the nearby connecting ridge"
+    },
+    {
+      "id": "slim",
+      "name": "SLIM (Shioli crater)",
+      "agency": "JAXA",
+      "mission": "SLIM",
+      "category": "other-nations",
+      "lat": -13.316,
+      "lon": 25.251,
+      "landed": "2024-01-19",
+      "source": "https://lroc.im-ldi.com/images/1358",
+      "source_note": "LROC: SLIM lander at 13.3160S, 25.2510E (NASA/GSFC/Arizona State University)"
+    },
+    {
+      "id": "surveyor-3",
+      "name": "Surveyor 3 (Ocean of Storms)",
+      "agency": "NASA",
+      "mission": "Surveyor 3",
+      "category": "nasa-robotic",
+      "lat": -3.0162,
+      "lon": -23.418,
+      "landed": "1967-04-20",
+      "source": "https://lroc.im-ldi.com/images/938",
+      "source_note": "LROC: Spacecraft Related Coordinates, 2016 Update (NASA/GSFC/Arizona State University); mean Earth/polar axis system, about 15 m uncertainty. Apollo 12 landed about 160 m away and brought parts of it back"
     }
   ]
 }

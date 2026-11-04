@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import shares from "@/data/site-shares.json";
 import { useDeferredValue, useMemo, useState } from "react";
 import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
@@ -23,6 +24,11 @@ import { useReducedMotion, useSkyPlayback, type SkyPlayback } from "./useSkyPlay
 
 const HOUR_MS = 3_600_000;
 const DAY_MS = 24 * HOUR_MS;
+
+/** Earth is never above this site's skyline in any hour of 2026-2030, from the pipeline's site shares. */
+function neverSeesEarth(id: string): boolean {
+  return (shares as Record<string, { earth: number }>)[id]?.earth === 0;
+}
 
 interface CountdownItemProps {
   name: string;
@@ -230,6 +236,19 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
         <CountdownItem name="Sun" outlook={outlook.sun} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="sunrise" sets="sunset" tone={styles.sun} />
       </section>
       <SkyTimeline rows={timeline} startMs={timeMs} shownMs={shownMs} cutMs={timelineCut(data.ephemeris, timeMs)} />
+      {site.id !== null && neverSeesEarth(site.id) && (
+        <p className={styles.note} data-testid="far-side-note">
+          Earth never rises at this site, so direct contact with Earth is impossible and there are no Golden hours. Landers on the
+          far side talk to Earth through a relay satellite in lunar orbit, which our Comms rule does not include.
+        </p>
+      )}
+      {site.id !== null && site.is_coarse_terrain && (
+        <p className={styles.note} data-testid="coarse-note">
+          The ground near this site comes from NASA&apos;s global LOLA map, whose pixels are 237 m wide, so close slopes are
+          smoothed. At Apollo 11, the one place we could compare it with a finer map, the two skylines differed by up to about
+          2°, mostly from ground within 1 km.
+        </p>
+      )}
       {data.heightAt && (
         <p className={styles.note}>
           This horizon is computed in your browser from NASA LOLA height tiles: full map detail close by, 480 m detail beyond

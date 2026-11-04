@@ -38,7 +38,7 @@ describe("parseValidation", () => {
     ["a difference larger than its figures", (f) => { f.sections[0].rows[0].diff_deg = 0.09; f.summary.max_angle_diff_deg = 0.09; }],
     ["a limit loosened to pass anything", (f) => { f.sections[1].rows[0].diff_deg = 5; f.sections[1].rows[0].tolerance_deg = 360; f.summary.max_angle_diff_deg = 5; }],
     ["a terrain limit loosened", (f) => { f.sections[3].rows[0].tolerance = 5000; }],
-    ["a percent difference off by most of a point", (f) => { f.sections[3].rows[1].diff = 1.0; }],
+    ["a percent difference off by most of a point", (f) => { f.sections[3].rows.find((row) => row.unit === "%")!.diff = 1.0; }],
     ["an unknown unit", (f) => { f.sections[3].rows[0].unit = "ft"; }],
     ["a site we do not know", (f) => { f.sections[1].rows[0].site = "mars-base"; }],
     ["a bad time on a row", (f) => { f.sections[1].rows[0].utc = "yesterday"; }],
@@ -57,12 +57,12 @@ describe("parseValidation", () => {
   });
 
   test.each([
-    ["metres", 3, 0, "tolerance", 150, "ours", 2729],
-    ["percent", 3, 1, "tolerance", 5, "ours", 87.3],
-  ])("a %s figure rounded onto its limit can still be a pass, as the pipeline judged it", (_, section, row, __, limit, field, value) => {
+    ["metres", "m", 150],
+    ["percent", "%", 5],
+  ])("a %s figure rounded onto its limit can still be a pass, as the pipeline judged it", (_, unit, limit) => {
     const file = parseValidation(edited((f) => {
-      const target = f.sections[section].rows[row];
-      target[field] = value;
+      const target = f.sections[3].rows.find((row) => row.unit === unit)!;
+      target.ours = (target.reference as number) + limit;
       target.diff = limit;
       target.pass = true;
     }));
@@ -114,7 +114,7 @@ describe("proofSections", () => {
   test("reads a terrain row with its unit and source", () => {
     expect(sections[3].rows[0]).toMatchObject({ ours: "2593 m", reference: "2579 m", difference: "14 m", limit: "150 m" });
     expect(sections[3].rows[0].source).toContain("LROC");
-    expect(sections[3].rows[1]).toMatchObject({ ours: "90.4 %", reference: "92.3 %", difference: "1.9 %", limit: "5 %" });
+    expect(sections[3].rows.find(({ limit }) => limit === "5 %")).toMatchObject({ ours: "90.4 %", reference: "92.3 %", difference: "1.9 %", limit: "5 %" });
   });
 
   test("counts its own passes, and plots angles only", () => {

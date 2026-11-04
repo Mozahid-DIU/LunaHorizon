@@ -10,11 +10,12 @@ import json
 
 import numpy as np
 
-from dem import source_for
+from dem import describe_maps, heights_and_maps
 from subpoints import MOON_RADIUS_KM, OUT_DIR
 
 MOON_RADIUS_M = MOON_RADIUS_KM * 1000
 MAX_DISTANCE_M = 150_000.0
+NEAR_DISTANCE_M = 2_000.0    # close ground, where a coarse map changes a skyline most
 FIRST_STEP_M = 10.0
 STEP_GROWTH = 1.002          # sample spacing grows 0.2% per step: ~20 m at 10 km, ~300 m at 150 km
 LANDER_HEIGHT_M = 2.0        # eye height of the lander's panels / antenna above the ground
@@ -54,6 +55,16 @@ def horizon_profile(lat, lon, height_fn, observer_height_m=LANDER_HEIGHT_M, n_az
     return np.nanmax(np.where(np.isfinite(elev), elev, -90.0), axis=1)
 
 
+def maps_for(lat: float, lon: float, max_distance_m: float = MAX_DISTANCE_M) -> str:
+    """Credit for the maps under every ray of a site out to max_distance_m, from where the rays fall."""
+    dist = _distances()
+    lats, lons = destination(lat, lon, np.arange(360.0)[:, None], dist[dist <= max_distance_m][None, :])
+    heights, used = heights_and_maps(np.append(lats.ravel(), lat), np.append(lons.ravel(), lon))
+    if not np.all(np.isfinite(heights)):
+        raise ValueError(f"part of the horizon around {lat}, {lon} has no elevation map")
+    return describe_maps(used)
+
+
 def build_site(site: dict, height_fn) -> dict:
     profile = horizon_profile(site["lat"], site["lon"], height_fn)
     return {
@@ -65,7 +76,8 @@ def build_site(site: dict, height_fn) -> dict:
         "max_distance_km": MAX_DISTANCE_M / 1000,
         "az_step_deg": 1,
         "elevation_deg": np.round(profile, 3).tolist(),
-        "source": source_for(site["lat"]),
+        "source": maps_for(site["lat"], site["lon"]),
+        "near_source": maps_for(site["lat"], site["lon"], NEAR_DISTANCE_M),
     }
 
 

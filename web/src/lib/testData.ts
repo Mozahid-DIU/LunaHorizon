@@ -29,3 +29,10 @@ export function loadProfile(siteId: string): number[] {
   }
   return readJson<{ elevation_deg: number[] }>("horizon", `${siteId}.json`).elevation_deg;
 }
+
+/**
+ * Sites for the slow tests of the engine's own logic, which does not change from site to site:
+ * the five demo sites, one far-side site and one whose close ground uses the coarse global map. Tests
+ * that compare a site's own data files still run for every site.
+ */
+export const REPRESENTATIVE_SITES: readonly string[] = ["apollo-11", "apollo-12", "chandrayaan-3", "change-4", "im-1", "im-2", "shackleton-rim"];

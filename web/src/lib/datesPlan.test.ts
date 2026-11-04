@@ -84,7 +84,18 @@ describe("nearbySites", () => {
   });
 
   test("a far site is not nearby", () => {
-    expect(nearbySites(findSite("apollo-11")!)).toEqual([]);
+    // Chang'e 4 sits alone on the far side
+    expect(nearbySites(findSite("change-4")!)).toEqual([]);
+  });
+
+  test("a site in the same landing area is not offered as an alternative", () => {
+    // Apollo 12 landed about 160 m from Surveyor 3
+    expect(nearbySites(findSite("apollo-12")!).map(({ site: s }) => s.id)).not.toContain("surveyor-3");
+    expect(nearbySites(findSite("surveyor-3")!).map(({ site: s }) => s.id)).not.toContain("apollo-12");
+  });
+
+  test("equatorial sites can be near each other too", () => {
+    expect(nearbySites(findSite("apollo-11")!).map(({ site: s }) => s.id)).toEqual(["apollo-16", "slim"]);
   });
 
   test("a custom point on a curated site does not list that site as nearby", () => {

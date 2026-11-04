@@ -68,17 +68,17 @@ test("adding, changing and removing columns updates the address", async ({ page 
   await add(page).click();
   await expect(page).toHaveURL(/\?with=apollo-11$/);
   await add(page).click();
-  await expect(page).toHaveURL(/\?with=apollo-11&with=chandrayaan-3$/);
+  await expect(page).toHaveURL(/\?with=apollo-11&with=apollo-12$/);
   await expect(add(page)).toHaveCount(0);
 
   await page.getByLabel("Site in column 2").selectOption("im-2");
-  await expect(page).toHaveURL(/\?with=im-2&with=chandrayaan-3$/);
+  await expect(page).toHaveURL(/\?with=im-2&with=apollo-12$/);
   await page.getByLabel("Date in column 3, UTC").fill("2028-02-29T12:00");
-  await expect(page).toHaveURL(/\?with=im-2&with=chandrayaan-3@2028-02-29T12:00Z$/);
+  await expect(page).toHaveURL(/\?with=im-2&with=apollo-12@2028-02-29T12:00Z$/);
 
   await page.getByRole("button", { name: "Remove column 2" }).click();
-  await expect(page).toHaveURL(/\?with=chandrayaan-3@2028-02-29T12:00Z$/);
-  await expect(card(page, "Chandrayaan-3")).toContainText("29 Feb 2028");
+  await expect(page).toHaveURL(/\?with=apollo-12@2028-02-29T12:00Z$/);
+  await expect(card(page, "Apollo 12")).toContainText("29 Feb 2028");
 });
 
 test.describe("on a slow connection", () => {
@@ -98,7 +98,7 @@ test.describe("on a slow connection", () => {
   test("a quick second change keeps the first one", async ({ page }) => {
     await add(page).click();
     await add(page).click();
-    await expect(page).toHaveURL(/\?with=apollo-11&with=chandrayaan-3$/);
+    await expect(page).toHaveURL(/\?with=apollo-11&with=apollo-12$/);
     expect(delayed).toBeGreaterThan(0);
   });
 
@@ -106,7 +106,7 @@ test.describe("on a slow connection", () => {
     await add(page).click();
     await add(page).click();
     await add(page).click({ timeout: 500 }).catch(() => {});
-    await expect(page).toHaveURL(/\?with=apollo-11&with=chandrayaan-3$/);
+    await expect(page).toHaveURL(/\?with=apollo-11&with=apollo-12$/);
     await expect(page.getByText("Compare shows three columns")).toHaveCount(0);
   });
 

@@ -21,7 +21,7 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Curated sites with official sources** (NSSDCA, LROC, IAU Gazetteer) and **hourly Sun/Earth sub-points 2026–2030**: any site's az/el reproduces the full SPICE result within 0.00003°
 - [x] **Terrain horizons** for all 5 demo sites from LRO LOLA and SLDEM2015 (NASA LOLA + JAXA Kaguya)
 - [x] **Calculation engine:** power, comms and Golden windows; sunset/Earthset countdown; best dates and slip planner; battery simulation; landing ellipse data; 3D terrain tiles; Golden Window Map data
-- [x] **58 validation checks** against JPL Horizons and published data, all passing
+- [x] **128 validation checks** against JPL Horizons, LROC and published data, all passing
 - [x] **Website foundation:** nine pages, desktop and phone navigation, checked data loading, shareable site and date links, and a live deployment
 - [x] **Atlas:** south polar relief map from LOLA, Golden / Sunlight / Earth layers, site pins and a site card computed from each site's own horizon
 - [x] **Sky View:** the lander's view of each site, with the Sun and Earth over the real skyline
@@ -33,6 +33,7 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Dates:** the best landings in the next 12 months, and what a delay or a nearby site would change, searched in the background
 - [x] **Proof:** every validation check with its difference and limit, read straight from `validation.json`
 - [x] **Plain-language summary:** rule-based from the engine's numbers, with an optional AI rewording whose numbers are checked
+- [x] **20 curated sites:** Apollo 11–17 (except 13), Chang'e 3–6 (two on the far side), SLIM, Blue Ghost 1, Luna 16 and 17, Surveyor 3, Chandrayaan-2 and -3, IM-1, IM-2 and the Shackleton rim, each with an official source and a terrain horizon; 11 landers' ground heights checked against LROC
 - [ ] Website features (power, ellipse, 3D view)
 
 📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)

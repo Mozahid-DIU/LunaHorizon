@@ -2,8 +2,8 @@ import { describe, expect, test } from "vitest";
 import reference from "./__fixtures__/windows.json";
 import { DATA_END_MS } from "./dataRange";
 import { DEFAULT_TIME_MS } from "./selection";
-import { findSite, SITES } from "./sites";
-import { loadEphemeris, loadProfile } from "./testData";
+import { findSite } from "./sites";
+import { loadEphemeris, loadProfile, REPRESENTATIVE_SITES } from "./testData";
 import { axisPercent, formatEdge, formatHours, TIMELINE_DAYS, TIMELINE_TICKS, timelineCut, timelineRows } from "./timeline";
 import { findWindows } from "./windows";
 
@@ -17,7 +17,7 @@ describe("timelineRows", () => {
     expect(rows.map((row) => row.label)).toEqual(["Sun", "Earth", "DSN", "Comms", "Golden"]);
   });
 
-  test.each(SITES.map((site) => site.id))("%s: every edge equals findWindows", (id) => {
+  test.each(REPRESENTATIVE_SITES)("%s: every edge equals findWindows", (id) => {
     const site = findSite(id)!;
     const profile = loadProfile(id);
     for (const start of [Date.UTC(2027, 0, 3, 5), DEFAULT_TIME_MS]) {

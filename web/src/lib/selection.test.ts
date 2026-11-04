@@ -161,8 +161,11 @@ describe("formatUtc", () => {
 });
 
 describe("sites", () => {
-  it("lists the five demo sites, all with terrain", () => {
-    expect(SITES.map((s) => s.id).sort()).toEqual(["apollo-11", "chandrayaan-3", "im-1", "im-2", "shackleton-rim"]);
+  it("lists the twenty curated sites, all with terrain", () => {
+    expect(SITES).toHaveLength(20);
+    for (const id of ["apollo-11", "chandrayaan-3", "im-1", "im-2", "shackleton-rim", "change-4", "slim", "blue-ghost-1"]) {
+      expect(SITES.map((s) => s.id)).toContain(id);
+    }
     expect(SITES.every((s) => s.has_terrain)).toBe(true);
   });
 });

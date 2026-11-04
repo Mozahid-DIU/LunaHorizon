@@ -488,3 +488,19 @@ test("nothing overflows, at any supported width", async ({ page, isMobile }) => 
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   }
 });
+
+test("a site on the coarse global map says so, and a fine-map site does not", async ({ page }) => {
+  await page.goto("/sky?site=change-4");
+  await expect(page.getByTestId("coarse-note")).toContainText("237 m wide");
+  await page.goto("/sky?site=apollo-16");
+  await expect(page.getByRole("region", { name: "Countdown" })).toBeVisible();
+  await expect(page.getByTestId("coarse-note")).toHaveCount(0);
+});
+
+test("a far-side site explains why it has no Golden hours", async ({ page }) => {
+  await page.goto("/sky?site=change-6");
+  await expect(page.getByTestId("far-side-note")).toContainText("relay satellite");
+  await page.goto("/sky?site=apollo-12");
+  await expect(page.getByRole("region", { name: "Countdown" })).toBeVisible();
+  await expect(page.getByTestId("far-side-note")).toHaveCount(0);
+});

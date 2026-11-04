@@ -96,6 +96,9 @@ def build_terrain(site: dict, height_fn) -> tuple[dict, bytes]:
     return manifest, b"".join(chunks)
 
 
+TERRAIN_MAX_LAT = -80.0
+
+
 def main() -> None:
     from dem import height_m
     from sites import load_sites
@@ -103,8 +106,9 @@ def main() -> None:
     out = OUT_DIR / "terrain"
     out.mkdir(parents=True, exist_ok=True)
     for site in load_sites():
-        if not np.isfinite(height_m(np.array([site["lat"]]), np.array([site["lon"]]))[0]):
-            print(f"skip {site['id']}: outside LOLA polar coverage")
+        # 3D tiles are built from the fine polar maps only
+        if site["lat"] > TERRAIN_MAX_LAT:
+            print(f"skip {site['id']}: outside the fine LOLA polar maps")
             continue
         manifest, blob = build_terrain(site, height_m)
         (out / f"{site['id']}.bin").write_bytes(blob)

@@ -4,8 +4,8 @@ import { countdown } from "./countdown";
 import { missionScore } from "./planning";
 import { DEFAULT_TIME_MS } from "./selection";
 import { formatCoordinates, formatDays, formatDuration, MISSION_DAYS, siteSummary } from "./siteSummary";
-import { findSite, SITES } from "./sites";
-import { loadEphemeris, loadProfile } from "./testData";
+import { findSite } from "./sites";
+import { loadEphemeris, loadProfile, REPRESENTATIVE_SITES } from "./testData";
 import { findWindows } from "./windows";
 
 const DAY_MS = 86_400_000;
@@ -26,7 +26,7 @@ describe("siteSummary", () => {
     expect(formatDuration(summary.sun.eventMs! - DEFAULT_TIME_MS)).toBe("22d 22h");
   });
 
-  test.each(SITES.map((site) => site.id))("%s equals the engine at several dates", (id) => {
+  test.each(REPRESENTATIVE_SITES)("%s equals the engine at several dates", (id) => {
     const site = findSite(id)!;
     const siteProfile = loadProfile(id);
     for (const landingMs of [Date.UTC(2027, 0, 3, 5), Date.UTC(2027, 5, 18, 12), Date.UTC(2027, 11, 25, 23)]) {

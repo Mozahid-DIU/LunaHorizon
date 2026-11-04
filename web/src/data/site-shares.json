@@ -4,10 +4,65 @@
   "earth": 1000,
   "golden": 486
  },
+ "apollo-12": {
+  "lit": 501,
+  "earth": 1000,
+  "golden": 492
+ },
+ "apollo-14": {
+  "lit": 492,
+  "earth": 1000,
+  "golden": 484
+ },
+ "apollo-15": {
+  "lit": 472,
+  "earth": 1000,
+  "golden": 464
+ },
+ "apollo-16": {
+  "lit": 496,
+  "earth": 1000,
+  "golden": 487
+ },
+ "apollo-17": {
+  "lit": 477,
+  "earth": 1000,
+  "golden": 470
+ },
+ "blue-ghost-1": {
+  "lit": 499,
+  "earth": 1000,
+  "golden": 491
+ },
+ "chandrayaan-2": {
+  "lit": 467,
+  "earth": 1000,
+  "golden": 460
+ },
  "chandrayaan-3": {
   "lit": 478,
   "earth": 1000,
   "golden": 471
+ },
+ "change-3": {
+  "lit": 501,
+  "earth": 1000,
+  "golden": 492
+ },
+ "change-4": {
+  "lit": 494,
+  "earth": 0,
+  "golden": 0
+ },
+ "change-5": {
+  "lit": 502,
+  "earth": 1000,
+  "golden": 494
+ },
+ "change-6": {
+  "lit": 500,
+  "earth": 0,
+  "golden": 0
  },
  "im-1": {
   "lit": 395,
@@ -19,9 +74,29 @@
   "earth": 815,
   "golden": 369
  },
+ "luna-16": {
+  "lit": 496,
+  "earth": 1000,
+  "golden": 488
+ },
+ "luna-17": {
+  "lit": 499,
+  "earth": 1000,
+  "golden": 490
+ },
  "shackleton-rim": {
   "lit": 848,
   "earth": 528,
   "golden": 454
+ },
+ "slim": {
+  "lit": 477,
+  "earth": 1000,
+  "golden": 469
+ },
+ "surveyor-3": {
+  "lit": 501,
+  "earth": 1000,
+  "golden": 492
  }
 }

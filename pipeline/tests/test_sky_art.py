@@ -45,17 +45,51 @@ def test_terrain_appears_only_towards_the_wall_and_only_up_to_its_angle():
     assert south[el > 1].max() == 0
 
 
+def test_the_art_reaches_above_every_published_skyline():
+    highest = max(max(json.loads((OUT_DIR / "horizon" / f"{s['id']}.json").read_text())["elevation_deg"]) for s in load_sites())
+    assert EL_TOP > highest + 1
+
+
+def _skyline_at(lat: float, lon: float, azimuths: np.ndarray) -> np.ndarray:
+    """The terrain skyline in exactly these directions, from the same maps and geometry as horizon.py."""
+    from dem import height_m
+    from horizon import LANDER_HEIGHT_M, MOON_RADIUS_M, _distances, destination
+
+    dist = _distances()
+    lats, lons = destination(lat, lon, azimuths[:, None], dist[None, :])
+    heights = height_m(lats.ravel(), lons.ravel()).reshape(lats.shape)
+    r_obs = MOON_RADIUS_M + height_m(np.array([lat]), np.array([lon]))[0] + LANDER_HEIGHT_M
+    theta = dist / MOON_RADIUS_M
+    elev = np.degrees(np.arctan2((MOON_RADIUS_M + heights) * np.cos(theta) - r_obs, (MOON_RADIUS_M + heights) * np.sin(theta)))
+    return np.nanmax(elev, axis=1)
+
+
 @pytest.mark.parametrize("site", load_sites(), ids=lambda s: s["id"])
-def test_the_top_of_each_image_follows_the_published_horizon(site):
+def test_the_top_of_each_image_follows_the_skyline(site):
     image = np.asarray(Image.open(OUT_DIR / "sky" / f"{site['id']}.webp").convert("L"))
-    profile = json.loads((OUT_DIR / "horizon" / f"{site['id']}.json").read_text())["elevation_deg"]
     rows = row_elevations(HEIGHT_PX)
     columns = np.arange(0, WIDTH_PX, 8)
     top = rows[np.argmax(image[:, columns] > 8, axis=0)]
     azimuths = column_azimuths(WIDTH_PX)[columns]
-    expected = np.interp(azimuths, np.arange(361), [*profile, profile[0]])
+    expected = _skyline_at(site["lat"], site["lon"], azimuths)
     assert abs(np.mean(top - expected)) < 0.05
-    assert np.max(np.abs(top - expected)) < 0.6
+    # WebP compression blurs a steep skyline edge upward a little (0.47 degrees at Apollo 17's
+    # massif); the page trims the art to the engine's horizon, so this is never shown
+    assert np.max(np.abs(top - expected)) < 0.5
+
+
+@pytest.mark.parametrize("site", load_sites(), ids=lambda s: s["id"])
+def test_the_published_one_degree_horizon_stays_close_between_its_samples(site):
+    """The engine reads the skyline every 1 degree and joins the points with straight lines.
+
+    A sharp peak between two samples is lowered by that. This measures how much, so the limit is
+    known: it matters only in steep terrain such as the Apollo 17 valley.
+    """
+    profile = json.loads((OUT_DIR / "horizon" / f"{site['id']}.json").read_text())["elevation_deg"]
+    azimuths = np.arange(0.5, 360, 1.0)
+    between = _skyline_at(site["lat"], site["lon"], azimuths)
+    joined = np.interp(azimuths, np.arange(361), [*profile, profile[0]])
+    assert np.max(np.abs(between - joined)) < 0.8
 
 
 def test_metadata_given_to_the_website_is_up_to_date():

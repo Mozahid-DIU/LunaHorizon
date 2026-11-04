@@ -4,7 +4,7 @@ import pytest
 from sites import load_sites
 
 REQUIRED = {"id", "name", "agency", "mission", "category", "lat", "lon", "source", "source_note"}
-CATEGORIES = {"apollo", "clps", "other-nations", "artemis"}
+CATEGORIES = {"apollo", "clps", "other-nations", "artemis", "nasa-robotic"}
 
 
 def test_demo_sites_present():

@@ -10,7 +10,7 @@ def test_site_list_copies_each_curated_site_exactly():
     exported = build_site_list(load_sites())
     assert [s["id"] for s in exported] == [s["id"] for s in load_sites()]
     for out, source in zip(exported, load_sites()):
-        assert set(out) == set(FIELDS) | {"has_terrain"}
+        assert set(out) == set(FIELDS) | {"has_terrain", "is_coarse_terrain"}
         assert all(out[key] == source.get(key) for key in FIELDS)
 
 
@@ -19,6 +19,18 @@ def test_terrain_flag_follows_the_horizon_file():
     exported = {s["id"]: s for s in build_site_list(sites)}
     assert exported["not-a-real-site"]["has_terrain"] is False
     assert exported["im-2"]["has_terrain"] is True
+
+
+def test_coarse_flag_marks_sites_whose_close_ground_is_on_the_global_map():
+    exported = {s["id"]: s for s in build_site_list(load_sites())}
+    assert exported["change-4"]["is_coarse_terrain"] is True
+    assert exported["apollo-12"]["is_coarse_terrain"] is True
+    # Apollo 15's far rays reach the global map, but its close ground is on SLDEM2015
+    for fine in ("apollo-11", "apollo-15", "apollo-16", "apollo-17", "slim", "shackleton-rim", "chandrayaan-2"):
+        assert exported[fine]["is_coarse_terrain"] is False, fine
+    for site in exported.values():
+        horizon = json.loads((OUT_DIR / "horizon" / f"{site['id']}.json").read_text())
+        assert site["is_coarse_terrain"] == ("global map" in horizon["near_source"])
 
 
 def test_file_in_the_website_is_up_to_date():

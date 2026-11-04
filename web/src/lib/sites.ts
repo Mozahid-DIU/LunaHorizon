@@ -12,6 +12,8 @@ export interface CuratedSite {
   landed: string | null;
   source: string;
   has_terrain: boolean;
+  /** Part of the horizon comes from LOLA's 237 m global map, which smooths close ground. */
+  is_coarse_terrain: boolean;
 }
 
 export interface CustomSite {

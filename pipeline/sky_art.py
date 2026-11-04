@@ -19,7 +19,7 @@ from subpoints import OUT_DIR
 
 SOFTNESS_DEG = 4.0
 EL_BOTTOM = -8.0
-EL_TOP = 12.0              # above the highest skyline of any demo site (IM-1, 10.9 degrees)
+EL_TOP = 16.0              # above the highest skyline of any curated site (Apollo 17, 14.2 degrees)
 WIDTH_PX = 2880
 HEIGHT_PX = 640
 QUALITY = 60

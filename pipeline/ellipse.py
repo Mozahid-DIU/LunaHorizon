@@ -17,6 +17,9 @@ RINGS_M = (100, 500, 1000)
 BEARINGS_DEG = (0, 45, 90, 135, 180, 225, 270, 315)
 
 
+ELLIPSE_MAX_LAT = -80.0
+
+
 def ellipse_points(lat: float, lon: float) -> list[dict]:
     """The target first, then each ring from north through east."""
     points = [{"ring_m": 0, "bearing_deg": 0, "lat": lat, "lon": lon}]
@@ -60,8 +63,9 @@ def main() -> None:
     out = OUT_DIR / "horizon"
     out.mkdir(parents=True, exist_ok=True)
     for site in load_sites():
-        if not np.isfinite(height_m(np.array([site["lat"]]), np.array([site["lon"]]))[0]):
-            print(f"skip {site['id']}: outside LOLA polar coverage")
+        # the 25 points need the fine polar maps; the global map is too coarse for metres apart
+        if site["lat"] > ELLIPSE_MAX_LAT:
+            print(f"skip {site['id']}: outside the fine LOLA polar maps")
             continue
         try:
             data = build_ellipse(site, height_m)

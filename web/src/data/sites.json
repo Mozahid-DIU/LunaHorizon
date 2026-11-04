@@ -9,7 +9,99 @@
   "lon": 23.47314,
   "landed": "1969-07-20",
   "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
-  "has_terrain": true
+  "has_terrain": true,
+  "is_coarse_terrain": false
+ },
+ {
+  "id": "apollo-12",
+  "name": "Apollo 12 (Ocean of Storms)",
+  "agency": "NASA",
+  "mission": "Apollo 12",
+  "category": "apollo",
+  "lat": -3.0128,
+  "lon": -23.4219,
+  "landed": "1969-11-19",
+  "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+  "has_terrain": true,
+  "is_coarse_terrain": true
+ },
+ {
+  "id": "apollo-14",
+  "name": "Apollo 14 (Fra Mauro)",
+  "agency": "NASA",
+  "mission": "Apollo 14",
+  "category": "apollo",
+  "lat": -3.64589,
+  "lon": -17.47194,
+  "landed": "1971-02-05",
+  "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+  "has_terrain": true,
+  "is_coarse_terrain": true
+ },
+ {
+  "id": "apollo-15",
+  "name": "Apollo 15 (Hadley-Apennine)",
+  "agency": "NASA",
+  "mission": "Apollo 15",
+  "category": "apollo",
+  "lat": 26.13239,
+  "lon": 3.6333,
+  "landed": "1971-07-30",
+  "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+  "has_terrain": true,
+  "is_coarse_terrain": false
+ },
+ {
+  "id": "apollo-16",
+  "name": "Apollo 16 (Descartes Highlands)",
+  "agency": "NASA",
+  "mission": "Apollo 16",
+  "category": "apollo",
+  "lat": -8.9734,
+  "lon": 15.5011,
+  "landed": "1972-04-21",
+  "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+  "has_terrain": true,
+  "is_coarse_terrain": false
+ },
+ {
+  "id": "apollo-17",
+  "name": "Apollo 17 (Taurus-Littrow)",
+  "agency": "NASA",
+  "mission": "Apollo 17",
+  "category": "apollo",
+  "lat": 20.1911,
+  "lon": 30.7723,
+  "landed": "1972-12-11",
+  "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+  "has_terrain": true,
+  "is_coarse_terrain": false
+ },
+ {
+  "id": "blue-ghost-1",
+  "name": "Blue Ghost Mission 1 (Mare Crisium)",
+  "agency": "NASA CLPS / Firefly Aerospace",
+  "mission": "Blue Ghost Mission 1",
+  "category": "clps",
+  "lat": 18.5623,
+  "lon": 61.8103,
+  "landed": "2025-03-02",
+  "source": "https://lroc.im-ldi.com/images/1407",
+  "has_terrain": true,
+  "is_coarse_terrain": true
+ },
+ {
+  "id": "chandrayaan-2",
+  "name": "Chandrayaan-2 Vikram (impact site)",
+  "agency": "ISRO",
+  "mission": "Chandrayaan-2 Vikram",
+  "category": "other-nations",
+  "lat": -70.881,
+  "lon": 22.784,
+  "landed": null,
+  "source": "https://lroc.im-ldi.com/images/1131",
+  "has_terrain": true,
+  "is_coarse_terrain": false
  },
  {
   "id": "chandrayaan-3",
@@ -21,7 +113,60 @@
   "lon": 32.32,
   "landed": "2023-08-23",
   "source": "https://lroc.im-ldi.com/images/1314",
-  "has_terrain": true
+  "has_terrain": true,
+  "is_coarse_terrain": false
+ },
+ {
+  "id": "change-3",
+  "name": "Chang'e 3 (Mare Imbrium)",
+  "agency": "CNSA",
+  "mission": "Chang'e 3",
+  "category": "other-nations",
+  "lat": 44.1214,
+  "lon": -19.5116,
+  "landed": "2013-12-14",
+  "source": "https://lroc.im-ldi.com/images/637",
+  "has_terrain": true,
+  "is_coarse_terrain": true
+ },
+ {
+  "id": "change-4",
+  "name": "Chang'e 4 (Von Karman crater, far side)",
+  "agency": "CNSA",
+  "mission": "Chang'e 4",
+  "category": "other-nations",
+  "lat": -45.4561,
+  "lon": 177.5885,
+  "landed": "2019-01-03",
+  "source": "https://lroc.im-ldi.com/images/1100",
+  "has_terrain": true,
+  "is_coarse_terrain": true
+ },
+ {
+  "id": "change-5",
+  "name": "Chang'e 5 (Mons Rumker region)",
+  "agency": "CNSA",
+  "mission": "Chang'e 5",
+  "category": "other-nations",
+  "lat": 43.0576,
+  "lon": -51.9161,
+  "landed": "2020-12-01",
+  "source": "https://lroc.im-ldi.com/images/1172",
+  "has_terrain": true,
+  "is_coarse_terrain": true
+ },
+ {
+  "id": "change-6",
+  "name": "Chang'e 6 (Apollo basin, far side)",
+  "agency": "CNSA",
+  "mission": "Chang'e 6",
+  "category": "other-nations",
+  "lat": -41.6385,
+  "lon": -153.9852,
+  "landed": "2024-06-01",
+  "source": "https://lroc.im-ldi.com/images/1374",
+  "has_terrain": true,
+  "is_coarse_terrain": true
  },
  {
   "id": "im-1",
@@ -33,7 +178,8 @@
   "lon": 1.44,
   "landed": "2024-02-22",
   "source": "https://lroc.im-ldi.com/images/1360",
-  "has_terrain": true
+  "has_terrain": true,
+  "is_coarse_terrain": false
  },
  {
   "id": "im-2",
@@ -45,7 +191,34 @@
   "lon": 29.13,
   "landed": "2025-03-06",
   "source": "https://lroc.im-ldi.com/images/1401",
-  "has_terrain": true
+  "has_terrain": true,
+  "is_coarse_terrain": false
+ },
+ {
+  "id": "luna-16",
+  "name": "Luna 16 (Mare Fecunditatis)",
+  "agency": "USSR",
+  "mission": "Luna 16",
+  "category": "other-nations",
+  "lat": -0.5137,
+  "lon": 56.3638,
+  "landed": "1970-09-20",
+  "source": "https://lroc.im-ldi.com/images/938",
+  "has_terrain": true,
+  "is_coarse_terrain": true
+ },
+ {
+  "id": "luna-17",
+  "name": "Luna 17 / Lunokhod 1 (Mare Imbrium)",
+  "agency": "USSR",
+  "mission": "Luna 17",
+  "category": "other-nations",
+  "lat": 38.23764,
+  "lon": -35.00163,
+  "landed": "1970-11-17",
+  "source": "https://lroc.im-ldi.com/images/938",
+  "has_terrain": true,
+  "is_coarse_terrain": true
  },
  {
   "id": "shackleton-rim",
@@ -57,6 +230,33 @@
   "lon": -156.18,
   "landed": null,
   "source": "https://pds-geosciences.wustl.edu/missions/lro/lola.htm",
-  "has_terrain": true
+  "has_terrain": true,
+  "is_coarse_terrain": false
+ },
+ {
+  "id": "slim",
+  "name": "SLIM (Shioli crater)",
+  "agency": "JAXA",
+  "mission": "SLIM",
+  "category": "other-nations",
+  "lat": -13.316,
+  "lon": 25.251,
+  "landed": "2024-01-19",
+  "source": "https://lroc.im-ldi.com/images/1358",
+  "has_terrain": true,
+  "is_coarse_terrain": false
+ },
+ {
+  "id": "surveyor-3",
+  "name": "Surveyor 3 (Ocean of Storms)",
+  "agency": "NASA",
+  "mission": "Surveyor 3",
+  "category": "nasa-robotic",
+  "lat": -3.0162,
+  "lon": -23.418,
+  "landed": "1967-04-20",
+  "source": "https://lroc.im-ldi.com/images/938",
+  "has_terrain": true,
+  "is_coarse_terrain": true
  }
 ]

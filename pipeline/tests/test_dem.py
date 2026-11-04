@@ -57,5 +57,7 @@ def test_outside_coverage_is_nan():
 
 @pytest.mark.skipif(not all((LOLA_DIR / f"{t}.img").exists() for t in SLDEM_TILES), reason="SLDEM2015 not downloaded")
 def test_height_picks_finest_available():
-    assert not np.isnan(height_m(np.array([-76.0]), np.array([10.0]))[0])
-    assert np.isnan(height_m(np.array([-50.0]), np.array([10.0]))[0])
+    from dem import heights_and_maps
+
+    heights, used = heights_and_maps(np.array([-76.0]), np.array([10.0]))
+    assert np.isfinite(heights[0]) and used == ["ldem_75s_120m"]

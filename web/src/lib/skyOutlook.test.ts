@@ -4,8 +4,8 @@ import { DATA_END_MS } from "./dataRange";
 import { DEFAULT_TIME_MS } from "./selection";
 import { eventWindows, goldenStatus, outlookAt, skyHeadline, skyDataEnd } from "./skyOutlook";
 import { outlookFrom } from "./siteSummary";
-import { findSite, SITES } from "./sites";
-import { loadEphemeris, loadProfile } from "./testData";
+import { findSite } from "./sites";
+import { loadEphemeris, loadProfile, REPRESENTATIVE_SITES } from "./testData";
 import { stateAt, type SiteState } from "./windows";
 
 const HOUR_MS = 3_600_000;
@@ -15,7 +15,7 @@ const UP = { lit: true, earthVisible: true };
 const DOWN = { lit: false, earthVisible: false };
 
 describe("outlookAt", () => {
-  test.each(SITES.map((site) => site.id))("%s: every frame agrees with the engine's countdown", (id) => {
+  test.each(REPRESENTATIVE_SITES)("%s: every frame agrees with the engine's countdown", (id) => {
     const site = findSite(id)!;
     const profile = loadProfile(id);
     for (const startMs of [Date.UTC(2027, 0, 3, 5), DEFAULT_TIME_MS - 200 * DAY_MS, Date.UTC(2027, 7, 18, 12)]) {

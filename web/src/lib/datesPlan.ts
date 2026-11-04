@@ -15,6 +15,8 @@ export const SEARCH_DAYS = 365;
 export const BEST_COUNT = 5;
 export const SLIP_DAYS: readonly number[] = [1, 7, 30];
 export const NEARBY_KM = 500;
+/** Closer than this is the same landing area, such as Apollo 12 beside Surveyor 3. */
+export const SAME_AREA_KM = 1;
 export const NEARBY_COUNT = 3;
 
 const DAY_MS = 86_400_000;
@@ -69,7 +71,7 @@ export interface NearbySite {
 export function nearbySites(site: SelectedSite, list: readonly CuratedSite[] = SITES): NearbySite[] {
   return list
     .map((candidate) => ({ site: candidate, km: distanceKm(site, candidate) }))
-    .filter(({ km }) => km > 0 && km <= NEARBY_KM)
+    .filter(({ km }) => km >= SAME_AREA_KM && km <= NEARBY_KM)
     .sort((a, b) => a.km - b.km)
     .slice(0, NEARBY_COUNT);
 }

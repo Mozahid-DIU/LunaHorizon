@@ -115,7 +115,8 @@ test("changing the site stops the old search", async ({ page }) => {
 });
 
 test("a far site has no nearby rows, and says what nearby means", async ({ page }) => {
-  await page.goto("/dates?site=apollo-11");
+  // Chang'e 4 sits alone on the far side; no other listed site is within 500 km
+  await page.goto("/dates?site=change-4");
   await ready(page);
   await expect(page.getByRole("rowheader", { name: /km away/ })).toHaveCount(0);
   await expect(page.getByText("within 500 km")).toBeVisible();

@@ -3,17 +3,19 @@
 Nested LOLA polar grids, fine near the pole and coarser farther out, keep a 150 km horizon ray
 from any south polar site on LOLA data. Two SLDEM2015 tiles (LOLA + JAXA SELENE/Kaguya, 512
 pixels per degree) cover 30 S to 30 N, 0 to 45 E for Apollo 11; it straddles the equator.
+The LOLA global map (128 pixels per degree, about 2 GB) covers every other site.
 Usage: python get_dem.py
 """
 from pathlib import Path
 
 import requests
 
-from dem import LOLA_DIR, PRODUCTS, SLDEM_TILES
+from dem import GLOBAL, LOLA_DIR, PRODUCTS, SLDEM_TILES
 
 PDS = "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data"
 POLAR = f"{PDS}/lola_gdr/polar/img"
 TILES = f"{PDS}/sldem2015/tiles/float_img"
+CYLINDRICAL = f"{PDS}/lola_gdr/cylindrical/img"
 DEST = LOLA_DIR
 CHUNK = 1 << 20
 
@@ -42,7 +44,7 @@ def download(url: str, target: Path) -> None:
 
 def main() -> None:
     DEST.mkdir(parents=True, exist_ok=True)
-    for base, name in [(POLAR, p) for p in PRODUCTS] + [(TILES, t) for t in SLDEM_TILES]:
+    for base, name in [(POLAR, p) for p in PRODUCTS] + [(TILES, t) for t in SLDEM_TILES] + [(CYLINDRICAL, g) for g in GLOBAL]:
         for ext in ("lbl", "img"):
             download(f"{base}/{name}.{ext}", DEST / f"{name}.{ext}")
 

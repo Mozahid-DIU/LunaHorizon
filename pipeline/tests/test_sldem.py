@@ -4,8 +4,8 @@ import json
 import numpy as np
 import pytest
 
-from dem import LOLA_DIR, PRODUCTS, SLDEM_TILES, TileDem, height_m, load_dem, load_tile, source_for
-from horizon import horizon_profile
+from dem import LOLA_DIR, PRODUCTS, SLDEM_TILES, TileDem, height_m, load_dem, load_tile
+from horizon import horizon_profile, maps_for
 from subpoints import OUT_DIR
 
 APOLLO_11 = (0.67416, 23.47314)
@@ -62,21 +62,13 @@ def test_outside_a_tile_is_nan():
     assert np.isnan(dem.height(np.array([1.0]), np.array([12.1]))[0])
 
 
-def test_each_site_names_the_map_it_uses():
-    assert "SLDEM2015" in source_for(APOLLO_11[0])
-    assert "ldem_60s_240m" in source_for(CHANDRAYAAN_3[0])
-    assert source_for(-85.0) == "NASA LRO LOLA polar DEMs (ldem_875s_20m, ldem_80s_80m, ldem_75s_120m)"
-
-
-@pytest.mark.parametrize("lat,uses_60s", [(-80.0, False), (-79.9, True), (-70.0, True), (-69.9, True), (-60.0, True)])
-def test_credit_includes_the_60s_map_when_rays_reach_it(lat, uses_60s):
-    assert ("ldem_60s_240m" in source_for(lat)) == uses_60s
-
-
-@pytest.mark.parametrize("lat", [45.0, -45.0, 90.0])
-def test_latitudes_without_a_map_have_no_credit(lat):
-    with pytest.raises(ValueError):
-        source_for(lat)
+@needs_maps
+def test_each_site_names_the_maps_its_rays_reach():
+    assert maps_for(*APOLLO_11) == "SLDEM2015 (NASA LRO LOLA + JAXA SELENE/Kaguya, 512 pixels per degree)"
+    # rays from 69.4 S reach only 74.3 S, short of the 75 S map
+    assert maps_for(*CHANDRAYAAN_3) == "NASA LRO LOLA polar DEM (ldem_60s_240m)"
+    # rays from 85 S stop at about 80.05 S, inside the 80 S map
+    assert maps_for(-85.0, 30.0) == "NASA LRO LOLA polar DEMs (ldem_875s_20m, ldem_80s_80m)"
 
 
 @needs_maps
@@ -134,6 +126,6 @@ def test_every_horizon_direction_reaches_terrain_out_to_the_limit(site):
 def test_generated_horizon_is_the_terrain_skyline(site_id, site):
     data = json.loads((OUT_DIR / "horizon" / f"{site_id}.json").read_text())
     assert len(data["elevation_deg"]) == 360
-    assert data["source"] == source_for(site[0])
+    assert data["source"] == maps_for(*site)
     assert np.array(data["elevation_deg"]) == pytest.approx(horizon_profile(*site, height_m), abs=0.001)
     assert -3 < min(data["elevation_deg"]) and max(data["elevation_deg"]) < 15

@@ -98,15 +98,41 @@ def _sunlit_any_part(lat: float, lon: float) -> float:
     return lit / total
 
 
+# Ground heights LROC measured at landers in its own images: (site id, label, metres, LROC page)
+LANDER_HEIGHTS = [
+    ("im-1", "IM-1 Odysseus landing point (80.13 S, 1.44 E)", 2579, 1360),
+    ("change-3", "Chang'e 3 lander", -2640, 637),
+    ("change-4", "Chang'e 4 lander", -5927, 1100),
+    ("change-5", "Chang'e 5 lander", -2570, 1172),
+    ("change-6", "Chang'e 6 landing site", -5256, 1374),
+    ("slim", "SLIM lander", -912, 1358),
+    ("blue-ghost-1", "Blue Ghost Mission 1 lander", -3650, 1407),
+    ("chandrayaan-2", "Chandrayaan-2 Vikram impact site", 834, 1131),
+    ("luna-16", "Luna 16 lander", -2452, 938),
+    ("luna-17", "Luna 17 lander", -2471, 938),
+    ("surveyor-3", "Surveyor 3 lander", -1433, 938),
+]
+HEIGHT_TOL_M = 150
+
+
+def _lander_rows() -> list[dict]:
+    sites = {s["id"]: s for s in load_sites()}
+    rows = []
+    for site_id, label, reference, page in LANDER_HEIGHTS:
+        # IM-1's published point is where it came to rest, which the site list rounds to the same place
+        lat, lon = (-80.13, 1.44) if site_id == "im-1" else (sites[site_id]["lat"], sites[site_id]["lon"])
+        ours = float(height_m(np.array([lat]), np.array([lon]))[0])
+        rows.append({"check": f"Ground height at the {label}", "ours": round(ours), "reference": reference, "unit": "m",
+                     "reference_source": f"NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/{page})",
+                     "diff": round(abs(ours - reference)), "tolerance": HEIGHT_TOL_M, "pass": bool(abs(ours - reference) < HEIGHT_TOL_M)})
+    return rows
+
+
 def _terrain_rows() -> list[dict]:
-    im1 = float(height_m(np.array([-80.13]), np.array([1.44]))[0])
     rim = next(s for s in load_sites() if s["id"] == "shackleton-rim")
     lit = _sunlit_any_part(rim["lat"], rim["lon"])
     return [
-        {"check": "Ground height at the IM-1 Odysseus landing point (80.13 S, 1.44 E)",
-         "ours": round(im1), "reference": 2579, "unit": "m",
-         "reference_source": "NASA/GSFC/Arizona State University, LROC (lroc.im-ldi.com/images/1360)",
-         "diff": round(abs(im1 - 2579)), "tolerance": 150, "pass": bool(abs(im1 - 2579) < 150)},
+        *_lander_rows(),
         {"check": "Best sunlit share on the Shackleton rim at 2 m height (any part of the Sun)",
          "ours": round(lit * 100, 1), "reference": 92.3, "unit": "%",
          "reference_source": "Glaser et al. 2014, Icarus: best point on the nearby connecting ridge, a different spot from ours",
@@ -125,7 +151,9 @@ def build_validation() -> dict:
         {"id": "dsn-moon", "title": "Moon elevation from Deep Space Network stations vs NASA JPL Horizons",
          "method": "Goldstone, Madrid, Canberra x 4 times", "rows": _dsn_rows()},
         {"id": "terrain", "title": "Terrain and illumination vs published values",
-         "method": "LOLA heights and our sunlit share against LROC and peer-reviewed results", "rows": _terrain_rows()},
+         "method": "Our reading of the LOLA maps against ground heights LROC published at landers (LROC's own maps are also built "
+                   "from LOLA, so these check how we read the maps, not the maps themselves), and our sunlit share against a "
+                   "peer-reviewed result", "rows": _terrain_rows()},
     ]
     rows = [r for s in sections for r in s["rows"]]
     angle_rows = [r for s in sections[:3] for r in s["rows"]]

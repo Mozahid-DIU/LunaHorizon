@@ -13,6 +13,7 @@ All source data LunaHorizon uses lives in this folder. Large files are not store
 | `sites.json` | Landing site coordinates, each with its official source | NASA NSSDCA, NASA/ASU LROC, IAU Gazetteer (USGS) | Yes | Curated by the team |
 | `lola/ldem_875s_20m`, `ldem_80s_80m`, `ldem_75s_120m`, `ldem_60s_240m` (.img + .lbl) | LRO LOLA south polar elevation maps: 87.5–90°S at 20 m, 80–90°S at 80 m, 75–90°S at 120 m, 60–90°S at 240 m | NASA LRO LOLA / PDS Geosciences Node | No (~450 MB) | `python pipeline/get_dem.py` |
 | `lola/sldem2015_512_00n_30n_000_045_float`, `sldem2015_512_30s_00s_000_045_float` (.img + .lbl) | SLDEM2015 elevation tiles, 30°S–30°N, 0–45°E, 512 pixels per degree | NASA LRO LOLA + JAXA SELENE/Kaguya (Barker et al., 2016) / PDS Geosciences Node | No (~2.7 GB) | `python pipeline/get_dem.py` |
+| `lola/ldem_128` (.img + .lbl) | LRO LOLA global elevation map, 128 pixels per degree (about 237 m), for sites outside the finer maps | NASA LRO LOLA / PDS Geosciences Node | No (~2 GB) | `python pipeline/get_dem.py` |
 
 Data we compute from these files (hourly Sun/Earth sub-points, terrain horizons) is written to `web/public/data/`, where the web app loads it.
 

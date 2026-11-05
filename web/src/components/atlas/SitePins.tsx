@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useSelection } from "@/components/selection/useSelection";
 import shares from "@/data/site-shares.json";
 import { LAYERS, mapPosition, type MapLayer, type MapPosition } from "@/lib/atlasMap";
+import { customSite } from "@/lib/selection";
 import { formatCoordinates } from "@/lib/siteSummary";
 import { shortName, SITES } from "@/lib/sites";
 import styles from "./atlas.module.css";
@@ -14,9 +16,24 @@ const pinStyle = ({ leftPercent, topPercent }: MapPosition) => ({ left: `${leftP
 const labelClass = ({ leftPercent }: MapPosition) =>
   `${styles.pin} ${leftPercent > FLIP_LABEL_LEFT_PERCENT ? styles.pinFlipped : ""}`;
 
-export function SitePins({ layer }: { layer: MapLayer }) {
+interface SitePinsProps {
+  layer: MapLayer;
+  /** Gives the map a function that chooses a custom point. */
+  onReady: (choose: (lat: number, lon: number) => void) => void;
+}
+
+export function SitePins({ layer, onReady }: SitePinsProps) {
   const { selection, update } = useSelection();
   const { site: selected } = selection;
+
+  // `update` is a new function on every render; the map keeps one chooser that always uses the latest
+  const latestUpdate = useRef(update);
+  useEffect(() => {
+    latestUpdate.current = update;
+  }, [update]);
+  useEffect(() => {
+    onReady((lat, lon) => latestUpdate.current({ site: customSite(lat, lon) }));
+  }, [onReady]);
   const customPosition = selected.id === null ? mapPosition(selected.lat, selected.lon) : null;
 
   return (

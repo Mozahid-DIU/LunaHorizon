@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { parseMapGrid } from "./data/validate";
-import { layerPixels, LAYERS, mapPosition, overlayOutsetPercent, polarPlaneKm } from "./atlasMap";
+import { cellBox, latLonAt, layerPixels, LAYERS, mapCell, mapPosition, overlayOutsetPercent, polarPlaneKm } from "./atlasMap";
 import { findSite } from "./sites";
 
 const grid = parseMapGrid(JSON.parse(readFileSync(join(__dirname, "..", "..", "public", "data", "map", "golden-grid.json"), "utf-8")));
@@ -93,5 +93,44 @@ describe("layerPixels", () => {
     expect(LAYERS.golden.rgb).toEqual([70, 230, 180]);
     expect(LAYERS.lit.rgb).toEqual([245, 184, 65]);
     expect(LAYERS.earth.rgb).toEqual([111, 176, 255]);
+  });
+});
+
+describe("mapCell", () => {
+  test("finds the 5 km cell under a site, with the file's values", () => {
+    const rim = findSite("shackleton-rim")!;
+    const cell = mapCell(grid, rim.lat, rim.lon)!;
+    expect([cell.row, cell.col]).toEqual([61, 59]);
+    expect(cell.values).toEqual({ golden: grid.golden[61 * 121 + 59], lit: grid.lit[61 * 121 + 59], earth: grid.earth[61 * 121 + 59] });
+    expect(cell.values.golden).toBe(163);
+  });
+
+  test("is null off the map, and null where the map has no value", () => {
+    const apollo = findSite("apollo-11")!;
+    expect(mapCell(grid, apollo.lat, apollo.lon)).toBeNull();
+    // the map's corner cells lie beyond the 300 km disc and hold null
+    expect(grid.golden[0]).toBeNull();
+    expect(mapCell(grid, latLonAt(0.2, 0.2).lat, latLonAt(0.2, 0.2).lon)).toBeNull();
+  });
+});
+
+describe("latLonAt", () => {
+  test("is the inverse of mapPosition", () => {
+    const im2 = findSite("im-2")!;
+    const { leftPercent, topPercent } = mapPosition(im2.lat, im2.lon)!;
+    const back = latLonAt(leftPercent, topPercent);
+    expect(back.lat).toBeCloseTo(im2.lat, 9);
+    expect(back.lon).toBeCloseTo(im2.lon, 9);
+    expect(latLonAt(50, 50).lat).toBe(-90);
+  });
+});
+
+describe("cellBox", () => {
+  test("is centred on its node and one step wide", () => {
+    const box = cellBox(grid, 61, 59);
+    const node = { x: 59 * grid.step_km - grid.radius_km, y: grid.radius_km - 61 * grid.step_km };
+    expect(box.leftPercent + box.sizePercent / 2).toBeCloseTo(50 + (node.x / grid.radius_km) * 50, 9);
+    expect(box.topPercent + box.sizePercent / 2).toBeCloseTo(50 - (node.y / grid.radius_km) * 50, 9);
+    expect(box.sizePercent).toBeCloseTo((grid.step_km / (2 * grid.radius_km)) * 100, 9);
   });
 });

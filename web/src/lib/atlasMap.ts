@@ -52,6 +52,48 @@ export function mapPosition(lat: number, lon: number): MapPosition | null {
   return { leftPercent: 50 + (x / MAP_RADIUS_KM) * 50, topPercent: 50 - (y / MAP_RADIUS_KM) * 50 };
 }
 
+/** The place under a point on the map image, given as percentages across and down. */
+export function latLonAt(leftPercent: number, topPercent: number): { lat: number; lon: number } {
+  const x = ((leftPercent - 50) / 50) * MAP_RADIUS_KM;
+  const y = ((50 - topPercent) / 50) * MAP_RADIUS_KM;
+  const r = Math.hypot(x, y);
+  return { lat: (2 * Math.atan(r / (2 * MOON_RADIUS_KM))) / DEG - 90, lon: r === 0 ? 0 : Math.atan2(x, y) / DEG };
+}
+
+export interface MapCell {
+  row: number;
+  col: number;
+  values: Record<MapLayer, number>;
+}
+
+/** The 5 km grid cell holding a place, with its three values; null off the map or where the map has none. */
+export function mapCell(grid: MapGrid, lat: number, lon: number): MapCell | null {
+  const { x, y } = polarPlaneKm(lat, lon);
+  const col = Math.round((x + grid.radius_km) / grid.step_km);
+  const row = Math.round((grid.radius_km - y) / grid.step_km);
+  if (col < 0 || row < 0 || col >= grid.size || row >= grid.size) return null;
+  const i = row * grid.size + col;
+  const golden = grid.golden[i];
+  const lit = grid.lit[i];
+  const earth = grid.earth[i];
+  if (golden === null || lit === null || earth === null) return null;
+  return { row, col, values: { golden, lit, earth } };
+}
+
+export interface CellBox {
+  leftPercent: number;
+  topPercent: number;
+  sizePercent: number;
+}
+
+/** Where a cell sits on the map image: a square one step wide, centred on its node. */
+export function cellBox(grid: MapGrid, row: number, col: number): CellBox {
+  const sizePercent = (grid.step_km / (2 * grid.radius_km)) * 100;
+  const x = col * grid.step_km - grid.radius_km;
+  const y = grid.radius_km - row * grid.step_km;
+  return { leftPercent: 50 + (x / grid.radius_km) * 50 - sizePercent / 2, topPercent: 50 - (y / grid.radius_km) * 50 - sizePercent / 2, sizePercent };
+}
+
 export function overlayOutsetPercent(grid: MapGrid): number {
   return (grid.step_km / 2 / (2 * grid.radius_km)) * 100;
 }

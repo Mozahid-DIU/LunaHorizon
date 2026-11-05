@@ -90,8 +90,145 @@
   cursor: pointer;
 }
 
+.pinFixed,
+.pin[aria-pressed="true"] {
+  z-index: 4;
+}
+
 .pinFixed {
   cursor: default;
+}
+
+/* the pointed 5 km cell and its readout */
+.cell {
+  position: absolute;
+  z-index: 3;
+  border: 2px solid var(--mint);
+  box-shadow: 0 0 0 2px var(--space), 0 0 18px #46e6b488;
+  background: #46e6b422;
+  pointer-events: none;
+}
+
+.tip {
+  position: absolute;
+  z-index: 5;
+  margin: 16px 0 0 16px;
+  padding: 9px 12px;
+  border: 1px solid #46e6b455;
+  border-radius: 12px;
+  background: #0c1226f0;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px #000a;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tipFlipped {
+  margin: 16px 16px 0 0;
+}
+
+.tipAbove {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.tip b {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.tip span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+}
+
+.tip em {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-style: normal;
+}
+
+.sheet {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid #46e6b455;
+  border-radius: 12px;
+  background: #0c1226f0;
+}
+
+.sheet b {
+  font-size: 17px;
+}
+
+.sheet span {
+  display: block;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+}
+
+.sheet button {
+  margin-left: auto;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--mint);
+  color: var(--on-mint);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.versus {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid #46e6b433;
+  border-radius: 12px;
+  background: #46e6b40f;
+}
+
+.versus .eyebrow {
+  color: var(--mint);
+}
+
+.versusCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.versus b {
+  display: block;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.versusDim {
+  color: var(--muted);
+}
+
+.versus small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.versus p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .pinFixed .dot {
@@ -243,6 +380,11 @@
   color: var(--muted);
   font-size: 13px;
   line-height: 1.4;
+}
+
+.keyNote b {
+  color: var(--ink);
+  font-weight: 500;
 }
 
 .cardColumn {
@@ -436,6 +578,11 @@ i.golden {
     width: min(100%, 720px);
     align-self: center;
     margin: 4px 0;
+    touch-action: pan-y;
+  }
+
+  .tip {
+    display: none;
   }
 
   .layers {

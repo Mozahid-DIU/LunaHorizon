@@ -1,16 +1,63 @@
 "use client";
 
 import Image from "next/image";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { DataNotice } from "@/components/data/DataNotice";
-import { layerPixels, LAYERS, overlayOutsetPercent, type MapLayer } from "@/lib/atlasMap";
+import { cellBox, latLonAt, layerPixels, LAYERS, mapCell, overlayOutsetPercent, type MapCell, type MapLayer } from "@/lib/atlasMap";
 import { useMapGrid } from "@/lib/data/useMapGrid";
 import type { MapGrid } from "@/lib/data/validate";
+import { formatCoordinates } from "@/lib/siteSummary";
 import styles from "./atlas.module.css";
 import { SiteCard, SiteCardFallback } from "./SiteCard";
 import { SitePins } from "./SitePins";
 
 const LAYER_ORDER: readonly MapLayer[] = ["golden", "lit", "earth"];
+/** A tooltip this far across the map sits to the left of the pointer, so it stays on the map. */
+const FLIP_TIP_LEFT_PERCENT = 55;
+/** Coordinates a click puts in the address: 0.001 degrees is about 30 m on the Moon. */
+const COORDINATE_DECIMALS = 3;
+
+/** A tooltip this far down the map sits above the pointer. */
+const FLIP_TIP_TOP_PERCENT = 72;
+/** A finger that moves further than this is scrolling, not tapping. */
+const TAP_SLOP_PX = 8;
+
+/** A place the pointer is over, already rounded to what a click would choose. */
+export interface Pointed {
+  lat: number;
+  lon: number;
+  leftPercent: number;
+  topPercent: number;
+  isTouch: boolean;
+}
+
+const percentText = (perMille: number) => `${(perMille / 10).toFixed(1)}%`;
+const roundCoordinate = (value: number) => Number(value.toFixed(COORDINATE_DECIMALS));
+
+interface MapEvent {
+  clientX: number;
+  clientY: number;
+  currentTarget: HTMLDivElement;
+  nativeEvent: Event;
+  target: EventTarget;
+}
+
+/** Which kind of pointer sent an event; a click carries it on its native event. */
+const isTouchEvent = (event: MapEvent) => (event.nativeEvent as Partial<PointerEvent>).pointerType === "touch";
+
+/** Where on the map a pointer event landed, or null outside the disc. */
+function pointedAt(event: MapEvent): Pointed | null {
+  const box = event.currentTarget.getBoundingClientRect();
+  const leftPercent = ((event.clientX - box.left) / box.width) * 100;
+  const topPercent = ((event.clientY - box.top) / box.height) * 100;
+  if (Math.hypot(leftPercent - 50, topPercent - 50) > 50) return null;
+  const place = latLonAt(leftPercent, topPercent);
+  // the same rounded place is read, shown, chosen and written to the address
+  return { lat: roundCoordinate(place.lat), lon: roundCoordinate(place.lon), leftPercent, topPercent, isTouch: isTouchEvent(event) };
+}
+
+/** The cell a pointed place falls in, read when it is drawn so a grid that arrives later still counts. */
+const cellOf = (grid: MapGrid | null, pointed: Pointed | null): MapCell | null => (grid && pointed ? mapCell(grid, pointed.lat, pointed.lon) : null);
 
 function MapOverlay({ grid, layer }: { grid: MapGrid; layer: MapLayer }) {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -45,16 +92,83 @@ function MapKey({ layer }: { layer: MapLayer }) {
         <span>{highPercent === 100 ? "100%" : `${highPercent}%+`}</span>
       </div>
       <p className={styles.keyNote}>
-        A 5 km overview for finding regions; good ground can lie between its points. Site numbers use each site&apos;s own
-        horizon. Relief shading is for display only.
+        <b>Point at the map</b> to read a 5 km cell; <b>click</b> to check that exact point with its own horizon. The map finds
+        regions; good ground can lie between its points. Relief shading is for display only.
       </p>
     </div>
   );
 }
 
+/** The pointed cell on the map: its outline, and a tooltip for a mouse. */
+function CellReadout({ pointed, grid, layer }: { pointed: Pointed; grid: MapGrid; layer: MapLayer }) {
+  const { leftPercent, topPercent, lat, lon } = pointed;
+  const cell = cellOf(grid, pointed);
+  if (!cell) return null;
+  const box = cellBox(grid, cell.row, cell.col);
+  const isFlipped = leftPercent > FLIP_TIP_LEFT_PERCENT;
+  const isAbove = topPercent > FLIP_TIP_TOP_PERCENT;
+  const place = {
+    ...(isFlipped ? { right: `${100 - leftPercent}%` } : { left: `${leftPercent}%` }),
+    ...(isAbove ? { bottom: `${100 - topPercent}%` } : { top: `${topPercent}%` }),
+  };
+  return (
+    <>
+      <div className={styles.cell} style={{ left: `${box.leftPercent}%`, top: `${box.topPercent}%`, width: `${box.sizePercent}%`, height: `${box.sizePercent}%` }} />
+      {!pointed.isTouch && (
+        <div className={`${styles.tip} ${isFlipped ? styles.tipFlipped : ""} ${isAbove ? styles.tipAbove : ""}`} data-testid="cell-tip" style={place}>
+          <b style={{ color: `rgb(${LAYERS[layer].rgb.join(" ")})` }}>
+            {percentText(cell.values[layer])} {LAYERS[layer].pinWord}
+          </b>
+          <span>5 km cell · {formatCoordinates(lat, lon)}</span>
+          <em>Click to check this exact point</em>
+        </div>
+      )}
+    </>
+  );
+}
+
 export function AtlasView() {
   const [layer, setLayer] = useState<MapLayer>("golden");
+  const [pointed, setPointed] = useState<Pointed | null>(null);
   const map = useMapGrid();
+  const grid = map.status === "ready" ? map.value : null;
+  // the pins hand over a way to choose a point; a ref, so handing it over never re-renders the map
+  const chooseRef = useRef<((lat: number, lon: number) => void) | null>(null);
+  const onPinsReady = useCallback((choose: (lat: number, lon: number) => void) => {
+    chooseRef.current = choose;
+  }, []);
+
+  const touchStart = useRef<{ id: number; x: number; y: number } | null>(null);
+  const choose = (at: Pointed) => {
+    chooseRef.current?.(at.lat, at.lon);
+    setPointed(null);
+  };
+  const isOnPin = (event: MapEvent) => (event.target as HTMLElement).closest("button") !== null;
+
+  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "touch") return;
+    setPointed(pointedAt(event));
+  };
+  // a mouse chooses with a plain left click; a pin is a button of its own
+  const onClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.button !== 0 || isTouchEvent(event) || isOnPin(event)) return;
+    const at = pointedAt(event);
+    if (at) choose(at);
+  };
+  // a finger reads a cell with a tap that does not move; a scroll is left alone
+  const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "touch" && event.isPrimary && !isOnPin(event)) touchStart.current = { id: event.pointerId, x: event.clientX, y: event.clientY };
+  };
+  const onPointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (!start || start.id !== event.pointerId || Math.hypot(event.clientX - start.x, event.clientY - start.y) > TAP_SLOP_PX) return;
+    const at = pointedAt(event);
+    if (at) setPointed(at);
+  };
+  const onPointerCancel = () => {
+    touchStart.current = null;
+  };
 
   return (
     <div className={styles.atlas}>
@@ -65,7 +179,16 @@ export function AtlasView() {
         <p>The glow marks ground that {LAYERS[layer].glow}, from real NASA terrain.</p>
       </section>
 
-      <div className={styles.map} data-testid="map">
+      <div
+        className={styles.map}
+        data-testid="map"
+        onPointerMove={onPointerMove}
+        onPointerLeave={() => setPointed((p) => (p?.isTouch ? p : null))}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerCancel}
+        onClick={onClick}
+      >
         <div className={styles.surface}>
           <Image
             className={styles.relief}
@@ -81,9 +204,24 @@ export function AtlasView() {
           {map.status === "ready" && <MapOverlay grid={map.value} layer={layer} />}
         </div>
         <Suspense>
-          <SitePins layer={layer} />
+          <SitePins layer={layer} onReady={onPinsReady} />
         </Suspense>
+        {pointed && grid && <CellReadout pointed={pointed} grid={grid} layer={layer} />}
       </div>
+
+      {pointed?.isTouch && grid && cellOf(grid, pointed) && (
+        <div className={styles.sheet} data-testid="cell-sheet" role="status">
+          <div>
+            <b style={{ color: `rgb(${LAYERS[layer].rgb.join(" ")})` }}>
+              {percentText(cellOf(grid, pointed)!.values[layer])} {LAYERS[layer].pinWord}
+            </b>
+            <span>5 km cell · {formatCoordinates(pointed.lat, pointed.lon)} · 2026–30</span>
+          </div>
+          <button type="button" aria-label={`Check this point, ${formatCoordinates(pointed.lat, pointed.lon)}`} onClick={() => choose(pointed)}>
+            Check this point
+          </button>
+        </div>
+      )}
 
       <div className={styles.controls}>
         <div className={styles.layers} role="group" aria-label="Map layer">
@@ -104,7 +242,7 @@ export function AtlasView() {
 
       <div className={styles.cardColumn}>
         <Suspense fallback={<SiteCardFallback />}>
-          <SiteCard />
+          <SiteCard layer={layer} />
         </Suspense>
       </div>
     </div>

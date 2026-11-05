@@ -1,6 +1,51 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
 const R_KM = 1737.4;
+const MAP_RADIUS_KM = 300;
+const MAP_STEP_KM = 5;
+const MAP_SIZE = 121;
+
+interface MapFile {
+  golden: (number | null)[];
+  lit: (number | null)[];
+  earth: (number | null)[];
+}
+
+const mapFile = (): MapFile => JSON.parse(readFileSync(join(__dirname, "..", "public", "data", "map", "golden-grid.json"), "utf-8")) as MapFile;
+
+/** The map cell's value under a point on the map image, read from the file the way the pipeline wrote it. */
+function cellValueAt(leftShare: number, topShare: number, layer: keyof MapFile): number | null {
+  const x = (leftShare - 0.5) * 2 * MAP_RADIUS_KM;
+  const y = (0.5 - topShare) * 2 * MAP_RADIUS_KM;
+  const col = Math.round((x + MAP_RADIUS_KM) / MAP_STEP_KM);
+  const row = Math.round((MAP_RADIUS_KM - y) / MAP_STEP_KM);
+  return mapFile()[layer][row * MAP_SIZE + col];
+}
+
+function latLonAt(leftShare: number, topShare: number): { lat: number; lon: number } {
+  const x = (leftShare - 0.5) * 2 * MAP_RADIUS_KM;
+  const y = (0.5 - topShare) * 2 * MAP_RADIUS_KM;
+  const r = Math.hypot(x, y);
+  return { lat: (2 * Math.atan(r / (2 * R_KM)) * 180) / Math.PI - 90, lon: (Math.atan2(x, y) * 180) / Math.PI };
+}
+
+const percent = (perMille: number) => `${(perMille / 10).toFixed(1)}%`;
+/** The map image shares of a cell's centre node, where a pointer is furthest from any cell edge. */
+const cellCentre = (row: number, col: number) => [(col * MAP_STEP_KM) / (2 * MAP_RADIUS_KM), (row * MAP_STEP_KM) / (2 * MAP_RADIUS_KM)] as const;
+
+/** The address holds the pointer's place; a pointer lands on whole pixels, about 0.6 km on this map. */
+async function expectChosen(page: Page, lat: number, lon: number) {
+  await expect(page).toHaveURL(/lat=/);
+  const url = new URL(page.url());
+  const chosen = { lat: Number(url.searchParams.get("lat")), lon: Number(url.searchParams.get("lon")) };
+  const r = (deg: number) => 2 * R_KM * Math.tan((((90 + deg) / 2) * Math.PI) / 180);
+  const toPlane = (p: { lat: number; lon: number }) => ({ x: r(p.lat) * Math.sin((p.lon * Math.PI) / 180), y: r(p.lat) * Math.cos((p.lon * Math.PI) / 180) });
+  const a = toPlane(chosen);
+  const b = toPlane({ lat, lon });
+  expect(Math.hypot(a.x - b.x, a.y - b.y)).toBeLessThan(1.2);
+}
 const pin = (page: Page, name: RegExp) => page.getByRole("button", { name });
 const card = (page: Page) => page.getByRole("region", { name: "Selected site" });
 
@@ -190,4 +235,76 @@ test("nothing overflows, at any supported width", async ({ page, isMobile }) => 
     await expect(card(page)).toContainText("14 of 14 days");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   }
+});
+
+test("the card sets the map's cell beside the site's own share, from the files", async ({ page }) => {
+  await page.goto("/");
+  const versus = page.getByTestId("map-versus");
+  // Shackleton rim: the 5 km cell under it, and the share its own horizon gives
+  const rimCell = mapFile().golden[61 * MAP_SIZE + 59]!;
+  await expect(versus.getByTestId("versus-cell")).toHaveText(percent(rimCell));
+  await expect(versus.getByTestId("versus-cell")).toHaveText("16.3%");
+  await expect(versus.getByTestId("versus-own")).toHaveText("45.4%");
+  await page.getByRole("button", { name: "Sunlight" }).click();
+  await expect(versus.getByTestId("versus-cell")).toHaveText(percent(mapFile().lit[61 * MAP_SIZE + 59]!));
+  await expect(versus).toContainText("sunlit");
+});
+
+test("pointing at the map reads the 5 km cell there, and a click checks that exact point", async ({ page, isMobile }) => {
+  test.skip(isMobile, "a mouse points; a phone taps");
+  await page.goto("/");
+  await expect(page.getByTestId("map-versus")).toBeVisible();
+  const map = page.getByTestId("map");
+  const box = (await map.boundingBox())!;
+  const [left, top] = cellCentre(77, 46);
+  await page.mouse.move(box.x + box.width * left, box.y + box.height * top);
+  const tip = page.getByTestId("cell-tip");
+  await expect(tip).toContainText(`${percent(cellValueAt(left, top, "golden")!)} golden`);
+  await expect(tip).toContainText("5 km cell");
+  // a right click chooses nothing
+  await page.mouse.click(box.x + box.width * left, box.y + box.height * top, { button: "right" });
+  await expect(page).not.toHaveURL(/lat=/);
+  await page.mouse.click(box.x + box.width * left, box.y + box.height * top);
+  const { lat, lon } = latLonAt(left, top);
+  await expectChosen(page, lat, lon);
+  await expect(card(page)).toContainText("Your point");
+  await expect(card(page)).toContainText("computed in your browser");
+  const versus = page.getByTestId("map-versus");
+  await expect(versus.getByTestId("versus-cell")).toHaveText(percent(cellValueAt(left, top, "golden")!));
+  // the point's own five-year share is counted in the browser
+  await expect(versus.getByTestId("versus-own")).toHaveText(/^\d+\.\d%$/, { timeout: 60_000 });
+});
+
+test("on a phone a tap reads the cell and a button checks the point", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "a phone taps");
+  await page.goto("/");
+  await expect(page.getByTestId("map-versus")).toBeVisible();
+  const box = (await page.getByTestId("map").boundingBox())!;
+  const [left, top] = cellCentre(77, 46);
+  await page.touchscreen.tap(box.x + box.width * left, box.y + box.height * top);
+  const sheet = page.getByTestId("cell-sheet");
+  await expect(sheet).toContainText(`${percent(cellValueAt(left, top, "golden")!)} golden`);
+  await expect(page).toHaveURL(/^[^?]*\/$/);
+  await sheet.getByRole("button", { name: /^Check this point/ }).tap();
+  const { lat, lon } = latLonAt(left, top);
+  await expectChosen(page, lat, lon);
+  await expect(card(page)).toContainText("Your point");
+  await expect(sheet).toHaveCount(0);
+});
+
+test("a custom point at a curated site counts the same five-year share as the site's file, give or take the browser horizon", async ({ page }) => {
+  // IM-2's own coordinates as a custom point: the browser builds its horizon from tiles and counts 2026-30
+  await page.goto("/?lat=-84.78&lon=29.13");
+  const own = page.getByTestId("versus-own");
+  await expect(own).toHaveText(/^\d+\.\d%$/, { timeout: 90_000 });
+  const shares = JSON.parse(readFileSync(join(__dirname, "..", "src", "data", "site-shares.json"), "utf-8")) as Record<string, { golden: number }>;
+  const counted = Number((await own.innerText()).replace("%", ""));
+  expect(Math.abs(counted - shares["im-2"].golden / 10)).toBeLessThan(1);
+});
+
+test("a click on a pin still chooses that site, not a custom point", async ({ page }) => {
+  await page.goto("/");
+  await pin(page, /^IM-2 Athena/).click();
+  await expect(page).toHaveURL(/site=im-2/);
+  await expect(page).not.toHaveURL(/lat=/);
 });

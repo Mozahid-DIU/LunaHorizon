@@ -125,13 +125,15 @@
   height: 6px;
   margin-top: 8px;
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: 999px;
   background: var(--hover);
 }
 
+/* both ends round, so a part-filled bar ends in a curve like the track */
 .meter i {
   display: block;
   height: 100%;
+  border-radius: 999px;
   background: var(--mint);
 }
 

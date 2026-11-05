@@ -118,3 +118,25 @@ main:focus {
     scroll-behavior: auto !important;
   }
 }
+
+/* printing: only the content, on white paper; the Mission Brief sets its own A4 pages */
+@page brief {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #fff;
+  }
+
+  .page:has([data-brief]) {
+    min-height: 0;
+    padding: 0;
+  }
+}

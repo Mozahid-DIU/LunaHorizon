@@ -60,7 +60,7 @@ function TabBar({ query }: { query: string }) {
 
   return (
     <>
-      <nav aria-label="Main" className={styles.phoneTabs}>
+      <nav aria-label="Main" className={styles.phoneTabs} data-print="hide">
         {PHONE_TABS.map(({ href, label }) => (
           <Link key={href} href={withQuery(href, query)} aria-current={isActivePage(pathname, href) ? "page" : undefined}>
             {label}

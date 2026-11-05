@@ -27,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${plexSans.variable} ${plexMono.variable}`}>
       <body>
-        <a href="#main" className="skip-link">
+        <a href="#main" className="skip-link" data-print="hide">
           Skip to content
         </a>
         <Suspense>

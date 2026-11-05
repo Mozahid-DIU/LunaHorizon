@@ -29,6 +29,7 @@ Landing coordinates are facts and are cited for transparency. We do not copy ima
 | Next.js, React | MIT |
 | d3-scale | ISC |
 | Three.js | MIT |
+| qrcode-generator (Kazuhiko Arase) | MIT |
 | Vitest | MIT |
 | Playwright | Apache-2.0 |
 

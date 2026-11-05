@@ -37,7 +37,7 @@ function LiveNavLinks() {
 
 export function TopNav() {
   return (
-    <header className={styles.top}>
+    <header className={styles.top} data-print="hide">
       <Link href="/" className={styles.brand} aria-label="LunaHorizon home">
         Luna<span>Horizon</span>
       </Link>

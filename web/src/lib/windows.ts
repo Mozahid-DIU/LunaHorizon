@@ -28,6 +28,8 @@ export type WindowKind = "lit" | "earth" | "dsn" | "comms" | "golden";
 export interface DsnYear {
   start: string;
   step_hours: number;
+  /** Station names in bit order: bit 0 is the first name. */
+  stations: readonly string[];
   mask: number[];
 }
 
@@ -48,6 +50,13 @@ export class Ephemeris {
         throw new Error(`sub-point and DSN files for ${year} do not line up`);
       }
     }
+    const names = [...years.values()].map((d) => d.dsn.stations.join("|"));
+    if (new Set(names).size > 1) throw new Error("DSN files name different stations");
+  }
+
+  /** The DSN stations, in the order of the mask's bits. */
+  dsnStations(): readonly string[] {
+    return [...this.years.values()][0].dsn.stations;
   }
 
   private locate(utcMs: number): { data: YearData; index: number } {

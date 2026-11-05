@@ -36,6 +36,7 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **20 curated sites:** Apollo 11–17 (except 13), Chang'e 3–6 (two on the far side), SLIM, Blue Ghost 1, Luna 16 and 17, Surveyor 3, Chandrayaan-2 and -3, IM-1, IM-2 and the Shackleton rim, each with an official source and a terrain horizon; 11 landers' ground heights checked against LROC
 - [x] **Power:** an example lander's solar panel and battery over 14 or 30 days, with the battery's charge on a chart and the model's limits on screen
 - [x] **Ellipse:** best, median and worst Golden hours within 100 m, 500 m or 1 km of the target at IM-1, IM-2 and the Shackleton rim, and where IM-2 Athena really came down
+- [x] **Who can hear the Moon:** on the Sky page, which Deep Space Network station (Goldstone, Madrid, Canberra) has the Moon at least 10° up, now, through the day and across 30 days, with the hours when none does
 - [ ] Website features (3D view)
 
 📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)

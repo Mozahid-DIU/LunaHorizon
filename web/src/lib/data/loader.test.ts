@@ -205,6 +205,20 @@ describe("corrupted DSN files", () => {
     expect(error.message).toMatch(/mask\[10\] is 1.5/);
   });
 
+  it("refuses a station name that is not 'Place (Country), DSS-nn'", async () => {
+    const error = await load(corrupt("dsn-2027.json", (d) => {
+      (d.stations as string[])[1] = "Madrid";
+    }));
+    expect(error.message).toMatch(/stations\[1\] is not a station name/);
+  });
+
+  it("refuses a file made with a different elevation limit, since the page says 10 degrees", async () => {
+    const error = await load(corrupt("dsn-2027.json", (d) => {
+      d.elevation_mask_deg = 6;
+    }));
+    expect(error.message).toMatch(/elevation_mask_deg/);
+  });
+
   it("refuses a mask that does not line up with the sub-points", async () => {
     const error = await load(corrupt("dsn-2027.json", (d) => {
       (d.mask as number[]).pop();

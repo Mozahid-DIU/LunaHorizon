@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 const sun = (page: Page) => page.getByTestId("sky-sun");
 const earth = (page: Page) => page.getByTestId("sky-earth");
-const readout = (page: Page, name: string) => page.getByRole("region", { name });
+const readout = (page: Page, name: string) => page.getByRole("region", { name, exact: true });
 
 /** What the browser finds at the centre of a body: the body itself, or the terrain over it. */
 const topmostAtCentre = (page: Page, testId: string) =>

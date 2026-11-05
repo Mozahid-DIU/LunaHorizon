@@ -47,7 +47,7 @@ describe("findWindows edge cases", () => {
 describe("Ephemeris", () => {
   it("rejects files that do not start on 1 January with hourly steps", () => {
     const bad = { start: "2027-01-02T00:00Z", step_hours: 1, sun: { lat: [], lon: [], dist_km: [] }, earth: { lat: [], lon: [], dist_km: [] } };
-    expect(() => new Ephemeris(new Map([[2027, { subpoints: bad, dsn: { start: bad.start, step_hours: 1, mask: [] } }]]))).toThrow();
+    expect(() => new Ephemeris(new Map([[2027, { subpoints: bad, dsn: { start: bad.start, step_hours: 1, stations: [], mask: [] } }]]))).toThrow();
   });
 });
 

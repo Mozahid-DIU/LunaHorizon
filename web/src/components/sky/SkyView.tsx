@@ -13,9 +13,11 @@ import { eventWindows, goldenStatus, outlookAt, skyDataEnd, skyHeadline, type Go
 import { formatCoordinates, formatDuration, MISSION_DAYS, outlookFrom, siteSummary, type BodyOutlook, type SiteSummary } from "@/lib/siteSummary";
 import { shortName, type SelectedSite } from "@/lib/sites";
 import { frameTime, isBesideView, playbackEnd } from "@/lib/skyView";
-import { timelineCut, timelineRows } from "@/lib/timeline";
+import { relay } from "@/lib/dsnRelay";
+import { TIMELINE_DAYS, timelineCut, timelineRows } from "@/lib/timeline";
 import { stateAt, type BodyState } from "@/lib/windows";
 import styles from "./sky.module.css";
+import { DsnRelay } from "./DsnRelay";
 import { SkyInsight } from "./SkyInsight";
 import { SkyStage, type SkySpan } from "./SkyStage";
 import { SkyTimeline } from "./SkyTimeline";
@@ -199,6 +201,8 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
     () => (data.status === "ready" ? timelineRows(data.ephemeris, site, data.profile, timeMs) : null),
     [data, site, timeMs],
   );
+  const relayEndMs = data.status === "ready" ? Math.min(timeMs + TIMELINE_DAYS * DAY_MS, data.ephemeris.dataEnd()) : timeMs;
+  const relayPlan = useMemo(() => (data.status === "ready" ? relay(data.ephemeris, timeMs, relayEndMs) : null), [data, timeMs, relayEndMs]);
   // moving frames read from the run's windows; a frame that has settled asks the engine directly
   const { isPlaying } = playback;
   const settledMs = useDeferredValue(shownMs);
@@ -236,6 +240,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
         <CountdownItem name="Sun" outlook={outlook.sun} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="sunrise" sets="sunset" tone={styles.sun} />
       </section>
       <SkyTimeline rows={timeline} startMs={timeMs} shownMs={shownMs} cutMs={timelineCut(data.ephemeris, timeMs)} />
+      {relayPlan && relayEndMs > timeMs && !(site.id !== null && neverSeesEarth(site.id)) && <DsnRelay key={`${siteKey}|${timeMs}`} eph={data.ephemeris} plan={relayPlan} startMs={timeMs} endMs={relayEndMs} shownMs={shownMs} />}
       {site.id !== null && neverSeesEarth(site.id) && (
         <p className={styles.note} data-testid="far-side-note">
           Earth never rises at this site, so direct contact with Earth is impossible and there are no Golden hours. Landers on the

@@ -6,10 +6,13 @@ import { MOON_RADIUS_KM, type SubpointYear, type Track } from "../geometry";
 import { findSite, TERRAIN_COVERAGE_LAT, type CuratedSite } from "../sites";
 import type { HeightManifest } from "../terrain/customTerrain";
 import type { DsnYear } from "../windows";
+import { ELEVATION_MASK_DEG } from "../dsnRelay";
 
 const PROFILE_POINTS = 360;
 const STATIONS = 3;
 const MAX_MASK = 2 ** STATIONS - 1;
+/** "Place (Country), DSS-nn", as the pipeline writes it. */
+const STATION_NAME = /^[^(),]+ \([^()]+\), DSS-\d+$/;
 const SUN_KM: readonly [number, number] = [1.3e8, 1.7e8];
 const EARTH_KM: readonly [number, number] = [3e5, 4.5e5];
 const MAP_SIZE = 121;
@@ -97,11 +100,17 @@ export function parseDsnYear(raw: unknown, year: number): DsnYear {
   const data = requireObject(raw, "file");
   requireEqual(data.start, `${year}-01-01T00:00Z`, "start");
   requireEqual(data.step_hours, 1, "step_hours");
+  requireEqual(data.elevation_mask_deg, ELEVATION_MASK_DEG, "elevation_mask_deg");
   const mask = requireSeries(data.mask, hoursInYear(year), 0, MAX_MASK, "mask");
   mask.forEach((value, i) => {
     if (!Number.isInteger(value)) throw new Error(`mask[${i}] is ${value}, not a whole number`);
   });
-  return { start: data.start as string, step_hours: 1, mask };
+  if (!Array.isArray(data.stations) || data.stations.length !== STATIONS) throw new Error(`stations must name ${STATIONS} stations`);
+  const stations = data.stations.map((name, i) => {
+    if (typeof name !== "string" || !STATION_NAME.test(name)) throw new Error(`stations[${i}] is not a station name`);
+    return name;
+  });
+  return { start: data.start as string, step_hours: 1, stations, mask };
 }
 
 export function parseHorizon(raw: unknown, site: CuratedSite): HorizonFile {

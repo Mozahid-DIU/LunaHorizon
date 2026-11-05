@@ -609,6 +609,314 @@
   line-height: 1.5;
 }
 
+/* the three DSN stations share the comms blue in three shades; red appears only where none listens */
+.relay {
+  --relay-goldstone: #3d7fd6;
+  --relay-madrid: var(--earth);
+  --relay-canberra: #a9d0ff;
+  margin-top: 16px;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: radial-gradient(120% 140% at 0% 0%, #6fb0ff14, transparent 55%), var(--panel);
+  box-shadow: 0 24px 60px #0008;
+}
+
+.relayHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.relayLabel {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.relayHeadline {
+  max-width: 900px;
+  margin: 0;
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.relayHeadline em {
+  color: var(--earth);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.relaySub {
+  max-width: 760px;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.relayNow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 14px;
+  border: 1px solid #6fb0ff55;
+  border-radius: 18px;
+  background: #6fb0ff1f;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.relayNow i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--relay-goldstone);
+  box-shadow: 0 0 0 4px #3d7fd640;
+}
+
+.relayNowNone {
+  border-color: #ff8a7a66;
+  background: #ff8a7a1f;
+  color: var(--danger);
+}
+
+.relayNowNone i {
+  background: var(--danger);
+  box-shadow: 0 0 0 4px #ff8a7a33;
+}
+
+.relayBody {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.relayRingBox {
+  margin: 0;
+  text-align: center;
+}
+
+.relayRingBox figcaption {
+  max-width: 280px;
+  margin: 6px auto 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.relayRing {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.relayRingTrack {
+  fill: none;
+  stroke: #ffffff10;
+  stroke-width: 13;
+}
+
+.relayRing path {
+  fill: none;
+  stroke-width: 13;
+}
+
+.relayRing path.relayRingGap {
+  stroke: var(--danger);
+  stroke-width: 4;
+}
+
+.relayRingLetter {
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: var(--space);
+  stroke-width: 3px;
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.relayRingTick {
+  fill: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  text-anchor: middle;
+}
+
+.relayRingHand {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.relayRingHub {
+  fill: var(--ink);
+}
+
+.relayRingTime {
+  fill: var(--ink);
+  font-size: 12px;
+  text-anchor: middle;
+}
+
+.relayPointer {
+  /* room for two lines, so the lanes never jump under a finger */
+  min-height: 3em;
+  line-height: 1.5;
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+}
+
+.relayLanes {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  padding: 6px 0;
+  border-radius: 10px;
+  cursor: crosshair;
+  touch-action: pan-y;
+}
+
+.relayLanes {
+  --relay-name: 110px;
+  --relay-hours: 52px;
+  --relay-gap: 10px;
+}
+
+.relayLane {
+  display: grid;
+  grid-template-columns: var(--relay-name) minmax(0, 1fr) var(--relay-hours);
+  gap: var(--relay-gap);
+  align-items: center;
+}
+
+.relayName {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.relayName small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.relayTrack {
+  position: relative;
+  height: 14px;
+  overflow: hidden;
+  border-radius: 7px;
+  background: var(--hover);
+}
+
+.relayTrack i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  min-width: 1px;
+}
+
+.relayHours {
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  text-align: right;
+}
+
+.relayGapLane .relayName,
+.relayGapLane .relayHours {
+  color: var(--danger);
+}
+
+.relayGapLane .relayTrack {
+  background: none;
+}
+
+.relayGapLane .relayTrack i,
+.relayBarGap {
+  background: repeating-linear-gradient(135deg, var(--danger) 0 3px, transparent 3px 6px);
+}
+
+.relayCursor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 2px solid var(--ink);
+  pointer-events: none;
+}
+
+.relayGoldstone {
+  background: var(--relay-goldstone);
+  stroke: var(--relay-goldstone);
+}
+
+.relayMadrid {
+  background: var(--relay-madrid);
+  stroke: var(--relay-madrid);
+}
+
+.relayCanberra {
+  background: var(--relay-canberra);
+  stroke: var(--relay-canberra);
+}
+
+.relayShare {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.relayBar {
+  display: flex;
+  gap: 2px;
+  height: 10px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.relayKeys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.relayKeys i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  border-radius: 3px;
+  vertical-align: -1px;
+}
+
+.relayWhy {
+  max-width: 820px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.relayWhy b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
 @media (max-width: 1279px) {
   .sky {
     padding: 20px 16px 24px;
@@ -658,5 +966,26 @@
 @media (max-width: 640px) {
   .readouts {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .relay {
+    padding: 18px 16px;
+  }
+
+  .relayBody {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .relayLanes {
+    --relay-name: 78px;
+    --relay-hours: 40px;
+    --relay-gap: 8px;
+  }
+
+  .relayTrack {
+    height: 12px;
   }
 }

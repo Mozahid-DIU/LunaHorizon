@@ -23,7 +23,7 @@ const DAY_MS = 86_400_000;
 const MISSION_MS = MISSION_DAYS * DAY_MS;
 const DEGREES = Math.PI / 180;
 /** Window edges are known to 30 s, so two totals this close are the same answer. */
-const SAME_HOURS = 1 / 60;
+export const SAME_HOURS = 1 / 60;
 
 export interface DatesPlan {
   best: BestDate[];
@@ -81,7 +81,7 @@ export interface DatesHeadline {
   emphasis: string;
 }
 
-const isSameAnswer = (a: number, b: number) => Math.floor(a) === Math.floor(b) && Math.abs(a - b) < SAME_HOURS;
+export const isSameAnswer = (a: number, b: number) => Math.floor(a) === Math.floor(b) && Math.abs(a - b) < SAME_HOURS;
 
 function hoursText(hours: number): string {
   if (hours < 1) return "under 1 Golden hour.";

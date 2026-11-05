@@ -1,6 +1,9 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
+import { createDataLoader } from "../src/lib/data/loader";
+import { nudgePlan } from "../src/lib/nudgePlan";
+import { findSite } from "../src/lib/sites";
 import { bestDates, slipPlanner } from "../src/lib/planning";
 import { loadEphemeris, loadProfile } from "../src/lib/testData";
 
@@ -77,6 +80,7 @@ test("a row links to its sky and to a comparison", async ({ page }) => {
 });
 
 test("the search leaves the page running", async ({ page }) => {
+  test.setTimeout(180_000);
   await page.addInitScript(() => {
     const state = { last: 0, longest: 0 };
     Object.assign(window, { gaps: state });
@@ -99,9 +103,11 @@ test("the search leaves the page running", async ({ page }) => {
   await page.waitForTimeout(1000);
   await page.evaluate(() => Object.assign((window as unknown as { gaps: { longest: number } }).gaps, { longest: 0 }));
   await ready(page);
+  // then the nearby points are built in a worker of their own; the page must keep running through both
+  await expect(page.getByTestId("nudge-headline")).toBeVisible({ timeout: 150_000 });
   const longest = await page.evaluate(() => (window as unknown as { gaps: { longest: number } }).gaps.longest);
   expect(longest).toBeLessThan(250);
-  expect(workerUrls).toHaveLength(1);
+  expect(workerUrls).toHaveLength(2);
 });
 
 test("changing the site stops the old search", async ({ page }) => {
@@ -191,4 +197,59 @@ test("the page fits without sideways scrolling", async ({ page }) => {
   await page.goto("/dates");
   await ready(page);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test.describe("small change, big impact", () => {
+  const section = (page: Page) => page.locator("section[aria-labelledby=nudge-title]");
+  const hoursOf = (text: string) => Number(/^(\d+) h/.exec(text.trim())?.[1]);
+
+  test("every point and date equals the engine run on the same tiles", async ({ page }) => {
+    test.setTimeout(240_000);
+    const data = join(__dirname, "..", "public", "data");
+    const loader = createDataLoader(async (input) => new Response(readFileSync(join(data, String(input).replace("/data/", ""))), { status: 200 }));
+    const site = findSite("im-2")!;
+    const plan = await nudgePlan(loader, loadEphemeris([2027, 2028]), site, loadProfile("im-2"), Date.UTC(2027, 11, 29, 21));
+    await page.goto("/dates?site=im-2");
+    await expect(page.getByTestId("nudge-headline")).toBeVisible({ timeout: 180_000 });
+    await expect(section(page).getByTestId("nudge-centre")).toContainText(`${Math.floor(plan.centreHours)} h`);
+    for (const m of plan.moved) {
+      await expect(section(page).locator(`[data-place="${m.km}${m.letter}"]`)).toContainText(`${Math.floor(m.goldenHours)} h`);
+    }
+    const days = section(page).getByTestId("nudge-day");
+    await expect(days.nth(0)).toContainText(`${Math.floor(plan.dates[0].goldenHours!)} h`);
+    await expect(days.nth(1)).toContainText(`${Math.floor(plan.chosenHours)} h`);
+    await expect(days.nth(2)).toContainText(`${Math.floor(plan.dates[1].goldenHours!)} h`);
+  });
+
+  test("the Shackleton rim loses everything a kilometre away, and every figure agrees across the section", async ({ page }) => {
+    test.setTimeout(180_000);
+    await page.goto("/dates");
+    const headline = page.getByTestId("nudge-headline");
+    await expect(headline).toHaveText(/^Move 1 km \w+ and the landing loses all 336 Golden hours; a day's delay costs 21\.$/, { timeout: 150_000 });
+    const points = section(page).getByTestId("nudge-point");
+    await expect(points).toHaveCount(8);
+    await expect(section(page).getByTestId("nudge-centre")).toContainText("336 h");
+    // each point's hours appear again in the list of changes
+    const changes = await section(page).getByTestId("nudge-change").allInnerTexts();
+    for (const place of ["1N", "2E", "1E"]) {
+      const text = await points.and(page.locator(`[data-place="${place}"]`)).innerText();
+      const km = place[0];
+      const dir = { N: "north", E: "east", S: "south", W: "west" }[place[1]]!;
+      const line = changes.find((c) => c.startsWith(`${km} km ${dir}`))!;
+      expect(line.split(String.fromCharCode(10)).some((part) => part.trim().startsWith(`${hoursOf(text)} h ·`))).toBe(true);
+    }
+    // the day-later card equals the slip table's own "1 day later" row, found by a different path
+    const slipLater = page.locator("table tr", { hasText: "1 day later" }).getByTestId("slip-golden");
+    const laterCard = section(page).getByTestId("nudge-day").nth(2);
+    expect(hoursOf(await laterCard.locator("b").innerText())).toBe(hoursOf(await slipLater.innerText()));
+    // and its change is worded exactly as the table words it
+    const slipChange = page.locator("table tr", { hasText: "1 day later" }).getByTestId("slip-change");
+    await expect(laterCard.locator("span")).toHaveText(await slipChange.innerText());
+  });
+
+  test("a site beyond the height tiles says why the nearby points are missing", async ({ page }) => {
+    await page.goto("/dates?site=apollo-11");
+    await expect(section(page)).toContainText("our height tiles cover only the south polar region");
+    await expect(page.getByTestId("nudge-headline")).toHaveCount(0);
+  });
 });

@@ -37,6 +37,7 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Power:** an example lander's solar panel and battery over 14 or 30 days, with the battery's charge on a chart and the model's limits on screen
 - [x] **Ellipse:** best, median and worst Golden hours within 100 m, 500 m or 1 km of the target at IM-1, IM-2 and the Shackleton rim, and where IM-2 Athena really came down
 - [x] **Who can hear the Moon:** on the Sky page, which Deep Space Network station (Goldstone, Madrid, Canberra) has the Moon at least 10° up, now, through the day and across 30 days, with the hours when none does
+- [x] **Small change, big impact:** on the Dates page, the same landing from points 1 km and 2 km away in each direction, each with its own horizon built in the browser, and a day earlier or later
 - [x] **Map reader:** point at the Golden Window Map to read any 5 km cell, click to check that exact point with its own horizon, and see the map's cell beside the point's own five-year share
 - [x] **Lander's-eye 3D:** real LOLA terrain at 1:1 around IM-1, IM-2 and the Shackleton rim, lit from the engine's Sun direction with shadows that move through the 30 days, from above or from the lander's eye, with the horizon file's skyline drawn over it as a check
 

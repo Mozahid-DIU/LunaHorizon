@@ -13,6 +13,7 @@ import { MISSION_DAYS } from "@/lib/siteSummary";
 import { findSite, shortName } from "@/lib/sites";
 import { formatHours } from "@/lib/timeline";
 import styles from "./dates.module.css";
+import { NudgeSection } from "./NudgeSection";
 
 const MISSION_HOURS = MISSION_DAYS * 24;
 
@@ -170,6 +171,7 @@ export function DatesView() {
               </p>
             </section>
           </div>
+          <NudgeSection site={site} landingMs={timeMs} />
         </>
       )}
     </>

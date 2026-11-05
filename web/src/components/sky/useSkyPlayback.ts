@@ -30,8 +30,11 @@ export interface SkyPlayback {
   seek: (offsetMs: number) => void;
 }
 
-/** A run of `lengthMs` that lasts until `key` changes, when it returns to the start. */
-export function useSkyPlayback(key: string, lengthMs: number, isMotionReduced: boolean): SkyPlayback {
+/**
+ * A run of `lengthMs` that lasts until `key` changes, when it returns to the start.
+ * `speed` multiplies the usual pace of the run.
+ */
+export function useSkyPlayback(key: string, lengthMs: number, isMotionReduced: boolean, speed = 1): SkyPlayback {
   const [stored, setStored] = useState<Run | null>(null);
   if (stored !== null && stored.key !== key) setStored(null);
   const run = stored?.key === key ? stored : { key, offsetMs: 0, isPlaying: false };
@@ -47,14 +50,14 @@ export function useSkyPlayback(key: string, lengthMs: number, isMotionReduced: b
       last = now;
       setStored((current) => {
         if (current?.key !== key) return current;
-        const next = advance(current.offsetMs, realMs);
+        const next = advance(current.offsetMs, realMs * speed);
         return next >= lengthMs ? { key, offsetMs: lengthMs, isPlaying: false } : { key, offsetMs: next, isPlaying: true };
       });
       frame = requestAnimationFrame(step);
     };
     frame = requestAnimationFrame(step);
     return () => cancelAnimationFrame(frame);
-  }, [isPlaying, key, lengthMs]);
+  }, [isPlaying, key, lengthMs, speed]);
 
   return {
     offsetMs,

@@ -1,0 +1,473 @@
+/* The 3D page: the scene fills the screen below the top bar; the controls float over it on glass. */
+.page {
+  position: relative;
+  min-height: calc(100vh - 92px);
+}
+
+.stage {
+  position: relative;
+  height: calc(100vh - 92px);
+  min-height: 560px;
+  overflow: hidden;
+  background: #02030a;
+}
+
+.canvasBox {
+  position: absolute;
+  inset: 0;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  touch-action: none;
+}
+
+.canvas:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--mint);
+}
+
+.starting,
+.failed {
+  margin: 0;
+  padding: 72px 40px;
+  color: var(--muted);
+}
+
+.failed {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.glass {
+  position: absolute;
+  z-index: 2;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 50px #0009;
+}
+
+.topPanel {
+  top: 20px;
+  left: 24px;
+  max-width: 420px;
+}
+
+.readouts {
+  top: 20px;
+  right: 24px;
+  display: grid;
+  gap: 10px;
+  width: 330px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.title small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.modes {
+  display: inline-flex;
+  margin-top: 12px;
+  padding: 3px;
+  border-radius: 12px;
+  background: #ffffff10;
+}
+
+.modes button {
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.modes button[aria-pressed="true"] {
+  background: var(--mint);
+  color: var(--on-mint);
+  font-weight: 600;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.chip:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.chip[aria-pressed="true"] {
+  border-color: #46e6b466;
+  background: #46e6b41a;
+  color: var(--ink);
+}
+
+.readout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  align-items: baseline;
+}
+
+.readout b {
+  font-size: 21px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.readout span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.readouts small {
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.sunTone {
+  color: var(--sun);
+}
+
+.earthTone {
+  color: var(--earth);
+}
+
+.mintTone {
+  color: var(--mint);
+}
+
+.caption {
+  position: absolute;
+  z-index: 2;
+  right: 24px;
+  bottom: 168px;
+  max-width: 330px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+  text-shadow: 0 1px 6px #000;
+}
+
+.film {
+  position: absolute;
+  z-index: 2;
+  right: 24px;
+  bottom: 22px;
+  left: 24px;
+  padding: 12px 16px 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.filmHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.play {
+  min-width: 150px;
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--mint);
+  color: var(--on-mint);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.motionNote {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.keys {
+  display: flex;
+  gap: 14px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.keys span::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+  border-radius: 2px;
+  vertical-align: -1px;
+  background: var(--c);
+}
+
+.keyGolden {
+  --c: #f5b84177;
+}
+
+.keySun {
+  --c: #f5b84133;
+}
+
+.keyEarth {
+  --c: var(--earth);
+}
+
+.keyNight {
+  --c: #060a18;
+}
+
+.speeds {
+  display: flex;
+  gap: 6px;
+}
+
+.speeds button {
+  padding: 4px 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.speeds button[aria-pressed="true"] {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+.strip {
+  position: relative;
+  height: 30px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #060a18;
+}
+
+.strip i,
+.strip b {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.stripSun {
+  background: linear-gradient(180deg, #f5b84133, #f5b84111);
+}
+
+.stripGolden {
+  background: linear-gradient(180deg, #f5b84177, #f5b84122), repeating-linear-gradient(90deg, transparent 0 10px, #0002 10px 11px);
+}
+
+.stripEarth {
+  top: auto !important;
+  height: 4px;
+  background: var(--earth);
+}
+
+.stripCut {
+  width: 2px;
+  background: var(--danger);
+}
+
+.stripHead {
+  width: 2px;
+  background: var(--ink);
+  box-shadow: 0 0 0 1px #000a;
+}
+
+.scrub {
+  width: 100%;
+  height: 22px;
+  margin: 4px 0 0;
+  accent-color: var(--mint);
+}
+
+.ticks {
+  position: relative;
+  height: 16px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+}
+
+.ticks span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.ticks span:first-child {
+  transform: none;
+}
+
+.ticks span:last-child {
+  transform: translateX(-100%);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.unavailable {
+  max-width: 720px;
+  padding: 24px 40px 40px;
+}
+
+.unavailable h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.unavailable p {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.unavailable a {
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  /* on a phone the page scrolls: the scene first, then the readouts and the film below it */
+  .page {
+    min-height: 0;
+  }
+
+  .stage {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+    min-height: 0;
+    padding-bottom: 10px;
+  }
+
+  .canvasBox {
+    position: relative;
+    height: 62vh;
+    min-height: 420px;
+  }
+
+  .topPanel {
+    position: static;
+    order: -1;
+    max-width: none;
+    margin: 10px 12px 0;
+    padding: 10px 12px;
+  }
+
+  .title {
+    font-size: 17px;
+  }
+
+  .readouts {
+    position: static;
+    gap: 5px;
+    width: auto;
+    margin: 0 12px;
+    padding: 10px 12px;
+  }
+
+  .readout b {
+    font-size: 16px;
+  }
+
+  .readouts small,
+  .caption,
+  .keys {
+    display: none;
+  }
+
+  .film {
+    position: static;
+    margin: 0 10px;
+    padding: 10px 12px;
+  }
+
+  .play {
+    min-width: 0;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  .unavailable {
+    padding: 20px 16px 32px;
+  }
+}

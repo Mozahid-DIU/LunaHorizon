@@ -14,6 +14,7 @@ const HEADLINES: Record<string, RegExp | string> = {
   "/power": /^Survives|^Runs out of power/,
   "/proof": /checks passed/,
   "/ellipse": /^Within 500 m of the target/,
+  "/3d": /^Shackleton crater rim/,
 };
 
 function watchErrors(page: Page): string[] {

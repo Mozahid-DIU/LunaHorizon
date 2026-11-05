@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
-import { PagePlaceholder } from "@/components/shell/PagePlaceholder";
+import { Suspense } from "react";
+import { ThreeView, ThreeViewFallback } from "@/components/three/ThreeView";
+import styles from "@/components/three/three.module.css";
 
 export const metadata: Metadata = { title: "3D" };
 
 export default function ThreeDPage() {
-  return <PagePlaceholder title="3D" purpose="Stand on real lunar terrain from the lander's eye." />;
+  return (
+    <div className={styles.page}>
+      <Suspense fallback={<ThreeViewFallback />}>
+        <ThreeView />
+      </Suspense>
+    </div>
+  );
 }

@@ -227,6 +227,38 @@ describe("corrupted DSN files", () => {
   });
 });
 
+describe("3D terrain tiles", () => {
+  const binFetch = (change?: (bytes: Buffer) => Buffer) =>
+    vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith(".bin")) {
+        const bytes = readFileSync(join(DATA, url.replace("/data/", "")));
+        const body = change ? change(bytes) : bytes;
+        return new Response(new Uint8Array(body), { status: 200 });
+      }
+      return new Response(diskText(url), { status: 200 });
+    });
+
+  it("loads the three levels of a polar site", async () => {
+    const tiles = await createDataLoader(binFetch()).loadTerrainTiles("shackleton-rim");
+    expect(tiles.meta.site).toBe("shackleton-rim");
+    expect(tiles.levels.map(({ size }) => size)).toEqual([301, 301, 301]);
+  });
+
+  it("refuses a site without tiles before fetching anything", async () => {
+    const fetchFn = binFetch();
+    const error = await failure(createDataLoader(fetchFn).loadTerrainTiles("apollo-11"));
+    expect(error.kind).toBe("unavailable");
+    expect(fetchFn).not.toHaveBeenCalled();
+  });
+
+  it("refuses a binary file of the wrong length", async () => {
+    const error = await failure(createDataLoader(binFetch((bytes) => bytes.subarray(0, bytes.length - 2))).loadTerrainTiles("im-2"));
+    expect(error.kind).toBe("invalid");
+    expect(error.file).toBe("terrain/im-2.bin");
+  });
+});
+
 describe("the map grid", () => {
   const load = (fetchFn: ReturnType<typeof corrupt>) => failure(createDataLoader(fetchFn).loadMapGrid());
   const FILE = "golden-grid.json";

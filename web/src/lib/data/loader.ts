@@ -3,7 +3,7 @@
  * and kept only if it passes, so a failed or damaged file can be tried again.
  */
 import { DATA_END_MS } from "../dataRange";
-import { findSite, hasHeightTiles } from "../sites";
+import { findSite, hasHeightTiles, hasTiles } from "../sites";
 import {
   computeHorizon,
   decodeTile,
@@ -16,6 +16,7 @@ import {
   type HeightManifest,
   type TileRef,
 } from "../terrain/customTerrain";
+import { decodeLevels, parseTerrainMeta, type TerrainLevels, type TerrainMeta } from "../terrain/terrainTiles";
 import { Ephemeris, type DsnYear, type YearData } from "../windows";
 import type { SubpointYear } from "../geometry";
 import {
@@ -93,6 +94,13 @@ export interface DataLoader {
   loadValidation(): Promise<ValidationFile>;
   loadHeightManifest(): Promise<HeightManifest>;
   loadCustomTerrain(lat: number, lon: number): Promise<CustomTerrain>;
+  loadTerrainTiles(siteId: string): Promise<TerrainTiles>;
+}
+
+/** A site's 3D tiles: the checked metadata and the decoded height grids. */
+export interface TerrainTiles {
+  meta: TerrainMeta;
+  levels: TerrainLevels;
 }
 
 export function createDataLoader(fetchFn: FetchFn = (input, init) => fetch(input, init), baseUrl = "/data"): DataLoader {
@@ -179,6 +187,23 @@ export function createDataLoader(fetchFn: FetchFn = (input, init) => fetch(input
       const site = findSite(siteId);
       if (!site?.has_ellipse) throw new DataFileError("unavailable", "ellipse", "no landing zone data for this site");
       return load(`horizon/${site.id}-ellipse.json`, (raw) => parseEllipse(raw, site));
+    },
+
+    loadTerrainTiles(siteId) {
+      return remember(`terrain-tiles/${siteId}`, async () => {
+        const site = findSite(siteId);
+        if (!site || !hasTiles(site)) throw new DataFileError("unavailable", "terrain", "no 3D tiles for this site");
+        const file = `terrain/${site.id}.bin`;
+        const [meta, bytes] = await Promise.all([
+          load(`terrain/${site.id}.json`, (raw) => parseTerrainMeta(raw, site)),
+          readFile(fetchFn, baseUrl, file, (response) => response.arrayBuffer()),
+        ]);
+        try {
+          return { meta, levels: decodeLevels(meta, bytes) };
+        } catch (error: unknown) {
+          throw new DataFileError("invalid", file, error instanceof Error ? error.message : "failed its checks");
+        }
+      });
     },
 
     loadMapGrid: () => load("map/golden-grid.json", parseMapGrid),

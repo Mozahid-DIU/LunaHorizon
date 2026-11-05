@@ -14,6 +14,24 @@ const eph = loadEphemeris([2027, 2028]);
 const UP = { lit: true, earthVisible: true };
 const DOWN = { lit: false, earthVisible: false };
 
+describe("outlookAt over a longer run", () => {
+  test("a 30-day run reads events up to 60 days past its last frame", () => {
+    const site = findSite("shackleton-rim")!;
+    const profile = loadProfile("shackleton-rim");
+    const start = DEFAULT_TIME_MS;
+    const runEnd = start + 30 * DAY_MS;
+    const events = eventWindows(eph, site, profile, start, runEnd);
+    for (const t of [start + 20 * DAY_MS, start + 29 * DAY_MS]) {
+      const quick = outlookAt(events, t, stateAt(eph, site, profile, t));
+      const direct = outlookFrom(countdown(eph, site, profile, t));
+      expect(quick.sun.eventMs === null).toBe(direct.sun.eventMs === null);
+      expect(quick.earth.eventMs === null).toBe(direct.earth.eventMs === null);
+      if (quick.earth.eventMs !== null && direct.earth.eventMs !== null) expect(Math.abs(quick.earth.eventMs - direct.earth.eventMs)).toBeLessThan(HOUR_MS);
+    }
+    expect(skyDataEnd(start, runEnd)).toBe(runEnd + 60 * DAY_MS);
+  });
+});
+
 describe("outlookAt", () => {
   test.each(REPRESENTATIVE_SITES)("%s: every frame agrees with the engine's countdown", (id) => {
     const site = findSite(id)!;

@@ -14,7 +14,8 @@ const MINUTE_MS = 60_000;
 const DAY_MS = 86_400_000;
 const PLAY_DAYS = 14;
 const PLAY_SECONDS = 30;
-const PLAY_RATE = (PLAY_DAYS * DAY_MS) / (PLAY_SECONDS * 1000);
+/** Moon time per real millisecond while playing: 14 days in 30 seconds. */
+export const PLAY_RATE = (PLAY_DAYS * DAY_MS) / (PLAY_SECONDS * 1000);
 const LABEL_GAP_PX = 18;
 const LABEL_LINE_PX = 12;
 const LABEL_ROOM_PX = 32;

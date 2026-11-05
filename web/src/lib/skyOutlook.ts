@@ -27,13 +27,14 @@ export interface GoldenStatus {
 }
 
 /** The data a run needs: its last frame, plus that frame's whole event search. */
-export function skyDataEnd(startMs: number): number {
-  return Math.min(playbackEnd(startMs) + DEFAULT_SEARCH_MS, DATA_END_MS);
+export function skyDataEnd(startMs: number, runEndMs: number = playbackEnd(startMs)): number {
+  return Math.min(runEndMs + DEFAULT_SEARCH_MS, DATA_END_MS);
 }
 
-export function eventWindows(eph: Ephemeris, site: Site, profile: readonly number[], startMs: number): EventWindows {
+/** The Sun and Earth windows every frame of a run to `runEndMs` can be read from. */
+export function eventWindows(eph: Ephemeris, site: Site, profile: readonly number[], startMs: number, runEndMs: number = playbackEnd(startMs)): EventWindows {
   const dataEndMs = eph.dataEnd();
-  const endMs = Math.min(playbackEnd(startMs) + DEFAULT_SEARCH_MS, dataEndMs);
+  const endMs = Math.min(runEndMs + DEFAULT_SEARCH_MS, dataEndMs);
   return {
     lit: findWindows(eph, site, profile, startMs, endMs, "lit"),
     earth: findWindows(eph, site, profile, startMs, endMs, "earth"),

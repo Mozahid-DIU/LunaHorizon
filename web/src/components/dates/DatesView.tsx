@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { LessonCard } from "@/components/classroom/LessonCard";
 import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
 import { CALCULATING, DATA_FAILED, datesAnswer, type LessonAnswer } from "@/lib/classroomAnswers";
 import { compareQuery, compareValue, extraFor, joinQueries } from "@/lib/compare";
 import { useDatesPlan } from "@/lib/data/useDatesPlan";
-import { datesHeadline, formatChange, formatPercent, NEARBY_KM, nearbySites } from "@/lib/datesPlan";
+import { datesHeadline, formatChange, formatPercent, NEARBY_KM, nearbySites, planEnd, SEARCH_DAYS } from "@/lib/datesPlan";
 import type { BestDate, SlipPlan, SlipRow } from "@/lib/planning";
 import { formatUtc, selectionQuery, withQuery, type Selection } from "@/lib/selection";
 import { MISSION_DAYS } from "@/lib/siteSummary";
@@ -16,6 +16,9 @@ import { findSite, shortName } from "@/lib/sites";
 import { formatHours } from "@/lib/timeline";
 import styles from "./dates.module.css";
 import { NudgeSection } from "./NudgeSection";
+import { YearStrip } from "./YearStrip";
+
+const DAY_MS = 86_400_000;
 
 const MISSION_HOURS = MISSION_DAYS * 24;
 
@@ -114,6 +117,7 @@ export function DatesView() {
   const result = useDatesPlan(site, timeMs);
   const headline = result.status === "ready" ? datesHeadline(result.plan.best, result.plan.slip?.baseline.goldenHours ?? null, result.plan.isSearchCut) : null;
   const heading = useRef<HTMLHeadingElement>(null);
+  const [isNudgeOpen, setNudgeOpen] = useState(false);
 
   // the list goes away while the new search runs, so focus must not stay on its button
   const onUse = (ms: number) => {
@@ -162,9 +166,11 @@ export function DatesView() {
       {result.status === "ready" && result.plan.slip && (
         <>
           {result.isFromTiles && <p className={styles.note}>Horizon computed in your browser from NASA LOLA height tiles.</p>}
+          <YearStrip best={result.plan.best} startMs={timeMs} endMs={Math.min(timeMs + SEARCH_DAYS * DAY_MS, planEnd(timeMs) - MISSION_DAYS * DAY_MS)} />
           <div className={styles.layout}>
             <section aria-labelledby="best-title">
-              <h2 id="best-title">{result.plan.isSearchCut ? "Best landings before our data ends" : "Best landings, 12 months from the chosen date"}</h2>
+              <h2 id="best-title">
+                <span className={styles.num} aria-hidden="true">01</span>{result.plan.isSearchCut ? "Best landings before our data ends" : "Best landings, 12 months from the chosen date"}</h2>
               <ol className={styles.bestList}>
                 {result.plan.best.map((best, i) => (
                   <BestRow key={best.landingMs} rank={i + 1} best={best} selection={selection} onUse={onUse} />
@@ -176,7 +182,9 @@ export function DatesView() {
               </p>
             </section>
             <section aria-labelledby="slip-title">
-              <h2 id="slip-title">If the plan changes</h2>
+              <h2 id="slip-title">
+                <span className={styles.num} aria-hidden="true">02</span>If the plan changes
+              </h2>
               <SlipTable slip={result.plan.slip} selection={selection} />
               <p className={styles.note}>
                 {result.hasTerrain
@@ -185,7 +193,12 @@ export function DatesView() {
               </p>
             </section>
           </div>
-          <NudgeSection site={site} landingMs={timeMs} />
+          <details className={styles.more} onToggle={(event) => setNudgeOpen(event.currentTarget.open)}>
+            <summary>
+              <span className={styles.num} aria-hidden="true">03</span>Small change, big impact: move the landing 1 to 2 km, or by a day
+            </summary>
+            {isNudgeOpen && <NudgeSection site={site} landingMs={timeMs} />}
+          </details>
         </>
       )}
     </>

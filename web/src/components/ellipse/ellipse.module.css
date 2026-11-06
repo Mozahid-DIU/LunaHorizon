@@ -38,17 +38,17 @@
   display: inline-flex;
   gap: 4px;
   margin: 18px 0 0;
-  padding: 4px;
+  padding: 3px;
   border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--panel);
+  border-radius: 999px;
+  background: none;
 }
 
 .rings button {
-  height: 36px;
-  padding: 0 14px;
+  height: 34px;
+  padding: 0 16px;
   border: 0;
-  border-radius: 9px;
+  border-radius: 999px;
   background: none;
   color: var(--muted);
   font: inherit;
@@ -156,7 +156,7 @@
   padding: 16px 18px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: var(--panel);
+  background: #07080b;
 }
 
 .card dt {
@@ -174,6 +174,7 @@
 }
 
 .card strong {
+  font-family: var(--font-mono), monospace;
   font-size: 30px;
   font-weight: 400;
   font-variant-numeric: tabular-nums;
@@ -266,6 +267,15 @@
   color: var(--muted);
   font-size: 13px;
   line-height: 1.5;
+}
+
+.limits summary {
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.limits p {
+  margin: 10px 0 0;
 }
 
 @media (max-width: 1279px) {

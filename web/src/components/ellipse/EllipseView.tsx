@@ -179,13 +179,16 @@ export function EllipseView() {
           </>
         )}
       </div>
-      <p className={styles.limits}>
+      <details className={styles.limits}>
+        <summary>How these points are chosen, and their limits</summary>
+        <p>
         Landers rarely touch down exactly on target. This page checks the target and 8 points on rings 100 m, 500 m and 1 km
         away, each with its own horizon from 2 m above the ground. The median is the middle of these sample points, not the
         likeliest landing spot. The rings are circles; a real landing ellipse depends on the approach, and ground between the
         points can differ. Near IM-1 and IM-2 the maps have 80 m pixels and near the Shackleton rim 20 m, so the 100 m ring is
         only one to five pixels from the target. The rings in the picture are evenly spaced, not to scale.
-      </p>
+        </p>
+      </details>
     </>
   );
 }

@@ -102,7 +102,7 @@ describe("strayNumbers", () => {
   });
 
   test("numbers written in words or other digits are refused", () => {
-    expect(strayNumbers("Golden lasts two weeks.", facts)).toEqual(["two"]);
+    expect(strayNumbers("Golden lasts two weeks.", facts)).toEqual(["two", "weeks"]);
     expect(strayNumbers("Golden lasts half the mission.", facts)).toEqual(["half"]);
     // Arabic-Indic digits for 336
     expect(strayNumbers("Golden lasts \u0663\u0663\u0666 hours.", facts)).toEqual(["\u0663\u0663\u0666"]);

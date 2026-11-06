@@ -49,7 +49,7 @@ export function factsFrom(site: SelectedSite, landingMs: number, summary: SiteSu
   };
 }
 
-function siteName({ siteId, lat, lon }: InsightFacts): string {
+export function siteName({ siteId, lat, lon }: InsightFacts): string {
   const site = siteId === null ? undefined : findSite(siteId);
   return site ? shortName(site) : `the custom site at ${formatCoordinates(lat, lon)}`;
 }
@@ -57,7 +57,7 @@ function siteName({ siteId, lat, lon }: InsightFacts): string {
 const capitalised = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 /** `name` as written mid-sentence, such as "the Sun" or "Earth". */
-function nextChange(name: string, outlook: BodyOutlook, landingMs: number, isSearchCut: boolean): string {
+export function nextChange(name: string, outlook: BodyOutlook, landingMs: number, isSearchCut: boolean): string {
   const verb = outlook.isUp ? "sets" : "rises";
   if (outlook.eventMs === null) {
     return isSearchCut ? `Our data ends before ${name} ${verb}.` : `${capitalised(name)} does not ${verb.slice(0, -1)} within ${SEARCH_DAYS} days.`;
@@ -70,7 +70,7 @@ function goldenCount(hours: number): string {
   return `${Math.floor(hours)} Golden ${Math.floor(hours) === 1 ? "hour" : "hours"}`;
 }
 
-function limitSentence({ goldenHours, litHours, commsHours }: InsightFacts): string {
+export function limitSentence({ goldenHours, litHours, commsHours }: InsightFacts): string {
   const isSame = (a: number, b: number) => Math.abs(a - b) < SAME_HOURS;
   if (isSame(goldenHours, MISSION_HOURS)) return "Every mission hour is Golden.";
   if (isSame(litHours, commsHours) && isSame(goldenHours, litHours)) return `Sunlight and contact come and go together, for ${formatHours(litHours)}.`;
@@ -119,16 +119,21 @@ const QUANTITIES: readonly [RegExp, (match: RegExpMatchArray) => string][] = [
   [/(\d{1,2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* (\d{4})/g, (m) => `${m[1]} ${m[2]} ${m[3]}`],
   [/(\d{2}):(\d{2})/g, (m) => `${m[1]}:${m[2]}`],
   [/(\d+(?:\.\d+)?)°\s?([NSEW])/g, (m) => `${m[1]}°${m[2]}`],
+  [/(\d+(?:\.\d+)?)\s?°/g, (m) => `${m[1]}°`],
+  [/(\d+(?:\.\d+)?)\s?km\b/g, (m) => `${m[1]} km`],
+  [/(\d+(?:\.\d+)?)\s?(?:m|metres?|meters?)\b/g, (m) => `${m[1]} m`],
+  [/(\d+(?:\.\d+)?)\s?(?:px|pixels?)\b/g, (m) => `${m[1]} px`],
   [/(\d+(?:\.\d+)?)\s?%/g, (m) => `${m[1]}%`],
   [/(\d+(?:\.\d+)?)\s?min(?:ute)?s?\b/g, (m) => `${m[1]} min`],
   [/(\d+(?:\.\d+)?)(?:\s|-)?(?:mission |Golden )?(?:h|hours?)\b/g, (m) => `${m[1]} h`],
   [/(\d+(?:\.\d+)?)(?:\s|-)?(?:d|days?)\b/g, (m) => `${m[1]} day`],
   [/\d+(?:\.\d+)?/g, (m) => m[0]],
 ];
-const NUMBER_WORDS = /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|thirty|forty|fifty|sixty|hundred|thousand|dozen|half|quarter|twice|thrice|percent)\b/gi;
-const OTHER_DIGITS = /[^\P{Nd}0-9]+/gu;
+export const NUMBER_WORDS =
+  /\b(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundreds?|thousands?|millions?|billions?|dozens?|tens|half|halves|quarters?|thirds?|fourths?|fifths?|first|second|fourth|fifth|sixth|seventh|eighth|ninth|tenth|twice|thrice|double|triple|couple|several|few|pair|weeks?|months?|years?|percent|per cent)\b/gi;
+export const OTHER_DIGITS = /[^\P{Nd}0-9]+/gu;
 
-function quantities(text: string): string[] {
+export function quantities(text: string): string[] {
   const found: string[] = [];
   let rest = text;
   for (const [pattern, name] of QUANTITIES) {

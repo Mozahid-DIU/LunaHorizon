@@ -11,8 +11,8 @@ export const CLIENT_PER_MINUTE = 5;
 const CLIENT_PER_DAY = 40;
 /** Groq's free plan allows 1,000 requests a day; this keeps headroom for the demo. */
 const ALL_PER_DAY = 800;
-const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-const TIMEOUT_MS = 12_000;
+export const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+export const TIMEOUT_MS = 12_000;
 const MAX_TOKENS = 700;
 const MAX_CACHED = 300;
 const MAX_CLIENTS = 5_000;
@@ -29,7 +29,7 @@ const SYSTEM = [
   "Write plain English for a general audience, in 3 or 4 short sentences, with no lists, headings or markdown.",
 ].join(" ");
 
-export type FallbackReason = "off" | "busy" | "failed" | "checked" | "invalid";
+export type FallbackReason = "off" | "busy" | "failed" | "checked" | "invalid" | "declined";
 
 export type InsightReply = { source: "ai"; text: string; model: string } | { source: "rules"; reason: FallbackReason };
 
@@ -38,12 +38,14 @@ export interface InsightResult {
   reply: InsightReply;
 }
 
-type FetchFn = (input: string, init: RequestInit) => Promise<Response>;
+export type FetchFn = (input: string, init: RequestInit) => Promise<Response>;
 
-interface ServiceOptions {
+export interface ServiceOptions {
   apiKey: string | undefined;
   fetchFn?: FetchFn;
   now?: () => number;
+  /** A limiter shared with other AI routes, so their total stays within the plan. */
+  allow?: (client: string) => boolean;
 }
 
 interface Usage {
@@ -53,7 +55,7 @@ interface Usage {
   inDay: number;
 }
 
-const fallback = (status: number, reason: FallbackReason): InsightResult => ({ status, reply: { source: "rules", reason } });
+export const fallback = (status: number, reason: FallbackReason): InsightResult => ({ status, reply: { source: "rules", reason } });
 
 function prompt(facts: InsightFacts): string {
   return [
@@ -65,12 +67,12 @@ function prompt(facts: InsightFacts): string {
 }
 
 /** Plain sentences only: markdown marks and line breaks are taken out. */
-function cleaned(text: string): string {
+export function cleaned(text: string): string {
   return text.replace(/[*_#`>]/g, "").replace(/\s+/g, " ").trim();
 }
 
 /** Counts per visitor and in total; old visitors are dropped so memory stays bounded. */
-function createLimiter(now: () => number) {
+export function createLimiter(now: () => number) {
   const clients = new Map<string, Usage>();
   let total = { dayStart: now(), inDay: 0 };
 
@@ -90,8 +92,10 @@ function createLimiter(now: () => number) {
   };
 }
 
-export function createInsightService({ apiKey, fetchFn = fetch, now = Date.now }: ServiceOptions) {
-  const allow = createLimiter(now);
+/** The one limiter both AI routes count against: Groq's daily allowance is for the key, not per route. */
+export const sharedLimiter = createLimiter(Date.now);
+
+export function createInsightService({ apiKey, fetchFn = fetch, now = Date.now, allow = createLimiter(now) }: ServiceOptions) {
   const answers = new Map<string, string>();
 
   async function askAi(facts: InsightFacts, key: string): Promise<InsightResult> {

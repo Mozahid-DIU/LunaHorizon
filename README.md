@@ -37,6 +37,7 @@ Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 - [x] **Power:** an example lander's solar panel and battery over 14 or 30 days, with the battery's charge on a chart and the model's limits on screen
 - [x] **Ellipse:** best, median and worst Golden hours within 100 m, 500 m or 1 km of the target at IM-1, IM-2 and the Shackleton rim, and where IM-2 Athena really came down
 - [x] **Who can hear the Moon:** on the Sky page, which Deep Space Network station (Goldstone, Madrid, Canberra) has the Moon at least 10° up, now, through the day and across 30 days, with the hours when none does
+- [x] **Ask LunaHorizon:** a chat panel on every page for questions about the chosen landing and how the app works; an AI words the answer from the engine's figures and our notes only, any other figure is refused, and suggested questions are answered by fixed rules when the AI is off
 - [x] **Share and CSV:** a Share button on every page copies a link that reopens the same page, site and date (a phone gets its own share sheet); the Sky page's 30-day timeline downloads as hourly data or as a list of windows, each row from the engine
 - [x] **Mission Brief:** a two-page A4 report for any site and date, ready to print or save as PDF, with a QR code back to the live page; every figure from the engine
 - [x] **Small change, big impact:** on the Dates page, the same landing from points 1 km and 2 km away in each direction, each with its own horizon built in the browser, and a day earlier or later

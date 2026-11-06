@@ -11,6 +11,7 @@ const REASONS: Record<FallbackReason, string> = {
   failed: "The AI did not answer, so this is our rule-based summary.",
   checked: "The AI's answer used a figure our engine did not give, so we did not show it. This is our rule-based summary.",
   invalid: "The request was not valid, so this is our rule-based summary.",
+  declined: "This is our rule-based summary.",
 };
 
 type Answer = { name: "asking" } | { name: "ai"; text: string; model: string } | { name: "fallback"; reason: FallbackReason };

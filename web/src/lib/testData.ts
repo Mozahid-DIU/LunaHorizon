@@ -22,6 +22,11 @@ export function loadEphemeris(years: number[]): Ephemeris {
   return new Ephemeris(map);
 }
 
+/** One year of Mission Replay data, from public/data/replay. */
+export function loadReplayEphemeris(year: number): Ephemeris {
+  return new Ephemeris(new Map([[year, { subpoints: readJson<SubpointYear>("replay", `subpoints-${year}.json`), dsn: readJson<DsnYear>("replay", `dsn-${year}.json`) }]]));
+}
+
 /** Terrain horizon for a site, or a flat 0° horizon where no terrain file exists. */
 export function loadProfile(siteId: string): number[] {
   if (!existsSync(join(DATA, "horizon", `${siteId}.json`))) {

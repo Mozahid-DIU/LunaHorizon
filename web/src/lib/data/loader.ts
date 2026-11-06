@@ -34,6 +34,8 @@ import {
 } from "./validate";
 
 export const DATA_YEARS = [2026, 2027, 2028, 2029, 2030] as const;
+/** The years of real landings in public/data/replay, from pipeline/replay_data.py. */
+export const REPLAY_YEARS = [1969, 2023, 2024, 2025] as const;
 
 const TIMEOUT_MS = 20_000;
 const MAX_CACHED_SITES = 4;
@@ -88,6 +90,8 @@ async function readJson(fetchFn: FetchFn, baseUrl: string, file: string): Promis
 
 export interface DataLoader {
   loadEphemeris(years: readonly number[]): Promise<Ephemeris>;
+  /** One year of a real landing that Mission Replay plays back, outside the app's 2026-2030 range. */
+  loadReplayEphemeris(year: number): Promise<Ephemeris>;
   loadHorizon(siteId: string): Promise<HorizonFile>;
   loadEllipse(siteId: string): Promise<EllipseFile>;
   loadMapGrid(): Promise<MapGrid>;
@@ -154,9 +158,9 @@ export function createDataLoader(fetchFn: FetchFn = (input, init) => fetch(input
 
   const loadHeightManifest = () => load("heights/manifest.json", parseHeightManifest);
 
-  const loadSubpoints = (year: number): Promise<SubpointYear> =>
-    load(`subpoints-${year}.json`, (raw) => parseSubpointYear(raw, year));
-  const loadDsn = (year: number): Promise<DsnYear> => load(`dsn-${year}.json`, (raw) => parseDsnYear(raw, year));
+  const loadSubpoints = (year: number, folder = ""): Promise<SubpointYear> =>
+    load(`${folder}subpoints-${year}.json`, (raw) => parseSubpointYear(raw, year));
+  const loadDsn = (year: number, folder = ""): Promise<DsnYear> => load(`${folder}dsn-${year}.json`, (raw) => parseDsnYear(raw, year));
 
   return {
     async loadEphemeris(years) {
@@ -172,6 +176,16 @@ export function createDataLoader(fetchFn: FetchFn = (input, init) => fetch(input
       );
       try {
         return new Ephemeris(new Map(loaded));
+      } catch (error: unknown) {
+        throw new DataFileError("invalid", "ephemeris", error instanceof Error ? error.message : "files do not line up");
+      }
+    },
+
+    async loadReplayEphemeris(year) {
+      if (!(REPLAY_YEARS as readonly number[]).includes(year)) throw new DataFileError("unavailable", "ephemeris", `no replay data for ${year}`);
+      const [subpoints, dsn] = await Promise.all([loadSubpoints(year, "replay/"), loadDsn(year, "replay/")]);
+      try {
+        return new Ephemeris(new Map([[year, { subpoints, dsn }]]));
       } catch (error: unknown) {
         throw new DataFileError("invalid", "ephemeris", error instanceof Error ? error.message : "files do not line up");
       }

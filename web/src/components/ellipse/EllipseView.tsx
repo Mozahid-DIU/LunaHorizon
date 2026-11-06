@@ -51,8 +51,8 @@ function AthenaStory({ scores }: { scores: EllipseScores }) {
       </p>
       <p className={styles.note}>
         The map here has 80 m pixels, so a crater 20 m across is not in these horizons. The {point.distance_m} m and{" "}
-        {point.bearing_deg}° are our own calculation from LROC&apos;s position. Athena&apos;s own landing in 2025 is before our
-        data, which starts in 2026.
+        {point.bearing_deg}° are our own calculation from LROC&apos;s position. To see the sky Athena itself saw in March 2025,
+        open its <Link href="/sky?replay=im-2">Mission Replay</Link>.
       </p>
     </section>
   );

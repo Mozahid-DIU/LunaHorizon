@@ -33,6 +33,7 @@ export const PAGES: readonly string[] = [
   `Power simulates an example lander: by default a ${DEFAULT_SETUP.areaM2} square metre panel at ${DEFAULT_SETUP.efficiencyPct}% efficiency that tracks the Sun, a ${DEFAULT_SETUP.capacityWh} Wh battery and a ${DEFAULT_SETUP.loadW} W load. It shows whether the lander survives; heating, charging losses and dust are not modelled.`,
   `Ellipse looks at points ${RINGS_M.map(ring).join(", ")} from the target, because landers rarely touch down exactly on target. It covers IM-1, IM-2 and the Shackleton rim, and tells where IM-2 Athena really came down.`,
   "3D shows real terrain at 1:1 around IM-1, IM-2 and the Shackleton rim, lit from the engine's Sun direction, from above or from the lander's eye.",
+  "Mission Replay, on the Sky page, plays back 5 real landings (Apollo 11, Chandrayaan-3 Vikram, IM-1 Odysseus, IM-2 Athena and Blue Ghost Mission 1) from touchdown, with the engine's sunset at each site set beside what each team reported, with links to NASA, ISRO and Firefly.",
   "Proof lists every check of our positions against NASA JPL Horizons and full SPICE, with each difference and its limit.",
   "Mission Brief is a report of 2 A4 pages for any site and date, ready to print or save as PDF, with a QR code back to the live page.",
   "Share copies a link that reopens the same page, site and date. Ask LunaHorizon is this chat.",

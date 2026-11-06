@@ -14,8 +14,9 @@ LunaHorizon uses only data, code, fonts and media that are public domain or unde
 | NSSDCA Apollo site coordinates | NASA NSSDCA | NASA data, not subject to U.S. copyright | NASA NSSDCA |
 | Crater names and positions | IAU / USGS Gazetteer of Planetary Nomenclature | U.S. government work, public domain | IAU WGPSN / USGS |
 | DSN complex locations | NASA Deep Space Network | Public facts | NASA DSN |
+| Mission Replay landing and end times, and one short quote per mission | NASA (NSSDCA, CLPS and Artemis news, Canberra DSCC history), ISRO, Press Information Bureau of India, Firefly Aerospace | Facts cited; each quote is a single sentence or less, credited and linked on the page | Linked beside each mission on the Replay page; list in `web/src/lib/replay.ts` |
 
-Landing coordinates are facts and are cited for transparency. We do not copy images, text or logos from mission pages.
+Landing coordinates and mission times are facts and are cited for transparency. We do not copy images or logos from mission pages, and the only text taken from them is the one short, credited quote per mission on the Replay page.
 
 ## Software
 

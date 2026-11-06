@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import shares from "@/data/site-shares.json";
+import { useSearchParams } from "next/navigation";
 import { useDeferredValue, useMemo, useState } from "react";
+import { MissionPicker, MissionReplay } from "@/components/replay/MissionReplay";
+import { findMission } from "@/lib/replay";
 import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
 import { countdown, DEFAULT_SEARCH_MS } from "@/lib/countdown";
@@ -17,14 +20,15 @@ import { shortName, type SelectedSite } from "@/lib/sites";
 import { frameTime, isBesideView, playbackEnd } from "@/lib/skyView";
 import { relay } from "@/lib/dsnRelay";
 import { TIMELINE_DAYS, timelineCut, timelineRows } from "@/lib/timeline";
-import { stateAt, type BodyState } from "@/lib/windows";
+import { stateAt } from "@/lib/windows";
 import styles from "./sky.module.css";
 import { DsnRelay } from "./DsnRelay";
+import { BodyReadout, PlaybackBar } from "./SkyControls";
 import { SkyInsight } from "./SkyInsight";
 import { SkyStage, type SkySpan } from "./SkyStage";
 import { SkyTimeline } from "./SkyTimeline";
 import { useCustomArt } from "./useCustomArt";
-import { useReducedMotion, useSkyPlayback, type SkyPlayback } from "./useSkyPlayback";
+import { useReducedMotion, useSkyPlayback } from "./useSkyPlayback";
 
 const HOUR_MS = 3_600_000;
 const DAY_MS = 24 * HOUR_MS;
@@ -42,72 +46,6 @@ interface CountdownItemProps {
   rises: string;
   sets: string;
   tone: string;
-}
-
-interface BodyReadoutProps {
-  name: string;
-  body: BodyState;
-  isUp: boolean;
-  isOutOfView: boolean;
-  tone: string;
-}
-
-function BodyReadout({ name, body, isUp, isOutOfView, tone }: BodyReadoutProps) {
-  return (
-    <section className={styles.readout} aria-label={name}>
-      <h2 className={tone}>{name}</h2>
-      <p className={styles.state}>{isUp ? "Above the horizon" : "Below the horizon"}</p>
-      <dl>
-        <div>
-          <dt>Elevation</dt>
-          <dd>{body.el.toFixed(2)}°</dd>
-        </div>
-        <div>
-          <dt>Azimuth</dt>
-          <dd>{body.az.toFixed(2)}°</dd>
-        </div>
-        <div>
-          <dt>Skyline there</dt>
-          <dd>{body.horizon.toFixed(2)}°</dd>
-        </div>
-      </dl>
-      {isUp && isOutOfView && <p className={styles.hint}>Outside this view. Turn to find it.</p>}
-    </section>
-  );
-}
-
-interface PlaybackBarProps {
-  playback: SkyPlayback;
-  lengthMs: number;
-  shownMs: number;
-  isMotionReduced: boolean;
-}
-
-function PlaybackBar({ playback, lengthMs, shownMs, isMotionReduced }: PlaybackBarProps) {
-  return (
-    <div className={styles.playback}>
-      {isMotionReduced ? (
-        <span className={styles.motionNote}>Animation is off for reduced motion. Use the slider.</span>
-      ) : (
-        <button type="button" className={styles.play} onClick={playback.toggle}>
-          {playback.isPlaying ? "Pause" : "Play the next 14 days"}
-        </button>
-      )}
-      <input
-        type="range"
-        aria-label="Time after the chosen date"
-        aria-valuetext={formatUtc(shownMs)}
-        min={0}
-        max={lengthMs / HOUR_MS}
-        step="any"
-        value={playback.offsetMs / HOUR_MS}
-        onChange={(event) => playback.seek(Number(event.target.value) * HOUR_MS)}
-      />
-      <span className={styles.time} data-testid="sky-time">
-        {formatUtc(shownMs)}
-      </span>
-    </div>
-  );
 }
 
 interface SkyIntroProps {
@@ -236,6 +174,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
   return (
     <>
       <SkyIntro site={site} timeMs={timeMs} query={query} summary={summary} status={goldenStatus(state)} />
+      <MissionPicker currentId={null} query={query} />
       {facts && <SkyInsight facts={facts} />}
       {!data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
       <SkyStage
@@ -286,6 +225,8 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
 
 export function SkyView() {
   const { selection, query } = useSelection();
+  const mission = findMission(useSearchParams().get("replay"));
+  if (mission) return <MissionReplay mission={mission} query={query} />;
   return <Sky site={selection.site} timeMs={selection.timeMs} query={query} />;
 }
 

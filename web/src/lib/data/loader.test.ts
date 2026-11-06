@@ -41,6 +41,25 @@ async function failure(promise: Promise<unknown>): Promise<DataFileError> {
   return error as DataFileError;
 }
 
+describe("loadReplayEphemeris", () => {
+  it("loads a replay year from its own folder and refuses any other year", async () => {
+    const fetchFn = diskFetch();
+    const eph = await createDataLoader(fetchFn).loadReplayEphemeris(2025);
+    expect(fetchFn.mock.calls.map(([url]) => String(url)).sort()).toEqual(["/data/replay/dsn-2025.json", "/data/replay/subpoints-2025.json"]);
+    expect(eph.dataEnd()).toBe(Date.UTC(2025, 11, 31, 23));
+    for (const year of [2026, 1970, 2022]) {
+      expect((await failure(createDataLoader(diskFetch()).loadReplayEphemeris(year))).kind).toBe("unavailable");
+    }
+  });
+
+  it("refuses a replay file that fails its checks", async () => {
+    const fetchFn = corrupt("replay/dsn-2024.json", (data) => {
+      data.mask = (data.mask as number[]).slice(1);
+    });
+    expect((await failure(createDataLoader(fetchFn).loadReplayEphemeris(2024))).kind).toBe("invalid");
+  });
+});
+
 describe("real data files", () => {
   it("accepts every year", async () => {
     const eph = await createDataLoader(diskFetch()).loadEphemeris([...DATA_YEARS]);

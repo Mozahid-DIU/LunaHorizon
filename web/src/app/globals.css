@@ -19,6 +19,14 @@
   box-sizing: border-box;
 }
 
+/* data bars grow in from their start; shared by every page */
+@keyframes lh-bar-in {
+  from {
+    opacity: 0;
+    transform: scaleX(0.4);
+  }
+}
+
 html,
 body {
   margin: 0;

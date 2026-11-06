@@ -584,16 +584,29 @@
 
 .track {
   position: relative;
-  height: 4px;
+  height: 12px;
   overflow: hidden;
-  border-radius: 2px;
-  background: var(--hover);
+  border-radius: 999px;
+  background: #ffffff0d;
+  box-shadow: inset 0 0 0 1px #ffffff0a;
 }
 
 .track i {
   position: absolute;
   top: 0;
   bottom: 0;
+  border-radius: 999px;
+  transform-origin: left center;
+  animation: lh-bar-in 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* one cell per mission day, like a power cell gauge */
+.track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 calc(100% / 14 - 2px), #050608 calc(100% / 14 - 2px) calc(100% / 14));
+  pointer-events: none;
 }
 
 span.sun {
@@ -609,15 +622,18 @@ span.golden {
 }
 
 i.sun {
-  background: var(--sun);
+  background: linear-gradient(180deg, #ffd27a, var(--sun));
+  box-shadow: 0 0 10px #f5b84159;
 }
 
 i.earth {
-  background: var(--earth);
+  background: linear-gradient(180deg, #a6ceff, var(--earth));
+  box-shadow: 0 0 10px #6fb0ff59;
 }
 
 i.golden {
-  background: var(--mint);
+  background: linear-gradient(180deg, #8af3d2, var(--mint));
+  box-shadow: 0 0 10px #46e6b459;
 }
 
 .countdowns {
@@ -629,7 +645,7 @@ i.golden {
 .countdowns strong {
   display: block;
   font-family: var(--font-mono), monospace;
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 500;
 }
 

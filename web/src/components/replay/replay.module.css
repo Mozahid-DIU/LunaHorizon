@@ -109,15 +109,23 @@
 }
 
 .track[data-kind="lit"] i {
-  background: var(--sun);
+  background: linear-gradient(180deg, #ffd27a, var(--sun));
+  box-shadow: 0 0 10px #f5b84159;
 }
 
 .track[data-kind="earth"] i {
-  background: var(--earth);
+  background: linear-gradient(180deg, #a6ceff, var(--earth));
+  box-shadow: 0 0 10px #6fb0ff59;
 }
 
 .track[data-kind="comms"] i {
-  background: var(--mint);
+  background: linear-gradient(180deg, #8af3d2, var(--mint));
+  box-shadow: 0 0 10px #46e6b459;
+}
+
+.track i {
+  transform-origin: left center;
+  animation: lh-bar-in 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .track b,

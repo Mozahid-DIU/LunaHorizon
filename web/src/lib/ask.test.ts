@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { isSteering, MAX_HISTORY, NOTES, parseHistory, parseQuestion, sourceTexts, strayInAnswer, topicFor, TOPICS } from "./ask";
+import { isSteering, MAX_HISTORY, NOTES, parseHistory, parseQuestion, plainPunctuation, sourceTexts, strayInAnswer, topicFor, TOPICS } from "./ask";
 import { expandIpv6 } from "./apiRequest";
 import { createAskService, MAX_ASK_BODY_CHARS } from "./askService";
 import { GUIDE, PAGES, RANKINGS, SITE_LINES, topSites } from "./askGuide";
@@ -49,7 +49,8 @@ describe("strayInAnswer", () => {
   test("stops any other figure, written in digits or in words", () => {
     expect(strayInAnswer("Earth sets in 15d 3h.", facts)).toEqual(["15d 3h"]);
     expect(strayInAnswer("About ninety percent of the time.", facts)).toEqual(["ninety", "percent"]);
-    expect(strayInAnswer("The three DSN sites take turns.", facts)).toEqual(["three"]);
+    expect(strayInAnswer("Earth sets in three days.", facts)).toEqual(["3 day"]);
+    expect(strayInAnswer("Earth sets in Fourteen days.", facts)).toEqual(["fourteen"]);
     expect(strayInAnswer("It is 99% sunny.", facts)).toEqual(["99%"]);
   });
 
@@ -277,5 +278,35 @@ describe("ask service with the guide and history", () => {
     const body = JSON.stringify({ facts, question: long, history: [long, long, long] });
     expect(new TextEncoder().encode(body).length).toBeLessThanOrEqual(MAX_ASK_BODY_CHARS);
     expect((await send(service, body)).status).toBe(200);
+  });
+});
+
+describe("small number words", () => {
+  test("count as their digits, so a word passes only where the digit would", () => {
+    expect(strayInAnswer("The DSN has three sites and the Mission Brief is a two-page report.", facts)).toEqual([]);
+    expect(strayInAnswer("If any one of them stops, the hour is not Golden.", facts)).toEqual([]);
+    expect(strayInAnswer("The Sun stays up for three hours.", facts)).toEqual(["3 h"]);
+    expect(strayInAnswer("It lasts eleven days.", facts)).toEqual(["11 day"]);
+    expect(strayInAnswer("For two weeks, then half a month.", facts)).toEqual(["weeks", "half", "month"]);
+  });
+});
+
+describe("plainPunctuation", () => {
+  test("turns a model's typographic marks into plain ones, so a good answer is not refused", () => {
+    const fancy = "The Moon’s wobble lets IM‑2 see Earth 81.5 % of hours “most” of the time…";
+    const plain = plainPunctuation(fancy);
+    expect(plain).toBe(`The Moon's wobble lets IM-2 see Earth 81.5 % of hours "most" of the time...`);
+    expect(strayInAnswer(fancy, facts)).toEqual(["unexpected characters"]);
+    expect(strayInAnswer(plain, facts)).toEqual([]);
+  });
+
+  test("does not let other characters or wrong figures through", () => {
+    expect(strayInAnswer(plainPunctuation("Earth sets in ١٤d 3h."), facts)).not.toEqual([]);
+    expect(strayInAnswer(plainPunctuation("IM‑2 sees Earth 82 % of hours."), facts)).toEqual(["82%"]);
+  });
+
+  test("the service shows a model answer written with typographic marks, in plain form", async () => {
+    const { service } = setup(async () => groq("Earth’s view ends: Earth sets in 14d 3h after landing."));
+    expect(await send(service)).toEqual({ status: 200, reply: { source: "ai", text: "Earth's view ends: Earth sets in 14d 3h after landing.", model: AI_MODEL } });
   });
 });

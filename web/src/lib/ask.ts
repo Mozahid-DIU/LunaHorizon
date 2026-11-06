@@ -80,6 +80,23 @@ export const TOPICS: readonly Topic[] = [
   { id: "ai", question: "Does the AI compute anything?", keywords: ["ai", "model", "chatgpt", "llm", "groq"], answer: () => NOTES[7] },
 ];
 
+/**
+ * Typographic look-alikes an AI model often writes (curly quotes, non-breaking hyphens and
+ * spaces, an ellipsis) turned into their plain forms. None of them is part of a number, so the
+ * figures in the text are unchanged; everything else unusual is still refused by the check.
+ */
+export function plainPunctuation(text: string): string {
+  return text
+    .replace(/[‘’‚‛′]/g, "'")
+    .replace(/[“”„″]/g, '"')
+    .replace(/[‐‑‒]/g, "-")
+    .replace(/[    ]/g, " ")
+    .replace(/…/g, "...");
+}
+
+const SMALL_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+const SMALL_NUMBERS = new RegExp(`\\b(${SMALL_WORDS.join("|")})\\b`, "gi");
+
 /** Every text an answer may take its figures from, for this landing. */
 export function sourceTexts(facts: InsightFacts): string[] {
   return [ruleInsight(facts), ...factLines(facts), ...NOTES, ...TOPICS.map((topic) => topic.answer(facts)), `within ${SEARCH_DAYS} days`, ...GUIDE];
@@ -93,9 +110,11 @@ export function strayInAnswer(text: string, facts: InsightFacts): string[] {
   const normal = text.normalize("NFKC");
   const odd = normal === text && PLAIN.test(text) ? [] : ["unexpected characters"];
   const links = /:\/\/|\bwww\./i.test(text) ? ["a link"] : [];
-  const words = (text.match(NUMBER_WORDS) ?? []).map((word) => word.toLowerCase());
+  // "three" is checked as 3, so it passes only where 3 itself would; every other number word is refused
+  const counted = text.replace(SMALL_NUMBERS, (word) => String(SMALL_WORDS.indexOf(word.toLowerCase())));
+  const words = (counted.match(NUMBER_WORDS) ?? []).map((word) => word.toLowerCase());
   const digits = text.match(OTHER_DIGITS) ?? [];
-  return [...new Set([...odd, ...links, ...quantities(text).filter((quantity) => !allowed.has(quantity)), ...words, ...digits])];
+  return [...new Set([...odd, ...links, ...quantities(counted).filter((quantity) => !allowed.has(quantity)), ...words, ...digits])];
 }
 
 /** The topic a typed question is about, by its words; null when nothing fits well enough. */

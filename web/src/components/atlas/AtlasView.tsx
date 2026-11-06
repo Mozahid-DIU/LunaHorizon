@@ -14,6 +14,7 @@ import { formatCoordinates } from "@/lib/siteSummary";
 import { shortName } from "@/lib/sites";
 import styles from "./atlas.module.css";
 import { SiteCard, SiteCardFallback } from "./SiteCard";
+import { MoonLight } from "./MoonLight";
 import { SitePins } from "./SitePins";
 
 const LAYER_ORDER: readonly MapLayer[] = ["golden", "lit", "earth"];
@@ -151,8 +152,22 @@ function AtlasLessonSlot() {
   );
 }
 
+interface LiveMoonProps {
+  isPlaying: boolean;
+  timeLabel: React.RefObject<HTMLSpanElement | null>;
+  onReady: () => void;
+}
+
+function LiveMoon(props: LiveMoonProps) {
+  return <MoonLight timeMs={useSelection().selection.timeMs} {...props} />;
+}
+
 export function AtlasView() {
   const [layer, setLayer] = useState<MapLayer>("golden");
+  const [isLightPlaying, setLightPlaying] = useState(true);
+  const [isLightReady, setLightReady] = useState(false);
+  const lightTime = useRef<HTMLSpanElement>(null);
+  const onLightReady = useCallback(() => setLightReady(true), []);
   const [pointed, setPointed] = useState<Pointed | null>(null);
   const map = useMapGrid();
   const grid = map.status === "ready" ? map.value : null;
@@ -199,6 +214,9 @@ export function AtlasView() {
       <AtlasLessonSlot />
       <div className={styles.atlas}>
         <section className={styles.intro}>
+          <p className={styles.section}>
+            <span>01</span>Lunar south pole
+          </p>
           <h1>
             Find the right place and the <em>right time</em> to land on the Moon.
           </h1>
@@ -226,6 +244,9 @@ export function AtlasView() {
               unoptimized
               priority
             />
+            <Suspense>
+              <LiveMoon isPlaying={isLightPlaying} timeLabel={lightTime} onReady={onLightReady} />
+            </Suspense>
             <div className={styles.tint} />
             {map.status === "ready" && <MapOverlay grid={map.value} layer={layer} />}
           </div>
@@ -250,6 +271,9 @@ export function AtlasView() {
         )}
 
         <div className={styles.controls}>
+          <p className={styles.section}>
+            <span>02</span>Map layer
+          </p>
           <div className={styles.layers} role="group" aria-label="Map layer">
             {LAYER_ORDER.map((id) => (
               <button key={id} type="button" aria-pressed={layer === id} onClick={() => setLayer(id)}>
@@ -263,6 +287,21 @@ export function AtlasView() {
             </div>
           ) : (
             <MapKey layer={layer} />
+          )}
+          {isLightReady && (
+            <div className={styles.light}>
+              <p className={styles.section}>
+                <span>03</span>Sunlight
+              </p>
+              <div className={styles.lightRow}>
+                <button type="button" onClick={() => setLightPlaying((playing) => !playing)} aria-label={isLightPlaying ? "Pause the sunlight" : "Play the sunlight"}>
+                  {isLightPlaying ? "❚❚" : "▶"}
+                </button>
+                <p>
+                  Lit from the real Sun direction at <span ref={lightTime} />, one lunar day in 24 s. Shadowed ground is shown dim so it stays readable.
+                </p>
+              </div>
+            </div>
           )}
         </div>
 

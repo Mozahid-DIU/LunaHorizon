@@ -116,8 +116,8 @@
 }
 
 .modes button[aria-pressed="true"] {
-  background: var(--mint);
-  color: var(--on-mint);
+  background: var(--ink);
+  color: var(--space);
   font-weight: 600;
 }
 
@@ -233,9 +233,9 @@
   height: 36px;
   padding: 0 14px;
   border: 0;
-  border-radius: 10px;
-  background: var(--mint);
-  color: var(--on-mint);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--space);
   font: inherit;
   font-size: 14px;
   font-weight: 600;

@@ -4,6 +4,41 @@
   min-height: calc(var(--disc) + 72px);
   padding: 28px 40px 40px;
   overflow: clip;
+  /* a sparse star field, drawn by the browser so it costs no download */
+  background:
+    radial-gradient(1px 1px at 12% 22%, #ffffff8c 50%, transparent 51%),
+    radial-gradient(1px 1px at 78% 12%, #ffffff66 50%, transparent 51%),
+    radial-gradient(1px 1px at 91% 64%, #ffffff73 50%, transparent 51%),
+    radial-gradient(1px 1px at 6% 78%, #ffffff59 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 33% 91%, #ffffff66 50%, transparent 51%),
+    radial-gradient(1px 1px at 58% 6%, #ffffff4d 50%, transparent 51%),
+    radial-gradient(1px 1px at 24% 52%, #ffffff40 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 96% 32%, #ffffff59 50%, transparent 51%);
+}
+
+/* numbered section labels, as on a mission console */
+.section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px !important;
+  color: var(--muted) !important;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px !important;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.section span {
+  color: var(--sun);
+}
+
+.section::after {
+  content: "";
+  flex: 1;
+  max-width: 120px;
+  height: 1px;
+  background: var(--line);
 }
 
 .intro,
@@ -16,7 +51,7 @@
 
 .intro h1 {
   margin: 0 0 18px;
-  font-size: clamp(2.5rem, 3.9vw, 3.75rem);
+  font-size: clamp(2.4rem, 3.6vw, 3.5rem);
   font-weight: 300;
   line-height: 1.12;
   letter-spacing: -0.03em;
@@ -53,8 +88,65 @@
   overflow: hidden;
   border-radius: 50%;
   background: #05070f;
-  box-shadow: 0 0 0 1px #46e6b42e;
+  box-shadow: 0 0 0 1px #ffffff14, 0 0 140px #6fb0ff1f, 0 0 40px #6fb0ff14;
   isolation: isolate;
+}
+
+/* the real-Sun light fades in over the relief image once its first frame is drawn */
+.moonLight {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.moonLight[data-ready="true"] {
+  opacity: 1;
+}
+
+.light {
+  width: 340px;
+  max-width: 100%;
+  margin-top: 22px;
+  pointer-events: auto;
+}
+
+.lightRow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lightRow button {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: none;
+  color: var(--sun);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background var(--duration-fast);
+}
+
+.lightRow button:hover {
+  background: var(--hover);
+}
+
+.lightRow p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.lightRow p span {
+  color: var(--ink);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
 }
 
 .relief {
@@ -178,9 +270,9 @@
   margin-left: auto;
   padding: 9px 12px;
   border: 0;
-  border-radius: 10px;
-  background: var(--mint);
-  color: var(--on-mint);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--space);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -190,10 +282,26 @@
 
 .versus {
   margin-top: 16px;
-  padding: 12px 14px;
-  border: 1px solid #46e6b433;
-  border-radius: 12px;
-  background: #46e6b40f;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.versus summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.versus summary::-webkit-details-marker {
+  display: none;
+}
+
+.versus summary::after {
+  content: " +";
+  color: var(--muted);
+}
+
+.versus[open] summary::after {
+  content: " −";
 }
 
 .versus .eyebrow {
@@ -289,21 +397,21 @@
 
 .layers {
   display: inline-flex;
-  gap: 4px;
-  margin-bottom: 24px;
-  padding: 5px;
+  gap: 2px;
+  margin-bottom: 18px;
+  padding: 3px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 999px;
   background: var(--glass);
   backdrop-filter: blur(12px);
   pointer-events: auto;
 }
 
 .layers button {
-  height: 38px;
-  padding: 0 14px;
+  height: 34px;
+  padding: 0 16px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 999px;
   background: none;
   color: var(--muted);
   font: inherit;
@@ -318,8 +426,8 @@
 }
 
 .layers button[aria-pressed="true"] {
-  background: #46e6b424;
-  color: var(--mint);
+  background: #ffffff1a;
+  color: var(--ink);
 }
 
 .key,
@@ -334,7 +442,7 @@
   width: 340px;
   max-width: 100%;
   padding: 16px 18px;
-  border-radius: 16px;
+  border-radius: 12px;
 }
 
 .keyError {
@@ -398,10 +506,10 @@
 
 .card {
   position: sticky;
-  top: 104px;
+  top: 125px;
   padding: 24px;
-  border-radius: 20px;
-  background: #0c1226e0;
+  border-radius: 14px;
+  background: #07080bd9;
 }
 
 .card h2 {
@@ -427,9 +535,9 @@
 }
 
 .headline {
-  margin: 18px 0 4px;
+  margin: 20px 0 4px;
   color: var(--mint);
-  font-size: 40px;
+  font-size: 44px;
   font-weight: 300;
   letter-spacing: -0.03em;
 }
@@ -459,9 +567,9 @@
 
 .track {
   position: relative;
-  height: 8px;
+  height: 4px;
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: 2px;
   background: var(--hover);
 }
 
@@ -503,6 +611,7 @@ i.golden {
 
 .countdowns strong {
   display: block;
+  font-family: var(--font-mono), monospace;
   font-size: 22px;
   font-weight: 500;
 }
@@ -542,11 +651,11 @@ i.golden {
 
 .cta {
   display: block;
-  margin-top: 16px;
+  margin-top: 18px;
   padding: 12px;
-  border-radius: 12px;
-  background: var(--mint);
-  color: var(--on-mint);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--space);
   font-weight: 600;
   text-align: center;
   text-decoration: none;

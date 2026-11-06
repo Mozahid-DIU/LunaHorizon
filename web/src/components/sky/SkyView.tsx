@@ -63,6 +63,9 @@ function SkyIntro({ site, timeMs, query, summary, status }: SkyIntroProps) {
   const headline = summary && skyHeadline(summary.hours.golden);
   return (
     <div className={styles.intro}>
+      <p className={styles.section}>
+        <span>01</span>Sky from the landing site
+      </p>
       {status && (
         <p className={`${styles.status} ${status.isOpen ? styles.statusOpen : ""}`}>
           <i aria-hidden="true" />
@@ -179,24 +182,45 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
     <>
       <SkyIntro site={site} timeMs={timeMs} query={query} summary={summary} status={goldenStatus(state)} />
       <LessonCard id="sky" answer={skyAnswer(summary ? summary.hours.lit : null)} />
+      {!data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
+      <div className={styles.console}>
+        <div className={styles.consoleMain}>
+          <SkyStage
+            state={state}
+            start={start}
+            profile={data.profile}
+            artSrc={site.id !== null ? `/data/sky/${site.id}.webp` : customArt}
+            viewKey={`${siteKey}|${timeMs}`}
+            onViewChange={setView}
+          />
+          {lengthMs > 0 && <PlaybackBar playback={playback} lengthMs={lengthMs} shownMs={shownMs} isMotionReduced={isMotionReduced} />}
+        </div>
+        <aside className={styles.telemetry} aria-label="From the engine">
+          <p className={styles.section}>
+            <span>02</span>Telemetry
+          </p>
+          <section className={styles.countdown} aria-label="Countdown">
+            <CountdownItem name="Earth" outlook={outlook.earth} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="Earthrise" sets="Earthset" tone={styles.earth} />
+            <CountdownItem name="Sun" outlook={outlook.sun} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="sunrise" sets="sunset" tone={styles.sun} />
+          </section>
+          <div className={styles.readouts}>
+            <BodyReadout name="Sun" body={state.sun} isUp={state.lit} isOutOfView={isOutOfView(state.sun.az)} tone={styles.sun} />
+            <BodyReadout name="Earth" body={state.earth} isUp={state.earthVisible} isOutOfView={isOutOfView(state.earth.az)} tone={styles.earth} />
+          </div>
+        </aside>
+      </div>
+      <p className={styles.section}>
+        <span>03</span>The next {TIMELINE_DAYS} days
+      </p>
+      <SkyTimeline rows={timeline} startMs={timeMs} shownMs={shownMs} cutMs={timelineCut(data.ephemeris, timeMs)} hourlyRows={hourlyRowCount(timeMs, eph.dataEnd())} onDownload={downloadCsv} />
+      {relayPlan && relayEndMs > timeMs && !(site.id !== null && neverSeesEarth(site.id)) && (
+        <details className={styles.more}>
+          <summary>Which DSN dish can reach the lander, hour by hour</summary>
+          <DsnRelay key={`${siteKey}|${timeMs}`} eph={data.ephemeris} plan={relayPlan} startMs={timeMs} endMs={relayEndMs} shownMs={shownMs} />
+        </details>
+      )}
       <MissionPicker currentId={null} query={query} />
       {facts && <SkyInsight facts={facts} />}
-      {!data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
-      <SkyStage
-        state={state}
-        start={start}
-        profile={data.profile}
-        artSrc={site.id !== null ? `/data/sky/${site.id}.webp` : customArt}
-        viewKey={`${siteKey}|${timeMs}`}
-        onViewChange={setView}
-      />
-      {lengthMs > 0 && <PlaybackBar playback={playback} lengthMs={lengthMs} shownMs={shownMs} isMotionReduced={isMotionReduced} />}
-      <section className={styles.countdown} aria-label="Countdown">
-        <CountdownItem name="Earth" outlook={outlook.earth} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="Earthrise" sets="Earthset" tone={styles.earth} />
-        <CountdownItem name="Sun" outlook={outlook.sun} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="sunrise" sets="sunset" tone={styles.sun} />
-      </section>
-      <SkyTimeline rows={timeline} startMs={timeMs} shownMs={shownMs} cutMs={timelineCut(data.ephemeris, timeMs)} hourlyRows={hourlyRowCount(timeMs, eph.dataEnd())} onDownload={downloadCsv} />
-      {relayPlan && relayEndMs > timeMs && !(site.id !== null && neverSeesEarth(site.id)) && <DsnRelay key={`${siteKey}|${timeMs}`} eph={data.ephemeris} plan={relayPlan} startMs={timeMs} endMs={relayEndMs} shownMs={shownMs} />}
       {site.id !== null && neverSeesEarth(site.id) && (
         <p className={styles.note} data-testid="far-side-note">
           Earth never rises at this site, so direct contact with Earth is impossible and there are no Golden hours. Landers on the
@@ -216,10 +240,6 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
           40 km. At 32 test points it stayed within 0.1° of the full maps.
         </p>
       )}
-      <div className={styles.readouts}>
-        <BodyReadout name="Sun" body={state.sun} isUp={state.lit} isOutOfView={isOutOfView(state.sun.az)} tone={styles.sun} />
-        <BodyReadout name="Earth" body={state.earth} isUp={state.earthVisible} isOutOfView={isOutOfView(state.earth.az)} tone={styles.earth} />
-      </div>
       <p className={styles.note}>
         The view is from 2 m above the ground. The skyline and positions are exact; the height scale is stretched near the
         horizon, the Sun and Earth markers are not to scale, and terrain shading is for display, not real lighting.

@@ -74,8 +74,8 @@
 
 .primary {
   border: 0;
-  background: var(--mint);
-  color: var(--on-mint);
+  background: var(--ink);
+  color: var(--space);
 }
 
 .primary:disabled {

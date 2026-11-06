@@ -173,9 +173,9 @@
 }
 
 .custom button[type="submit"] {
-  border-color: var(--mint);
-  background: var(--mint);
-  color: var(--on-mint);
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--space);
 }
 
 .columnActions {

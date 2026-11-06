@@ -1,27 +1,41 @@
+/* the header: a full-width mission bar, then a strip with the chosen site and time and the group's pages */
 .top {
   position: fixed;
   z-index: 20;
-  top: 18px;
-  left: 24px;
-  right: 24px;
-  height: 56px;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #050608f2;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+.row {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 0 10px 0 22px;
-  background: var(--glass);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-  border: 1px solid var(--line);
-  border-radius: 16px;
+  gap: 28px;
+  height: 56px;
+  padding: 0 24px 0 28px;
+}
+
+.context {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 48px;
+  padding: 0 24px 0 28px;
+  border-top: 1px solid var(--line);
 }
 
 .brand {
   color: var(--ink);
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .brand span {
@@ -30,41 +44,136 @@
 
 .tabs {
   display: flex;
-  gap: 2px;
-  margin-left: auto;
+  align-self: stretch;
+  gap: 4px;
 }
 
-.tabs a,
-.brief {
-  padding: 9px 13px;
-  border-radius: 10px;
+.tabs a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
   color: var(--muted);
-  font-size: 14px;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
   font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   text-decoration: none;
-  transition: background var(--duration-fast), color var(--duration-fast);
+  transition: color var(--duration-fast);
 }
 
-.tabs a:hover,
-.brief:hover {
-  background: var(--hover);
+.tabs a::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transition: transform var(--duration-fast);
+}
+
+.tabs a:hover {
   color: var(--ink);
 }
 
 .tabs a[aria-current="page"] {
+  color: var(--ink);
+}
+
+.tabs a[aria-current="page"]::after {
+  transform: none;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid #46e6b440;
+  border-radius: 999px;
+  color: var(--mint);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--duration-fast);
+}
+
+.verified i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
   background: var(--mint);
-  color: var(--on-mint);
-  font-weight: 600;
+  box-shadow: 0 0 8px var(--mint);
+}
+
+.verified:hover,
+.verified[aria-current="page"] {
+  background: #46e6b414;
 }
 
 .brief {
-  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--space);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
   white-space: nowrap;
+  transition: opacity var(--duration-fast);
+}
+
+.brief:hover {
+  opacity: 0.85;
 }
 
 .brief[aria-current="page"] {
-  border-color: var(--mint);
-  color: var(--mint);
+  box-shadow: 0 0 0 2px var(--space), 0 0 0 3px var(--ink);
+}
+
+.subTabs {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.subTabs a {
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--duration-fast), color var(--duration-fast);
+}
+
+.subTabs a:hover {
+  color: var(--ink);
+}
+
+.subTabs a[aria-current="page"] {
+  background: #ffffff1a;
+  color: var(--ink);
 }
 
 .phoneTabs,
@@ -116,14 +225,14 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 40px;
+  height: 36px;
   padding: 0 14px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 999px;
   background: none;
   color: var(--ink);
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
@@ -208,10 +317,10 @@
   background: var(--hover);
 }
 
-/* the narrower desktop bars have no room for the word; the icon stays and the name is read out */
+/* narrower desktop bars keep the Share icon; its name is read out */
 @media (min-width: 1280px) and (max-width: 1599px) {
   .share {
-    width: 40px;
+    width: 36px;
     padding: 0;
     justify-content: center;
   }
@@ -219,49 +328,44 @@
   .shareLabel {
     display: none;
   }
-}
 
-/* the narrowest desktop bars tighten so the date never runs under the page tabs */
-@media (min-width: 1280px) and (max-width: 1439px) {
-  .top {
-    gap: 10px;
-  }
-
-  .tabs a,
-  .brief {
-    padding: 9px 8px;
+  .row {
+    gap: 18px;
   }
 }
 
 @media (max-width: 1279px) {
   .top {
-    position: static;
-    flex-wrap: wrap;
-    height: auto;
-    padding: 18px 20px 0;
+    position: relative;
     background: none;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    border: 0;
+  }
+
+  .row {
+    height: 60px;
+    padding: 0 20px;
   }
 
   .tabs,
-  .brief {
+  .right {
     display: none;
   }
 
-  /* Classroom and Share sit in the header's corner; the desktop bar's offsets must not move them */
-  .top {
-    position: relative;
-    top: 0;
-    right: 0;
-    left: 0;
+  .actions {
+    margin-left: auto;
   }
 
-  .actions {
-    position: absolute;
-    top: 14px;
-    right: 20px;
+  .context {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 20px 14px;
+  }
+
+  .subTabs {
+    order: -1;
+    max-width: 100%;
+    overflow-x: auto;
   }
 
   .phoneTabs {
@@ -272,7 +376,7 @@
     bottom: calc(14px + env(safe-area-inset-bottom));
     height: 56px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     background: var(--glass);
     -webkit-backdrop-filter: blur(18px);
     backdrop-filter: blur(18px);
@@ -291,7 +395,7 @@
     background: none;
     color: var(--muted);
     font: inherit;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
@@ -300,7 +404,7 @@
   .phoneTabs a[aria-current="page"],
   .phoneTabs button[data-current="true"],
   .sheet a[aria-current="page"] {
-    color: var(--mint);
+    color: var(--ink);
     font-weight: 600;
   }
 

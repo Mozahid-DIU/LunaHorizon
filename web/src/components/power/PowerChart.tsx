@@ -1,3 +1,4 @@
+import { smoothArea, smoothPath } from "@/lib/chartPath";
 import type { PowerSample } from "@/lib/power";
 import { wattLabel } from "@/lib/powerPlan";
 import styles from "./power.module.css";
@@ -29,9 +30,9 @@ export function PowerChart({ samples, capacityWh, loadW, emptyAtMs, days, summar
   const yW = (w: number) => PAD.top + plotH - (w / maxW) * plotH;
   const yCharge = (wh: number) => PAD.top + plotH - (wh / capacityWh) * plotH;
 
-  const solarLine = samples.map(({ utcMs, solarW }) => `${x(utcMs).toFixed(1)},${yW(solarW).toFixed(1)}`).join(" ");
-  const solarArea = `${PAD.left},${PAD.top + plotH} ${solarLine} ${x(samples[samples.length - 1].utcMs).toFixed(1)},${PAD.top + plotH}`;
-  const chargeLine = samples.map(({ utcMs, socWh }) => `${x(utcMs).toFixed(1)},${yCharge(socWh).toFixed(1)}`).join(" ");
+  const solarPoints = samples.map(({ utcMs, solarW }) => ({ x: x(utcMs), y: yW(solarW) }));
+  const chargePoints = samples.map(({ utcMs, socWh }) => ({ x: x(utcMs), y: yCharge(socWh) }));
+  const base = PAD.top + plotH;
   const dayTicks = Array.from({ length: Math.floor(days / 7) + 1 }, (_, i) => i * 7);
 
   return (
@@ -52,10 +53,21 @@ export function PowerChart({ samples, capacityWh, loadW, emptyAtMs, days, summar
           +{day}d
         </text>
       ))}
-      <polygon className={styles.solarArea} points={solarArea} />
-      <polyline className={styles.solarLine} points={solarLine} />
+      <defs>
+        <linearGradient id="power-solar" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="#f5b841" stopOpacity="0.38" />
+          <stop offset="100%" stopColor="#f5b841" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="power-charge" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="#46e6b4" stopOpacity="0.16" />
+          <stop offset="100%" stopColor="#46e6b4" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path className={styles.solarArea} d={smoothArea(solarPoints, base)} fill="url(#power-solar)" />
+      <path className={styles.chargeArea} d={smoothArea(chargePoints, base)} fill="url(#power-charge)" />
+      <path className={styles.solarLine} d={smoothPath(solarPoints)} pathLength={1} />
       <line className={styles.loadLine} x1={PAD.left} x2={WIDTH - PAD.right} y1={yW(loadW)} y2={yW(loadW)} />
-      <polyline className={styles.chargeLine} points={chargeLine} />
+      <path className={styles.chargeLine} d={smoothPath(chargePoints)} pathLength={1} />
       {emptyAtMs !== null && <line className={styles.emptyLine} data-testid="empty-marker" x1={x(emptyAtMs)} x2={x(emptyAtMs)} y1={PAD.top} y2={PAD.top + plotH} />}
     </svg>
   );

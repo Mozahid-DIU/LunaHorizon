@@ -1,0 +1,8 @@
+{
+ "size_px": 1024,
+ "radius_km": 300,
+ "moon_radius_m": 1737400.0,
+ "min_m": -7262.73,
+ "max_m": 7015.33,
+ "source": "NASA LRO LOLA polar DEMs, same square as relief.webp"
+}

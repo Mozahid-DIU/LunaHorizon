@@ -215,14 +215,35 @@
   text-anchor: middle;
 }
 
-.solarArea {
-  fill: #f5b84126;
+.solarArea,
+.chargeArea {
+  animation: area-in 900ms ease both;
 }
 
 .solarLine {
   fill: none;
   stroke: var(--sun);
-  stroke-width: 1.5;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  animation: line-draw 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* the lines draw in from the landing, left to right */
+@keyframes line-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes area-in {
+  from {
+    opacity: 0;
+  }
 }
 
 .loadLine {
@@ -234,7 +255,12 @@
 .chargeLine {
   fill: none;
   stroke: var(--mint);
-  stroke-width: 2.5;
+  stroke-width: 2.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  filter: drop-shadow(0 0 6px #46e6b466);
+  animation: line-draw 1.4s cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
 }
 
 .emptyLine {

@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { ALL_PAGES, DESKTOP_NAV, isActivePage, PHONE_MORE, PHONE_TABS } from "./routes";
+import { ALL_PAGES, DESKTOP_NAV, groupOf, isActivePage, NAV_GROUPS, PHONE_MORE } from "./routes";
 
 const appDir = (href: string) => join(__dirname, "..", "app", ...href.split("/").filter(Boolean));
 
@@ -29,10 +29,19 @@ describe("site pages", () => {
     ]);
   });
 
-  it("reaches every page on a phone, each exactly once", () => {
-    expect(PHONE_TABS.map((p) => p.label)).toEqual(["Atlas", "Sky", "Compare"]);
-    const reachable = [...PHONE_TABS, ...PHONE_MORE].map((p) => p.href).sort();
+  it("groups the pages by task, and reaches every page once from the menu", () => {
+    expect(NAV_GROUPS.map((g) => g.label)).toEqual(["Explore", "Plan", "Compare", "Landing"]);
+    expect(NAV_GROUPS.find((g) => g.label === "Plan")!.pages.map((p) => p.label)).toEqual(["Sky", "Dates", "Power"]);
+    const reachable = [...NAV_GROUPS.flatMap((g) => g.pages), ...PHONE_MORE].map((p) => p.href).sort();
     expect(reachable).toEqual(ALL_PAGES.map((p) => p.href).sort());
+  });
+
+  it("finds the group of a page, and none for Proof or the Brief", () => {
+    expect(groupOf("/dates")?.label).toBe("Plan");
+    expect(groupOf("/3d")?.label).toBe("Landing");
+    expect(groupOf("/")?.label).toBe("Explore");
+    expect(groupOf("/proof")).toBeNull();
+    expect(groupOf("/brief")).toBeNull();
   });
 });
 

@@ -63,8 +63,8 @@
 }
 
 .rings button[aria-pressed="true"] {
-  background: var(--mint);
-  color: var(--on-mint);
+  background: var(--ink);
+  color: var(--space);
 }
 
 /* the picture carries the idea; the four figures beside it carry the answer */

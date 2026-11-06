@@ -103,8 +103,8 @@ function MapVersus({ site, layer, profile }: MapVersusProps) {
         : "counting…"
     : percent(shares[site.id as keyof typeof shares][layer]);
   return (
-    <div className={styles.versus} data-testid="map-versus">
-      <p className={styles.eyebrow}>Map vs this point</p>
+    <details className={styles.versus} data-testid="map-versus">
+      <summary className={styles.eyebrow}>Map vs this point</summary>
       <div className={styles.versusCols}>
         <div>
           <b className={styles.versusDim} data-testid="versus-cell">
@@ -121,7 +121,7 @@ function MapVersus({ site, layer, profile }: MapVersusProps) {
         The map finds regions. The number comes from this point&apos;s own horizon,{" "}
         {isCustom ? "computed in your browser from NASA LOLA height tiles." : "from the site's horizon file."}
       </p>
-    </div>
+    </details>
   );
 }
 

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSelection } from "@/components/selection/useSelection";
-import { isActivePage, PHONE_MORE, PHONE_TABS } from "@/lib/routes";
+import { groupOf, isActivePage, NAV_GROUPS, PHONE_MORE } from "@/lib/routes";
 import { withQuery } from "@/lib/selection";
 import styles from "./shell.module.css";
 
@@ -61,9 +61,9 @@ function TabBar({ query }: { query: string }) {
   return (
     <>
       <nav aria-label="Main" className={styles.phoneTabs} data-print="hide">
-        {PHONE_TABS.map(({ href, label }) => (
-          <Link key={href} href={withQuery(href, query)} aria-current={isActivePage(pathname, href) ? "page" : undefined}>
-            {label}
+        {NAV_GROUPS.map((group) => (
+          <Link key={group.label} href={withQuery(group.pages[0].href, query)} aria-current={groupOf(pathname) === group ? "page" : undefined}>
+            {group.label}
           </Link>
         ))}
         <button

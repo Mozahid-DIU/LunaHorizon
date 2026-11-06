@@ -8,7 +8,7 @@
 
 .intro h1 {
   margin: 0;
-  font-size: clamp(2.5rem, 5.4vw, 5rem);
+  font-size: clamp(2.4rem, 4.6vw, 4.25rem);
   font-weight: 300;
   line-height: 1.05;
   letter-spacing: -0.035em;
@@ -108,8 +108,8 @@
   align-items: center;
   gap: 8px;
   border: 0;
-  background: var(--mint);
-  color: var(--on-mint);
+  background: var(--ink);
+  color: var(--space);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
@@ -117,10 +117,13 @@
 }
 
 .explain {
-  height: 44px;
+  height: 40px;
   padding: 0 18px;
-  border-radius: 12px;
-  font-size: 15px;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px;
+  background: none !important;
+  color: var(--ink) !important;
+  font-size: 14px;
 }
 
 .explain:hover,
@@ -346,32 +349,50 @@
 .timelineTrack {
   position: relative;
   height: 12px;
-  overflow: hidden;
   border-radius: 6px;
-  background: var(--hover);
+  background: #ffffff0a;
 }
 
 .timelineTrack i {
   position: absolute;
   top: 0;
   bottom: 0;
-  min-width: 1px;
+  min-width: 2px;
+  border-radius: 6px;
+  transform-origin: left center;
+  animation: bar-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* each row draws in a moment after the one above it */
+.timelineRow:nth-child(2) i { animation-delay: 60ms; }
+.timelineRow:nth-child(3) i { animation-delay: 120ms; }
+.timelineRow:nth-child(4) i { animation-delay: 180ms; }
+.timelineRow:nth-child(5) i { animation-delay: 240ms; }
+
+@keyframes bar-in {
+  from {
+    opacity: 0;
+    transform: scaleX(0.6);
+  }
 }
 
 .barSun {
-  background: var(--sun);
+  background: linear-gradient(180deg, #ffd27a, var(--sun));
+  box-shadow: 0 0 10px #f5b84140;
 }
 
 .barEarth {
-  background: var(--earth);
+  background: linear-gradient(180deg, #9cc8ff, var(--earth));
+  box-shadow: 0 0 10px #6fb0ff40;
 }
 
 .barDsn {
-  background: #8d96ad;
+  background: linear-gradient(180deg, #b3bccd, #8d96ad);
 }
 
 .barGolden {
-  background: var(--mint);
+  background: linear-gradient(180deg, #7ff0cc, var(--mint));
+  box-shadow: 0 0 10px #46e6b440;
 }
 
 .overlay {
@@ -590,9 +611,9 @@
   height: 40px;
   padding: 0 14px;
   border: 0;
-  border-radius: 10px;
-  background: var(--mint);
-  color: var(--on-mint);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--space);
   font: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -1089,5 +1110,160 @@
 
   .relayTrack {
     height: 12px;
+  }
+}
+
+/* ---- mission console layout: the sky in the middle, the engine's numbers beside it ---- */
+.section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 34px 0 14px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.intro .section {
+  margin-top: 0;
+}
+
+.section span {
+  color: var(--sun);
+}
+
+.section::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.console {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 0;
+  margin-top: 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.consoleMain {
+  min-width: 0;
+  padding: 14px;
+}
+
+.consoleMain .stage {
+  border-radius: 10px;
+}
+
+.telemetry {
+  padding: 20px 22px;
+  border-left: 1px solid var(--line);
+  background: #07080b;
+}
+
+.telemetry .section {
+  margin-top: 0;
+}
+
+.telemetry .countdown {
+  margin: 0;
+  padding: 0 0 18px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+}
+
+.telemetry .countdownItem strong {
+  font-family: var(--font-mono), monospace;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+}
+
+.telemetry .readouts {
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 0;
+}
+
+.telemetry .readout {
+  padding: 16px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+}
+
+.telemetry .readout:last-child {
+  border-bottom: 0;
+}
+
+.telemetry .state {
+  margin: 4px 0 10px;
+  font-size: 16px;
+}
+
+.telemetry .readout dt,
+.telemetry .readout dd {
+  font-size: 13px;
+}
+
+.more {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.more > summary {
+  padding: 14px 18px;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.more > summary::before {
+  content: "+ ";
+  color: var(--ink);
+}
+
+.more[open] > summary::before {
+  content: "− ";
+}
+
+.more[open] {
+  padding: 0 14px 14px;
+}
+
+.more[open] > summary {
+  padding: 14px 4px;
+}
+
+@media (max-width: 1100px) {
+  .console {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .telemetry {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .telemetry .readouts {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .telemetry .readout {
+    border-bottom: 0;
   }
 }

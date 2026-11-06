@@ -1,12 +1,12 @@
 /* Colour meaning is fixed across the app: gold = Sun / power, blue = Earth / comms, mint = validated / golden. */
 :root {
-  --space: #04060e;
-  --panel: #0c1226;
-  --glass: #0c1226b8;
-  --line: #ffffff1f;
-  --hover: #ffffff14;
-  --ink: #eef1f8;
-  --muted: #a3adc6;
+  --space: #050608;
+  --panel: #0c0e13;
+  --glass: #0c0e13d9;
+  --line: #ffffff17;
+  --hover: #ffffff0f;
+  --ink: #eceff4;
+  --muted: #949cab;
   --sun: #f5b841;
   --earth: #6fb0ff;
   --mint: #46e6b4;
@@ -57,7 +57,7 @@ main:focus {
 
 .page {
   min-height: 100vh;
-  padding-top: 92px;
+  padding-top: 105px;
 }
 
 .message {
@@ -84,9 +84,9 @@ main:focus {
   display: inline-block;
   padding: 11px 16px;
   border: 0;
-  border-radius: 11px;
-  background: var(--mint);
-  color: var(--on-mint);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--space);
   font: inherit;
   font-weight: 600;
   text-decoration: none;

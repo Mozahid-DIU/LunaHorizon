@@ -2,11 +2,16 @@
 
 import Image from "next/image";
 import { Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { LessonCard } from "@/components/classroom/LessonCard";
+import { useClassroom } from "@/components/classroom/useClassroom";
 import { DataNotice } from "@/components/data/DataNotice";
+import { useSelection } from "@/components/selection/useSelection";
 import { cellBox, latLonAt, layerPixels, LAYERS, mapCell, overlayOutsetPercent, type MapCell, type MapLayer } from "@/lib/atlasMap";
 import { useMapGrid } from "@/lib/data/useMapGrid";
 import type { MapGrid } from "@/lib/data/validate";
+import { atlasAnswer } from "@/lib/classroomAnswers";
 import { formatCoordinates } from "@/lib/siteSummary";
+import { shortName } from "@/lib/sites";
 import styles from "./atlas.module.css";
 import { SiteCard, SiteCardFallback } from "./SiteCard";
 import { SitePins } from "./SitePins";
@@ -127,6 +132,25 @@ function CellReadout({ pointed, grid, layer }: { pointed: Pointed; grid: MapGrid
   );
 }
 
+function AtlasLesson() {
+  const { site } = useSelection().selection;
+  return (
+    <div className={styles.lesson}>
+      <LessonCard id="atlas" answer={atlasAnswer(site.id, shortName(site))} />
+    </div>
+  );
+}
+
+/** Only in Classroom mode, so the page is unchanged without it. */
+function AtlasLessonSlot() {
+  if (!useClassroom()) return null;
+  return (
+    <Suspense>
+      <AtlasLesson />
+    </Suspense>
+  );
+}
+
 export function AtlasView() {
   const [layer, setLayer] = useState<MapLayer>("golden");
   const [pointed, setPointed] = useState<Pointed | null>(null);
@@ -171,80 +195,83 @@ export function AtlasView() {
   };
 
   return (
-    <div className={styles.atlas}>
-      <section className={styles.intro}>
-        <h1>
-          Find the right place and the <em>right time</em> to land on the Moon.
-        </h1>
-        <p>The glow marks ground that {LAYERS[layer].glow}, from real NASA terrain.</p>
-      </section>
+    <>
+      <AtlasLessonSlot />
+      <div className={styles.atlas}>
+        <section className={styles.intro}>
+          <h1>
+            Find the right place and the <em>right time</em> to land on the Moon.
+          </h1>
+          <p>The glow marks ground that {LAYERS[layer].glow}, from real NASA terrain.</p>
+        </section>
 
-      <div
-        className={styles.map}
-        data-testid="map"
-        onPointerMove={onPointerMove}
-        onPointerLeave={() => setPointed((p) => (p?.isTouch ? p : null))}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerCancel}
-        onClick={onClick}
-      >
-        <div className={styles.surface}>
-          <Image
-            className={styles.relief}
-            src="/data/map/relief.webp"
-            alt="Shaded relief map of the lunar south pole, reaching 300 km from the pole"
-            width={1600}
-            height={1600}
-            sizes="(max-width: 1279px) 100vw, 1040px"
-            unoptimized
-            priority
-          />
-          <div className={styles.tint} />
-          {map.status === "ready" && <MapOverlay grid={map.value} layer={layer} />}
-        </div>
-        <Suspense>
-          <SitePins layer={layer} onReady={onPinsReady} />
-        </Suspense>
-        {pointed && grid && <CellReadout pointed={pointed} grid={grid} layer={layer} />}
-      </div>
-
-      {pointed?.isTouch && grid && cellOf(grid, pointed) && (
-        <div className={styles.sheet} data-testid="cell-sheet" role="status">
-          <div>
-            <b style={{ color: `rgb(${LAYERS[layer].rgb.join(" ")})` }}>
-              {percentText(cellOf(grid, pointed)!.values[layer])} {LAYERS[layer].pinWord}
-            </b>
-            <span>5 km cell · {formatCoordinates(pointed.lat, pointed.lon)} · 2026–30</span>
+        <div
+          className={styles.map}
+          data-testid="map"
+          onPointerMove={onPointerMove}
+          onPointerLeave={() => setPointed((p) => (p?.isTouch ? p : null))}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerCancel}
+          onClick={onClick}
+        >
+          <div className={styles.surface}>
+            <Image
+              className={styles.relief}
+              src="/data/map/relief.webp"
+              alt="Shaded relief map of the lunar south pole, reaching 300 km from the pole"
+              width={1600}
+              height={1600}
+              sizes="(max-width: 1279px) 100vw, 1040px"
+              unoptimized
+              priority
+            />
+            <div className={styles.tint} />
+            {map.status === "ready" && <MapOverlay grid={map.value} layer={layer} />}
           </div>
-          <button type="button" aria-label={`Check this point, ${formatCoordinates(pointed.lat, pointed.lon)}`} onClick={() => choose(pointed)}>
-            Check this point
-          </button>
+          <Suspense>
+            <SitePins layer={layer} onReady={onPinsReady} />
+          </Suspense>
+          {pointed && grid && <CellReadout pointed={pointed} grid={grid} layer={layer} />}
         </div>
-      )}
 
-      <div className={styles.controls}>
-        <div className={styles.layers} role="group" aria-label="Map layer">
-          {LAYER_ORDER.map((id) => (
-            <button key={id} type="button" aria-pressed={layer === id} onClick={() => setLayer(id)}>
-              {LAYERS[id].label}
+        {pointed?.isTouch && grid && cellOf(grid, pointed) && (
+          <div className={styles.sheet} data-testid="cell-sheet" role="status">
+            <div>
+              <b style={{ color: `rgb(${LAYERS[layer].rgb.join(" ")})` }}>
+                {percentText(cellOf(grid, pointed)!.values[layer])} {LAYERS[layer].pinWord}
+              </b>
+              <span>5 km cell · {formatCoordinates(pointed.lat, pointed.lon)} · 2026–30</span>
+            </div>
+            <button type="button" aria-label={`Check this point, ${formatCoordinates(pointed.lat, pointed.lon)}`} onClick={() => choose(pointed)}>
+              Check this point
             </button>
-          ))}
-        </div>
-        {map.status === "error" ? (
-          <div className={styles.keyError}>
-            <DataNotice error={map.error} retry={map.retry} />
           </div>
-        ) : (
-          <MapKey layer={layer} />
         )}
-      </div>
 
-      <div className={styles.cardColumn}>
-        <Suspense fallback={<SiteCardFallback />}>
-          <SiteCard layer={layer} />
-        </Suspense>
+        <div className={styles.controls}>
+          <div className={styles.layers} role="group" aria-label="Map layer">
+            {LAYER_ORDER.map((id) => (
+              <button key={id} type="button" aria-pressed={layer === id} onClick={() => setLayer(id)}>
+                {LAYERS[id].label}
+              </button>
+            ))}
+          </div>
+          {map.status === "error" ? (
+            <div className={styles.keyError}>
+              <DataNotice error={map.error} retry={map.retry} />
+            </div>
+          ) : (
+            <MapKey layer={layer} />
+          )}
+        </div>
+
+        <div className={styles.cardColumn}>
+          <Suspense fallback={<SiteCardFallback />}>
+            <SiteCard layer={layer} />
+          </Suspense>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -177,6 +177,17 @@
   color: var(--on-mint);
 }
 
+/* the narrowest desktop bar: smaller controls, so the bar keeps its full width */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .control {
+    max-width: 160px;
+  }
+
+  .date .control {
+    width: 176px;
+  }
+}
+
 @media (max-width: 1279px) {
   .bar {
     flex-wrap: wrap;

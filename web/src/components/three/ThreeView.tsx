@@ -3,9 +3,12 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
+import { LessonCard } from "@/components/classroom/LessonCard";
+import { useClassroom } from "@/components/classroom/useClassroom";
 import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
 import { useReducedMotion, useSkyPlayback } from "@/components/sky/useSkyPlayback";
+import { CALCULATING, DATA_FAILED, threeAnswer, type LessonAnswer } from "@/lib/classroomAnswers";
 import { DEFAULT_SEARCH_MS } from "@/lib/countdown";
 import { DATA_END_MS } from "@/lib/dataRange";
 import { useSiteData } from "@/lib/data/useSiteData";
@@ -173,6 +176,26 @@ function Film({ rows, startMs, cutMs, shownMs, lengthMs, isPlaying, isMotionRedu
   );
 }
 
+function ThreeLesson({ answer }: { answer: LessonAnswer }) {
+  // only in Classroom mode, so the page is unchanged without it
+  if (!useClassroom()) return null;
+  return (
+    <div className={styles.lesson}>
+      <LessonCard id="3d" answer={answer} />
+    </div>
+  );
+}
+
+/** The lesson keeps its place, and its open answer, while the stage below it loads. */
+function withLesson(lesson: React.ReactNode, content: React.ReactNode) {
+  return (
+    <>
+      {lesson}
+      {content}
+    </>
+  );
+}
+
 function Stage({ site, timeMs }: { site: CuratedSite; timeMs: number }) {
   const data = useSiteData({ site, startMs: timeMs, endMs: skyDataEnd(timeMs, Math.min(timeMs + TIMELINE_DAYS * DAY_MS, DATA_END_MS)) });
   const tilesResult = useTerrainTiles(site.id);
@@ -191,16 +214,19 @@ function Stage({ site, timeMs }: { site: CuratedSite; timeMs: number }) {
   const events = useMemo(() => (ready ? eventWindows(ready.ephemeris, site, ready.profile, timeMs, endMs) : null), [endMs, ready, site, timeMs]);
   const rows = useMemo(() => (ready ? timelineRows(ready.ephemeris, site, ready.profile, timeMs) : null), [ready, site, timeMs]);
   const outlook = events && state ? outlookAt(events, shownMs, state) : null;
+  const isFailed = data.status === "error" || tilesResult.status === "error";
+  const lesson = <ThreeLesson answer={isFailed ? DATA_FAILED : state ? threeAnswer(state.sun, state.lit, degrees) : CALCULATING} />;
 
-  if (data.status === "error") return <DataNotice error={data.error} retry={data.retry} />;
-  if (tilesResult.status === "error") return <DataNotice error={tilesResult.error} retry={tilesResult.retry} />;
-  if (lengthMs <= 0) return <p className={styles.starting}>This date is at the end of our data, which stops on 31 December 2030. Choose an earlier date.</p>;
-  if (!ready || !state || !outlook || !rows || tilesResult.status !== "ready") return <p className={styles.starting}>Loading the terrain…</p>;
+  if (data.status === "error") return withLesson(lesson, <DataNotice error={data.error} retry={data.retry} />);
+  if (tilesResult.status === "error") return withLesson(lesson, <DataNotice error={tilesResult.error} retry={tilesResult.retry} />);
+  if (lengthMs <= 0) return withLesson(lesson, <p className={styles.starting}>This date is at the end of our data, which stops on 31 December 2030. Choose an earlier date.</p>);
+  if (!ready || !state || !outlook || !rows || tilesResult.status !== "ready") return withLesson(lesson, <p className={styles.starting}>Loading the terrain…</p>);
 
   const status = goldenStatus(state);
   const [sunEvent, sunTo] = eventText(outlook.sun, shownMs, outlook.isSearchCut, "sunrise", "sunset");
   const [earthEvent, earthTo] = eventText(outlook.earth, shownMs, outlook.isSearchCut, "Earthrise", "Earthset");
-  return (
+  return withLesson(
+    lesson,
     <div className={styles.stage} data-mode={mode}>
       <TerrainScene
         tiles={tilesResult.tiles}
@@ -279,7 +305,7 @@ function Stage({ site, timeMs }: { site: CuratedSite; timeMs: number }) {
 export function ThreeView() {
   const { selection } = useSelection();
   const { site, timeMs } = selection;
-  if (!hasTiles(site)) return <Unavailable site={site} timeMs={timeMs} />;
+  if (!hasTiles(site)) return withLesson(<ThreeLesson answer={threeAnswer(null, false, degrees)} />, <Unavailable site={site} timeMs={timeMs} />);
   return <Stage key={site.id} site={site} timeMs={timeMs} />;
 }
 

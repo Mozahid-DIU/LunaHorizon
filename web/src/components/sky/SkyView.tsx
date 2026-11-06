@@ -6,12 +6,15 @@ import { useSearchParams } from "next/navigation";
 import { useDeferredValue, useMemo, useState } from "react";
 import { MissionPicker, MissionReplay } from "@/components/replay/MissionReplay";
 import { findMission } from "@/lib/replay";
+import { LessonCard } from "@/components/classroom/LessonCard";
+import { Term } from "@/components/classroom/Term";
 import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
 import { countdown, DEFAULT_SEARCH_MS } from "@/lib/countdown";
 import { dataLoader } from "@/lib/data/loader";
 import { useSiteData } from "@/lib/data/useSiteData";
 import { csvFileName, hourlyCsv, hourlyRowCount, saveFile, windowsCsv } from "@/lib/exportCsv";
+import { CALCULATING, skyAnswer } from "@/lib/classroomAnswers";
 import { factsFrom } from "@/lib/insight";
 import { formatUtc, withQuery } from "@/lib/selection";
 import { eventWindows, goldenStatus, outlookAt, skyDataEnd, skyHeadline, type GoldenStatus } from "@/lib/skyOutlook";
@@ -81,8 +84,8 @@ function SkyIntro({ site, timeMs, query, summary, status }: SkyIntroProps) {
       </p>
       {headline && (
         <p className={styles.lead}>
-          Land at this time and {headline.hours} of {MISSION_DAYS * 24} mission hours have sunlight, Earth in view and a DSN
-          station listening.
+          Land at this time and {headline.hours} of {MISSION_DAYS * 24} mission hours have sunlight, Earth in view and a{" "}
+          <Term id="dsn">DSN station</Term> listening.
         </p>
       )}
       {headline && (
@@ -156,6 +159,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
     return (
       <>
         <SkyIntro site={site} timeMs={timeMs} query={query} summary={null} status={null} />
+        <LessonCard id="sky" answer={CALCULATING} />
         {data.status === "error" ? <DataNotice error={data.error} retry={data.retry} /> : <p className={styles.calculating}>Calculating…</p>}
       </>
     );
@@ -174,6 +178,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
   return (
     <>
       <SkyIntro site={site} timeMs={timeMs} query={query} summary={summary} status={goldenStatus(state)} />
+      <LessonCard id="sky" answer={skyAnswer(summary ? summary.hours.lit : null)} />
       <MissionPicker currentId={null} query={query} />
       {facts && <SkyInsight facts={facts} />}
       {!data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}

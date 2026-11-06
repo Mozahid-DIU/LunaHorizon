@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { LessonCard } from "@/components/classroom/LessonCard";
 import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
+import { CALCULATING, DATA_FAILED, ellipseAnswer, type LessonAnswer } from "@/lib/classroomAnswers";
 import { useEllipseScores } from "@/lib/data/useEllipseScores";
 import { DATA_END_MS } from "@/lib/dataRange";
 import { ellipseHeadline, formatRing, pointName, RINGS_M, zoneSummary, type EllipseScores, type ScoredPoint } from "@/lib/ellipse";
@@ -81,6 +83,13 @@ function Zone({ siteId, timeMs }: { siteId: string; timeMs: number }) {
   const zone = scores && zoneSummary(scores, ringM);
   const headline = zone && ellipseHeadline(zone, ringM);
   const summary = headline ? `${headline.lead}${headline.emphasis}` : "Landing zone points around the target";
+  const widest = scores && zoneSummary(scores, Math.max(...RINGS_M));
+  const lesson: LessonAnswer =
+    result.status === "loading"
+      ? CALCULATING
+      : result.status === "error"
+        ? DATA_FAILED
+        : ellipseAnswer(widest && { best: widest.best.score.goldenHours, worst: widest.worst.score.goldenHours }, true);
 
   return (
     <>
@@ -97,6 +106,7 @@ function Zone({ siteId, timeMs }: { siteId: string; timeMs: number }) {
       <p className={styles.caveat}>
         For a {MISSION_DAYS}-day mission landing on {formatUtc(timeMs)}.
       </p>
+      <LessonCard id="ellipse" answer={lesson} />
       <div className={styles.rings} role="group" aria-label="Landing zone size">
         {RINGS_M.map((ring) => (
           <button key={ring} type="button" aria-pressed={ring === ringM} onClick={() => setRingM(ring)}>
@@ -164,6 +174,7 @@ export function EllipseView() {
         ) : (
           <>
             <h1>Landing zone</h1>
+            <LessonCard id="ellipse" answer={ellipseAnswer(null, false)} />
             <Unavailable timeMs={timeMs} />
           </>
         )}

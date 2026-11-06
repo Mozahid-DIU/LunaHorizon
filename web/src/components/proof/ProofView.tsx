@@ -1,6 +1,8 @@
 "use client";
 
+import { LessonCard } from "@/components/classroom/LessonCard";
 import { DataNotice } from "@/components/data/DataNotice";
+import { CALCULATING, DATA_FAILED, proofAnswer } from "@/lib/classroomAnswers";
 import { dataLoader } from "@/lib/data/loader";
 import { useDataFile } from "@/lib/data/useDataFile";
 import type { ValidationFile } from "@/lib/data/validate";
@@ -126,6 +128,7 @@ function Results({ file }: { file: ValidationFile }) {
           {formatUtc(Date.parse(`${file.generated}T00:00Z`)).split(",")[0]}.
         </p>
       </div>
+      <LessonCard id="proof" answer={proofAnswer(file.summary.max_angle_diff_deg, formatDegrees(file.summary.max_angle_diff_deg))} />
       {proofSections(file).map((section) => (
         <Section key={section.id} section={section} />
       ))}
@@ -141,6 +144,7 @@ export function ProofView() {
       <div className={styles.intro}>
         <h1>Proof</h1>
       </div>
+      <LessonCard id="proof" answer={data.status === "error" ? DATA_FAILED : CALCULATING} />
       {data.status === "loading" ? <p className={styles.note}>Loading the checks…</p> : <DataNotice error={data.error} retry={data.retry} />}
     </>
   );

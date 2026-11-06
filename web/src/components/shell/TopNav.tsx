@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
+import { ClassroomToggle } from "@/components/classroom/ClassroomToggle";
 import { SelectionBar, SelectionBarFallback } from "@/components/selection/SelectionBar";
 import { useSelection } from "@/components/selection/useSelection";
 import { BRIEF, DESKTOP_NAV, isActivePage } from "@/lib/routes";
@@ -48,9 +49,12 @@ export function TopNav() {
       <Suspense fallback={<NavLinks query="" />}>
         <LiveNavLinks />
       </Suspense>
-      <Suspense fallback={<ShareButtonFallback />}>
-        <ShareButton />
-      </Suspense>
+      <div className={styles.actions}>
+        <ClassroomToggle />
+        <Suspense fallback={<ShareButtonFallback />}>
+          <ShareButton />
+        </Suspense>
+      </div>
     </header>
   );
 }

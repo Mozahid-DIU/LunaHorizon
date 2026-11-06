@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useDeferredValue, useMemo, useState } from "react";
+import { LessonCard } from "@/components/classroom/LessonCard";
 import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
+import { CALCULATING, DATA_FAILED, powerAnswer, type LessonAnswer } from "@/lib/classroomAnswers";
 import { useSiteData } from "@/lib/data/useSiteData";
 import { DATA_END_MS } from "@/lib/dataRange";
 import type { PowerRun } from "@/lib/power";
@@ -146,6 +148,17 @@ export function PowerView() {
       ? `${headline.lead}${headline.emphasis} Lowest charge ${lowestChargePct(result.run.minSocWh, settled!.capacityWh)}%.`
       : "Solar power, load and battery charge across the mission";
 
+  const lesson: LessonAnswer =
+    problems.length > 0
+      ? powerAnswer(null, null, false)
+      : data.status === "error"
+        ? DATA_FAILED
+        : result?.status === "past-data"
+          ? powerAnswer(null, null, true)
+          : headline && result?.status === "ready" && settled
+            ? powerAnswer(headline, lowestChargePct(result.run.minSocWh, settled.capacityWh), false)
+            : CALCULATING;
+
   return (
     <>
       <div className={styles.intro}>
@@ -165,6 +178,7 @@ export function PowerView() {
         </p>
         {data.status === "ready" && !data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
       </div>
+      <LessonCard id="power" answer={lesson} />
 
       <div className={styles.layout}>
         <form className={styles.form} aria-label="Example lander" onSubmit={(event) => event.preventDefault()}>

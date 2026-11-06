@@ -106,6 +106,12 @@
   position: relative;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .share {
   display: inline-flex;
   align-items: center;
@@ -202,8 +208,8 @@
   background: var(--hover);
 }
 
-/* the narrowest desktop bars have no room for the word; the icon stays and the name is read out */
-@media (min-width: 1280px) and (max-width: 1439px) {
+/* the narrower desktop bars have no room for the word; the icon stays and the name is read out */
+@media (min-width: 1280px) and (max-width: 1599px) {
   .share {
     width: 40px;
     padding: 0;
@@ -212,6 +218,18 @@
 
   .shareLabel {
     display: none;
+  }
+}
+
+/* the narrowest desktop bars tighten so the date never runs under the page tabs */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .top {
+    gap: 10px;
+  }
+
+  .tabs a,
+  .brief {
+    padding: 9px 8px;
   }
 }
 
@@ -232,7 +250,7 @@
     display: none;
   }
 
-  /* the Share button sits in the header's corner; the desktop bar's offsets must not move it */
+  /* Classroom and Share sit in the header's corner; the desktop bar's offsets must not move them */
   .top {
     position: relative;
     top: 0;
@@ -240,7 +258,7 @@
     left: 0;
   }
 
-  .shareWrap {
+  .actions {
     position: absolute;
     top: 14px;
     right: 20px;

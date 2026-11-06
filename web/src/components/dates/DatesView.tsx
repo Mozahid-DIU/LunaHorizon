@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useRef } from "react";
+import { LessonCard } from "@/components/classroom/LessonCard";
 import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
+import { CALCULATING, DATA_FAILED, datesAnswer, type LessonAnswer } from "@/lib/classroomAnswers";
 import { compareQuery, compareValue, extraFor, joinQueries } from "@/lib/compare";
 import { useDatesPlan } from "@/lib/data/useDatesPlan";
 import { datesHeadline, formatChange, formatPercent, NEARBY_KM, nearbySites } from "@/lib/datesPlan";
@@ -119,6 +121,17 @@ export function DatesView() {
     heading.current?.focus();
   };
   const name = site.id === null ? "this custom site" : shortName(site);
+  const first = result.status === "ready" ? (result.plan.best[0] ?? null) : null;
+  const lesson: LessonAnswer =
+    result.status === "ready"
+      ? datesAnswer(
+          first && { landingMs: first.landingMs, goldenHours: first.score.goldenHours },
+          result.plan.slip && { landingMs: timeMs, goldenHours: result.plan.slip.baseline.goldenHours },
+          result.plan.isSearchCut,
+        )
+      : result.status === "error"
+        ? DATA_FAILED
+        : CALCULATING;
 
   return (
     <>
@@ -139,6 +152,7 @@ export function DatesView() {
         </p>
         {result.status === "ready" && !result.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
       </div>
+      <LessonCard id="dates" answer={lesson} />
 
       <p role="status" className={styles.searching}>
         {result.status === "loading" ? "Searching 12 months…" : ""}

@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { LessonCard } from "@/components/classroom/LessonCard";
 import { useSelection } from "@/components/selection/useSelection";
 import { columnLabels, columnsOf, compareLead, compareValue, hasRepeat, MAX_COLUMNS, nextExtra, parseCompare, type CompareExtra } from "@/lib/compare";
+import { CALCULATING, compareAnswer } from "@/lib/classroomAnswers";
 import { DEFAULT_SEARCH_MS } from "@/lib/countdown";
 import { useSiteData } from "@/lib/data/useSiteData";
 import { DATA_END_MS } from "@/lib/dataRange";
@@ -97,6 +99,7 @@ export function CompareView() {
           {[...problems, notice].filter(Boolean).join(" ")}
         </p>
       </div>
+      <LessonCard id="compare" answer={isSettled ? compareAnswer(lead, labels) : CALCULATING} />
 
       <div className={styles.grid}>
         {columns.map((column, i) => (

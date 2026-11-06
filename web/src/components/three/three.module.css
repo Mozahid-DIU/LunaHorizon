@@ -471,3 +471,8 @@
     padding: 20px 16px 32px;
   }
 }
+
+/* Classroom mode lesson above the stage */
+.lesson {
+  padding: 0 24px;
+}

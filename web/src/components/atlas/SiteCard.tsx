@@ -154,6 +154,9 @@ export function SiteCard({ layer }: { layer: MapLayer }) {
       <p className={styles.coordinates}>{formatCoordinates(site.lat, site.lon)}</p>
       <CardBody site={site} timeMs={timeMs} layer={layer} />
       {!mapPosition(site.lat, site.lon) && <p className={styles.note}>This site lies outside the south polar map.</p>}
+      <p className={styles.note}>
+        For this exact point; ground nearby can differ. <Link href={withQuery("/ellipse", query)}>See the Landing Ellipse</Link>
+      </p>
       <Link className={styles.cta} href={withQuery("/sky", query)}>
         See the sky from here →
       </Link>

@@ -5,9 +5,8 @@
   top: 0;
   left: 0;
   right: 0;
-  background: #050608f2;
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+  /* solid, not blurred: a full-width blur makes the browser repaint everything scrolling under it */
+  background: #050608;
   border-bottom: 1px solid var(--line);
 }
 
@@ -434,5 +433,18 @@
 
   .placeholder {
     padding: 32px 20px;
+  }
+}
+
+/* the narrowest phones keep Share as an icon, so the header row fits */
+@media (max-width: 400px) {
+  .share {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .shareLabel {
+    display: none;
   }
 }

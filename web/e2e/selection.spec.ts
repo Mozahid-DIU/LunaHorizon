@@ -95,7 +95,9 @@ test("a copied link reopens the same site and date", async ({ page, context }) =
 test("the choice stays while moving between pages on desktop", async ({ page, isMobile }) => {
   test.skip(isMobile, "desktop navigation");
   await page.goto("/?site=im-1");
-  await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Power" }).click();
+  await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Plan" }).click();
+  await expect(page).toHaveURL(/\/sky\?site=im-1$/);
+  await page.getByRole("navigation", { name: "Plan pages" }).getByRole("link", { name: "Power" }).click();
   await expect(page).toHaveURL(/\/power\?site=im-1$/);
   await page.getByRole("link", { name: "Mission Brief" }).click();
   await expect(page).toHaveURL(/\/brief\?site=im-1$/);
@@ -105,11 +107,13 @@ test("the choice stays while moving between pages on a phone", async ({ page, is
   test.skip(!isMobile, "phone navigation");
   await page.goto("/?site=im-1");
   const nav = page.getByRole("navigation", { name: "Main" });
-  await nav.getByRole("link", { name: "Sky" }).click();
+  await nav.getByRole("link", { name: "Plan" }).click();
   await expect(page).toHaveURL(/\/sky\?site=im-1$/);
-  await nav.getByRole("button", { name: "More" }).click();
-  await page.getByRole("dialog").getByRole("link", { name: "Power" }).click();
+  await page.getByRole("navigation", { name: "Plan pages" }).getByRole("link", { name: "Power" }).click();
   await expect(page).toHaveURL(/\/power\?site=im-1$/);
+  await nav.getByRole("button", { name: "More" }).click();
+  await page.getByRole("dialog").getByRole("link", { name: "Brief" }).click();
+  await expect(page).toHaveURL(/\/brief\?site=im-1$/);
 });
 
 test("custom coordinates are applied and marked as having no terrain", async ({ page }) => {
@@ -187,9 +191,11 @@ test("the header keeps everything inside it at the narrowest desktop width", asy
   const header = (await page.locator("header").boundingBox())!;
   const brief = (await page.getByRole("link", { name: "Mission Brief" }).boundingBox())!;
   expect(brief.x + brief.width).toBeLessThanOrEqual(header.x + header.width);
-  const proof = (await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Proof" }).boundingBox())!;
-  expect(proof.x + proof.width).toBeLessThanOrEqual(brief.x);
+  const landing = (await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Landing" }).boundingBox())!;
+  expect(landing.x + landing.width).toBeLessThanOrEqual(brief.x);
+  // the date sits in the strip below the menu, clear of the group's sub-tabs
   const date = (await page.getByLabel("Date and time, UTC").boundingBox())!;
-  const atlas = (await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Atlas" }).boundingBox())!;
-  expect(date.x + date.width).toBeLessThanOrEqual(atlas.x);
+  const sky = (await page.getByRole("navigation", { name: "Plan pages" }).getByRole("link", { name: "Sky" }).boundingBox())!;
+  expect(date.y).toBeGreaterThanOrEqual(landing.y + landing.height);
+  expect(date.x + date.width).toBeLessThanOrEqual(sky.x);
 });

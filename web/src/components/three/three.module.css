@@ -15,6 +15,13 @@
 .canvasBox {
   position: absolute;
   inset: 0;
+  background: #02030a;
+}
+
+/* a canvas the browser could not start stays dark behind its message */
+.canvasBox canvas[data-status="failed"],
+.canvasBox canvas[data-status="lost"] {
+  visibility: hidden;
 }
 
 .canvas {
@@ -287,6 +294,7 @@
 }
 
 .speeds button {
+  border-radius: 999px !important;
   padding: 4px 9px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -307,7 +315,7 @@
   position: relative;
   height: 30px;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 999px;
   background: #060a18;
 }
 

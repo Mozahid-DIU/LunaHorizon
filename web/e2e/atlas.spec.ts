@@ -91,7 +91,7 @@ test("pins show each site's own share of hours", async ({ page }) => {
   await expect(pin(page, /^Shackleton crater rim/)).toContainText("45.4% golden");
   await expect(pin(page, /^IM-1 Odysseus/)).toContainText("38.8% golden");
   await expect(pin(page, /^IM-2 Athena/)).toContainText("36.9% golden");
-  await page.getByRole("button", { name: "Sunlight" }).click();
+  await page.getByRole("button", { name: "Sunlight", exact: true }).click();
   await expect(pin(page, /^Shackleton crater rim/)).toContainText("84.8% sunlit");
   await page.getByRole("button", { name: "Earth view" }).click();
   await expect(pin(page, /^IM-2 Athena/)).toContainText("81.5% Earth view");
@@ -192,7 +192,7 @@ test("a countdown near the end of the data never claims a full search", async ({
 test("the wording follows the chosen layer", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByText("sees the Sun and Earth together")).toBeVisible();
-  await page.getByRole("button", { name: "Sunlight" }).click();
+  await page.getByRole("button", { name: "Sunlight", exact: true }).click();
   await expect(page.getByText("sees the Sun most often")).toBeVisible();
 });
 
@@ -240,12 +240,14 @@ test("nothing overflows, at any supported width", async ({ page, isMobile }) => 
 test("the card sets the map's cell beside the site's own share, from the files", async ({ page }) => {
   await page.goto("/");
   const versus = page.getByTestId("map-versus");
+  // folded by default, so the card stays short
+  await versus.getByText("Map vs this point").click();
   // Shackleton rim: the 5 km cell under it, and the share its own horizon gives
   const rimCell = mapFile().golden[61 * MAP_SIZE + 59]!;
   await expect(versus.getByTestId("versus-cell")).toHaveText(percent(rimCell));
   await expect(versus.getByTestId("versus-cell")).toHaveText("16.3%");
   await expect(versus.getByTestId("versus-own")).toHaveText("45.4%");
-  await page.getByRole("button", { name: "Sunlight" }).click();
+  await page.getByRole("button", { name: "Sunlight", exact: true }).click();
   await expect(versus.getByTestId("versus-cell")).toHaveText(percent(mapFile().lit[61 * MAP_SIZE + 59]!));
   await expect(versus).toContainText("sunlit");
 });
@@ -295,6 +297,7 @@ test("on a phone a tap reads the cell and a button checks the point", async ({ p
 test("a custom point at a curated site counts the same five-year share as the site's file, give or take the browser horizon", async ({ page }) => {
   // IM-2's own coordinates as a custom point: the browser builds its horizon from tiles and counts 2026-30
   await page.goto("/?lat=-84.78&lon=29.13");
+  await page.getByTestId("map-versus").getByText("Map vs this point").click();
   const own = page.getByTestId("versus-own");
   await expect(own).toHaveText(/^\d+\.\d%$/, { timeout: 90_000 });
   const shares = JSON.parse(readFileSync(join(__dirname, "..", "src", "data", "site-shares.json"), "utf-8")) as Record<string, { golden: number }>;

@@ -34,9 +34,12 @@ const utc = (ms: number) => {
 const hours = Array.from({ length: 720 }, (_, h) => LANDING + h * HOUR_MS);
 const card = (page: Page) => page.locator("section[aria-labelledby=relay-title]");
 const slider = (page: Page) => page.getByLabel("Time after the chosen date");
+/** The relay card is folded under the timeline; opening it shows the card. */
+const openRelay = (page: Page) => page.getByText("Which DSN dish can reach the lander, hour by hour").click();
 
 test("the stations, their shares and the hours with no station come from the DSN files", async ({ page }) => {
   await page.goto("/sky");
+  await openRelay(page);
   const lanes = card(page).getByTestId("relay-lane");
   await expect(lanes).toHaveCount(3);
   for (const [bit, place] of places.entries()) {
@@ -53,6 +56,7 @@ test("the stations, their shares and the hours with no station come from the DSN
 
 test("the listening chip follows the slider", async ({ page }) => {
   await page.goto("/sky");
+  await openRelay(page);
   const chip = card(page).getByTestId("relay-now");
   await expect(chip).toHaveText(wording(LANDING));
   // the first hour of the mission where a different set of stations listens
@@ -63,6 +67,7 @@ test("the listening chip follows the slider", async ({ page }) => {
 
 test("the arrow keys walk the lanes hour by hour and name who listens", async ({ page }) => {
   await page.goto("/sky");
+  await openRelay(page);
   const lanes = card(page).getByRole("group", { name: "Stations across the 30 days" });
   await lanes.focus();
   for (const step of [1, 2, 3]) {
@@ -75,6 +80,7 @@ test("the arrow keys walk the lanes hour by hour and name who listens", async ({
 
 test("End and Home jump to the last and first hour, and Page keys move a day", async ({ page }) => {
   await page.goto("/sky");
+  await openRelay(page);
   const lanes = card(page).getByRole("group", { name: "Stations across the 30 days" });
   const readout = card(page).getByTestId("relay-pointer");
   const says = (ms: number) => `${utc(ms)}: ${listening(ms).length > 0 ? listening(ms).join(" and ") : "no station"}`;
@@ -97,6 +103,7 @@ test("a far-side site gets no relay card, since it never sees Earth", async ({ p
 
 test("near the end of the data the card covers only the hours there are", async ({ page }) => {
   await page.goto("/sky?t=2030-12-25T00:00Z");
+  await openRelay(page);
   // 25 Dec 00:00 up to 31 Dec 23:00, the last hour the files hold: 167 hours
   const late = JSON.parse(readFileSync(join(__dirname, "..", "public", "data", "dsn-2030.json"), "utf-8")) as DsnFile;
   const first = (Date.UTC(2030, 11, 25) - Date.parse(late.start)) / HOUR_MS;

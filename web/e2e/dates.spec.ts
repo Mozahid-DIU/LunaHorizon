@@ -81,15 +81,16 @@ test("a row links to its sky and to a comparison", async ({ page }) => {
 
 test("the search leaves the page running", async ({ page }) => {
   test.setTimeout(180_000);
+  // how long our own scripts hold a frame back; a browser's one-off cost of starting its graphics is not the page's work
   await page.addInitScript(() => {
-    const state = { last: 0, longest: 0 };
+    const state = { longest: 0, since: 0 };
     Object.assign(window, { gaps: state });
-    const tick = (now: number) => {
-      if (state.last) state.longest = Math.max(state.longest, now - state.last);
-      state.last = now;
-      requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
+    // frames are reported a little late, so each is counted by when it began, not when it arrived
+    new PerformanceObserver((list) => {
+      for (const frame of list.getEntries() as (PerformanceEntry & { blockingDuration: number })[]) {
+        if (frame.startTime >= state.since) state.longest = Math.max(state.longest, frame.blockingDuration);
+      }
+    }).observe({ type: "long-animation-frame" });
   });
   // held back, so the whole search happens after the page has settled and the measuring began
   await page.route(/subpoints-2028/, async (route) => {
@@ -101,8 +102,9 @@ test("the search leaves the page running", async ({ page }) => {
   await page.goto("/dates");
   await expect(page.getByRole("status").filter({ hasText: "Searching" })).toBeVisible();
   await page.waitForTimeout(1000);
-  await page.evaluate(() => Object.assign((window as unknown as { gaps: { longest: number } }).gaps, { longest: 0 }));
+  await page.evaluate(() => Object.assign((window as unknown as { gaps: { longest: number; since: number } }).gaps, { longest: 0, since: performance.now() }));
   await ready(page);
+  await openNudge(page);
   // then the nearby points are built in a worker of their own; the page must keep running through both
   await expect(page.getByTestId("nudge-headline")).toBeVisible({ timeout: 150_000 });
   const longest = await page.evaluate(() => (window as unknown as { gaps: { longest: number } }).gaps.longest);
@@ -199,6 +201,11 @@ test("the page fits without sideways scrolling", async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
+/** The small-change section is folded; it opens, and only then calculates, on a click. */
+async function openNudge(page: Page) {
+  await page.getByText("Small change, big impact", { exact: false }).first().click();
+}
+
 test.describe("small change, big impact", () => {
   const section = (page: Page) => page.locator("section[aria-labelledby=nudge-title]");
   const hoursOf = (text: string) => Number(/^(\d+) h/.exec(text.trim())?.[1]);
@@ -210,6 +217,7 @@ test.describe("small change, big impact", () => {
     const site = findSite("im-2")!;
     const plan = await nudgePlan(loader, loadEphemeris([2027, 2028]), site, loadProfile("im-2"), Date.UTC(2027, 11, 29, 21));
     await page.goto("/dates?site=im-2");
+    await openNudge(page);
     await expect(page.getByTestId("nudge-headline")).toBeVisible({ timeout: 180_000 });
     await expect(section(page).getByTestId("nudge-centre")).toContainText(`${Math.floor(plan.centreHours)} h`);
     for (const m of plan.moved) {
@@ -224,6 +232,7 @@ test.describe("small change, big impact", () => {
   test("the Shackleton rim loses everything a kilometre away, and every figure agrees across the section", async ({ page }) => {
     test.setTimeout(180_000);
     await page.goto("/dates");
+    await openNudge(page);
     const headline = page.getByTestId("nudge-headline");
     await expect(headline).toHaveText(/^Move 1 km \w+ and the landing loses all 336 Golden hours; a day's delay costs 21\.$/, { timeout: 150_000 });
     const points = section(page).getByTestId("nudge-point");
@@ -249,6 +258,7 @@ test.describe("small change, big impact", () => {
 
   test("a site beyond the height tiles says why the nearby points are missing", async ({ page }) => {
     await page.goto("/dates?site=apollo-11");
+    await openNudge(page);
     await expect(section(page)).toContainText("our height tiles cover only the south polar region");
     await expect(page.getByTestId("nudge-headline")).toHaveCount(0);
   });

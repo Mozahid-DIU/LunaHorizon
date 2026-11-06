@@ -41,16 +41,23 @@ for (const [href, title] of PAGES) {
   });
 }
 
-test("desktop tabs move between pages and mark the current one", async ({ page, isMobile }) => {
+test("desktop groups move between pages, and a group's sub-tabs reach its pages", async ({ page, isMobile }) => {
   test.skip(isMobile, "desktop navigation");
   await page.goto("/");
   const nav = page.getByRole("navigation", { name: "Main" });
-  await expect(nav.getByRole("link")).toHaveCount(8);
-  await expect(nav.getByRole("link", { name: "Atlas" })).toHaveAttribute("aria-current", "page");
-  await nav.getByRole("link", { name: "Power" }).click();
+  await expect(nav.getByRole("link")).toHaveText(["Explore", "Plan", "Compare", "Landing"]);
+  await expect(nav.getByRole("link", { name: "Explore" })).toHaveAttribute("aria-current", "page");
+  await nav.getByRole("link", { name: "Plan" }).click();
+  await expect(page).toHaveURL(/\/sky$/);
+  await expect(nav.getByRole("link", { name: "Plan" })).toHaveAttribute("aria-current", "page");
+  const plan = page.getByRole("navigation", { name: "Plan pages" });
+  await plan.getByRole("link", { name: "Power" }).click();
   await expect(page).toHaveURL(/\/power$/);
-  await expect(nav.getByRole("link", { name: "Power" })).toHaveAttribute("aria-current", "page");
-  await expect(nav.getByRole("link", { name: "Atlas" })).not.toHaveAttribute("aria-current", "page");
+  await expect(plan.getByRole("link", { name: "Power" })).toHaveAttribute("aria-current", "page");
+  await expect(nav.getByRole("link", { name: "Plan" })).toHaveAttribute("aria-current", "page");
+  await expect(nav.getByRole("link", { name: "Explore" })).not.toHaveAttribute("aria-current", "page");
+  await page.getByRole("link", { name: "Verified vs NASA JPL" }).click();
+  await expect(page).toHaveURL(/\/proof$/);
 });
 
 test("desktop reaches the Mission Brief", async ({ page, isMobile }) => {
@@ -66,11 +73,15 @@ test("phone tabs and More reach every page", async ({ page, isMobile }) => {
   const tabs = page.getByRole("navigation", { name: "Main" });
   await tabs.getByRole("link", { name: "Compare" }).click();
   await expect(page).toHaveURL(/\/compare$/);
+  await tabs.getByRole("link", { name: "Landing" }).click();
+  await expect(page).toHaveURL(/\/ellipse$/);
+  await page.getByRole("navigation", { name: "Landing pages" }).getByRole("link", { name: "3D" }).click();
+  await expect(page).toHaveURL(/\/3d$/);
+  await tabs.getByRole("link", { name: "Plan" }).click();
+  await page.getByRole("navigation", { name: "Plan pages" }).getByRole("link", { name: "Dates" }).click();
+  await expect(page).toHaveURL(/\/dates$/);
 
-  const more: [string, RegExp][] = [
-    ["Dates", /\/dates$/], ["Power", /\/power$/], ["Ellipse", /\/ellipse$/],
-    ["3D", /\/3d$/], ["Proof", /\/proof$/], ["Brief", /\/brief$/],
-  ];
+  const more: [string, RegExp][] = [["Proof", /\/proof$/], ["Brief", /\/brief$/]];
   for (const [label, url] of more) {
     await tabs.getByRole("button", { name: "More" }).click();
     await page.getByRole("dialog", { name: "More pages" }).getByRole("link", { name: label }).click();
@@ -120,7 +131,7 @@ test("choosing the current page in More also moves focus to the content", async 
 test("More closes when the browser goes back", async ({ page, isMobile }) => {
   test.skip(!isMobile, "phone navigation");
   await page.goto("/");
-  await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Sky" }).click();
+  await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Plan" }).click();
   await expect(page).toHaveURL(/\/sky$/);
   await page.getByRole("button", { name: "More" }).click();
   await page.goBack();
@@ -164,12 +175,12 @@ test("the layout switches cleanly at 1279 and 1280 pixels", async ({ page, isMob
   test.skip(isMobile, "viewport test");
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/sky");
-  await expect(page.getByRole("navigation", { name: "Main" }).getByRole("link")).toHaveCount(8);
+  await expect(page.getByRole("navigation", { name: "Main" }).getByRole("link")).toHaveCount(4);
   await expect(page.getByRole("button", { name: "More" })).toBeHidden();
   expect(await noSidewaysScroll(page)).toBe(true);
 
   await page.setViewportSize({ width: 1279, height: 800 });
-  await expect(page.getByRole("navigation", { name: "Main" }).getByRole("link")).toHaveCount(3);
+  await expect(page.getByRole("navigation", { name: "Main" }).getByRole("link")).toHaveCount(4);
   await expect(page.getByRole("button", { name: "More" })).toBeVisible();
   expect(await noSidewaysScroll(page)).toBe(true);
 });
@@ -190,7 +201,7 @@ test("the tab bar never covers the end of a page", async ({ page, isMobile }) =>
 
 test("More shows as current on a page inside it", async ({ page, isMobile }) => {
   test.skip(!isMobile, "phone navigation");
-  await page.goto("/power");
+  await page.goto("/proof");
   await expect(page.getByRole("button", { name: "More" })).toHaveAttribute("data-current", "true");
 });
 

@@ -101,18 +101,19 @@ test("the top bar never overlaps itself at desktop widths", async ({ page, isMob
     await page.goto("/sky");
     await toggle(page).click();
     const clashes = await page.evaluate(() => {
-      const parts = [...document.querySelectorAll("header > *")].map((el) => el.getBoundingClientRect());
       const header = document.querySelector("header")!.getBoundingClientRect();
       const found: string[] = [];
-      parts.forEach((a, i) => {
-        if (a.right > header.right + 0.5) found.push(`part ${i} past the bar`);
-        parts.slice(i + 1).forEach((b, j) => {
-          if (Math.min(a.right, b.right) - Math.max(a.left, b.left) > 0.5) found.push(`parts ${i} and ${i + j + 1}`);
+      // the header has two rows; within each row no part may overlap another or leave the bar
+      for (const [r, row] of [...document.querySelectorAll("header > div")].entries()) {
+        const parts = [...row.children].map((el) => el.getBoundingClientRect()).filter((b) => b.width > 0);
+        parts.forEach((a, i) => {
+          if (a.right > header.right + 0.5) found.push(`row ${r} part ${i} past the bar`);
+          parts.slice(i + 1).forEach((b, j) => {
+            if (Math.min(a.right, b.right) - Math.max(a.left, b.left) > 0.5) found.push(`row ${r} parts ${i} and ${i + j + 1}`);
+          });
         });
-      });
-      // the selection bar's own controls must fit inside it
-      const bar = document.querySelector("header > div")!;
-      if (bar.scrollWidth > bar.clientWidth + 0.5) found.push("selection bar squeezed");
+        if (row.scrollWidth > row.clientWidth + 0.5) found.push(`row ${r} squeezed`);
+      }
       return found;
     });
     expect(clashes, `${width}px`).toEqual([]);

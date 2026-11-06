@@ -231,7 +231,7 @@ test("the top bar and other pages keep the comparison", async ({ page }) => {
   await page.getByLabel("Landing site").selectOption("im-2");
   await expect(page).toHaveURL(/\?site=im-2&with=im-1$/);
   await expect(golden(page, "IM-2 Athena")).toBeVisible();
-  const nav = page.getByRole("link", { name: "Sky", exact: true }).first();
+  const nav = page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Plan" });
   await expect(nav).toHaveAttribute("href", "/sky?site=im-2&with=im-1");
 });
 

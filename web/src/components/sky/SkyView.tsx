@@ -182,6 +182,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
     <>
       <SkyIntro site={site} timeMs={timeMs} query={query} summary={summary} status={goldenStatus(state)} />
       <LessonCard id="sky" answer={skyAnswer(summary ? summary.hours.lit : null)} />
+      {facts && <SkyInsight facts={facts} />}
       {!data.hasTerrain && <p className={styles.warning}>Flat horizon: terrain not included</p>}
       <div className={styles.console}>
         <div className={styles.consoleMain}>
@@ -220,7 +221,6 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
         </details>
       )}
       <MissionPicker currentId={null} query={query} />
-      {facts && <SkyInsight facts={facts} />}
       {site.id !== null && neverSeesEarth(site.id) && (
         <p className={styles.note} data-testid="far-side-note">
           Earth never rises at this site, so direct contact with Earth is impossible and there are no Golden hours. Landers on the

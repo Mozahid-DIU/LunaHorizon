@@ -101,6 +101,120 @@
   text-transform: uppercase;
 }
 
+/* Share: copies a link to the page with the same site and date */
+.shareWrap {
+  position: relative;
+}
+
+.share {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--duration-fast);
+}
+
+.share:hover,
+.share[aria-expanded="true"] {
+  background: var(--hover);
+}
+
+.share svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.sharePop {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  padding: 16px;
+  border: 1px solid #46e6b455;
+  border-radius: 14px;
+  background: #0c1226f5;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 20px 50px #000c;
+}
+
+.sharePop p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.sharePop b {
+  color: var(--mint);
+  font-weight: 600;
+}
+
+.shareUrl {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  border: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #ffffff0d;
+  color: var(--ink);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.shareActions {
+  display: flex;
+  gap: 8px;
+}
+
+.shareActions button {
+  flex: 1;
+  min-height: 40px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.shareActions button:hover {
+  background: var(--hover);
+}
+
+/* the narrowest desktop bars have no room for the word; the icon stays and the name is read out */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .share {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .shareLabel {
+    display: none;
+  }
+}
+
 @media (max-width: 1279px) {
   .top {
     position: static;
@@ -116,6 +230,20 @@
   .tabs,
   .brief {
     display: none;
+  }
+
+  /* the Share button sits in the header's corner; the desktop bar's offsets must not move it */
+  .top {
+    position: relative;
+    top: 0;
+    right: 0;
+    left: 0;
+  }
+
+  .shareWrap {
+    position: absolute;
+    top: 14px;
+    right: 20px;
   }
 
   .phoneTabs {

@@ -204,6 +204,108 @@
   background: var(--panel);
 }
 
+.timelineHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.download {
+  position: relative;
+}
+
+.download summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff08;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+
+.download summary::-webkit-details-marker {
+  display: none;
+}
+
+.download summary:hover,
+.download[open] summary {
+  background: var(--hover);
+}
+
+.download summary svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.downloadMenu {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 8px);
+  right: 0;
+  display: grid;
+  gap: 4px;
+  width: 420px;
+  max-width: calc(100vw - 48px);
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #0c1226f5;
+  box-shadow: 0 20px 50px #000c;
+}
+
+.downloadMenu button {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.downloadMenu button:hover,
+.downloadMenu button:focus-visible {
+  background: var(--hover);
+}
+
+.download summary:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 2px;
+}
+
+.downloadError {
+  margin: 4px 12px 8px;
+  color: var(--danger);
+  font-size: 12px;
+}
+
+.downloadMenu b {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.downloadMenu span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 .timeline h2 {
   margin: 0 0 14px;
   color: var(--muted);

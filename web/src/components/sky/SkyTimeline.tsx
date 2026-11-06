@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { MISSION_DAYS } from "@/lib/siteSummary";
 import { formatUtc } from "@/lib/selection";
 import { axisPercent, formatEdge, formatHours, TIMELINE_DAYS, TIMELINE_TICKS, type TimelineRow } from "@/lib/timeline";
@@ -19,13 +20,85 @@ interface SkyTimelineProps {
   shownMs: number;
   /** Where the data stops, if that comes before the end of the 30 days. */
   cutMs: number | null;
+  /** How many rows the hourly file holds. */
+  hourlyRows: number;
+  /** Saves the timeline as a CSV file. */
+  onDownload: (what: "hourly" | "windows") => Promise<void>;
 }
 
-export function SkyTimeline({ rows, startMs, shownMs, cutMs }: SkyTimelineProps) {
+function DownloadMenu({ onDownload, hourlyRows }: { onDownload: SkyTimelineProps["onDownload"]; hourlyRows: number }) {
+  const menu = useRef<HTMLDetailsElement>(null);
+  const summary = useRef<HTMLElement>(null);
+  const [failed, setFailed] = useState(false);
+  const close = () => {
+    if (menu.current) menu.current.open = false;
+    summary.current?.focus();
+  };
+  const pick = async (what: "hourly" | "windows") => {
+    try {
+      await onDownload(what);
+      setFailed(false);
+      close();
+    } catch {
+      setFailed(true);
+    }
+  };
+
+  // Escape or a click elsewhere closes the menu
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && menu.current?.open) close();
+    };
+    const onPointer = (event: PointerEvent) => {
+      if (menu.current?.open && !menu.current.contains(event.target as Node)) menu.current.open = false;
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
+  }, []);
+
+  const span = hourlyRows === TIMELINE_DAYS * 24 ? `${TIMELINE_DAYS} days` : `${hourlyRows} hours, to the end of our data`;
+  return (
+    <details className={styles.download} ref={menu}>
+      <summary data-testid="csv-menu" ref={summary}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
+        </svg>
+        Download CSV
+      </summary>
+      <div className={styles.downloadMenu}>
+        <button type="button" onClick={() => pick("hourly")} data-testid="csv-hourly">
+          <b>Hourly data, {span}</b>
+          <span>
+            {hourlyRows} rows, one every hour from the chosen time: Sun and Earth position, the skyline in their direction, whether each is above
+            it, DSN stations listening, Comms, Golden
+          </span>
+        </button>
+        <button type="button" onClick={() => pick("windows")} data-testid="csv-windows">
+          <b>Windows</b>
+          <span>Every Sun, Earth, DSN, Comms and Golden window: start, end and hours. Edges are found to within 30 s; DSN changes on the hour.</span>
+        </button>
+        {failed && (
+          <p className={styles.downloadError} role="alert">
+            The file could not be prepared: a data file did not load. Try again.
+          </p>
+        )}
+      </div>
+    </details>
+  );
+}
+
+export function SkyTimeline({ rows, startMs, shownMs, cutMs, hourlyRows, onDownload }: SkyTimelineProps) {
   const missionEnd = (MISSION_DAYS / TIMELINE_DAYS) * 100;
   return (
     <section className={styles.timeline} aria-label="Next 30 days">
-      <h2>Next 30 days</h2>
+      <div className={styles.timelineHead}>
+        <h2>Next 30 days</h2>
+        <DownloadMenu onDownload={onDownload} hourlyRows={hourlyRows} />
+      </div>
       <div className={styles.chart}>
         {rows.map(({ kind, label, windows, hours }) => (
           <div className={styles.timelineRow} key={kind}>

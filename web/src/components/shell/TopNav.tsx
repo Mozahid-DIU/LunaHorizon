@@ -7,6 +7,7 @@ import { SelectionBar, SelectionBarFallback } from "@/components/selection/Selec
 import { useSelection } from "@/components/selection/useSelection";
 import { BRIEF, DESKTOP_NAV, isActivePage } from "@/lib/routes";
 import { withQuery } from "@/lib/selection";
+import { ShareButton, ShareButtonFallback } from "./ShareButton";
 import styles from "./shell.module.css";
 
 function NavLinks({ query }: { query: string }) {
@@ -46,6 +47,9 @@ export function TopNav() {
       </Suspense>
       <Suspense fallback={<NavLinks query="" />}>
         <LiveNavLinks />
+      </Suspense>
+      <Suspense fallback={<ShareButtonFallback />}>
+        <ShareButton />
       </Suspense>
     </header>
   );

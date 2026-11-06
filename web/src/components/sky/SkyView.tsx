@@ -6,7 +6,9 @@ import { useDeferredValue, useMemo, useState } from "react";
 import { DataNotice } from "@/components/data/DataNotice";
 import { useSelection } from "@/components/selection/useSelection";
 import { countdown, DEFAULT_SEARCH_MS } from "@/lib/countdown";
+import { dataLoader } from "@/lib/data/loader";
 import { useSiteData } from "@/lib/data/useSiteData";
+import { csvFileName, hourlyCsv, hourlyRowCount, saveFile, windowsCsv } from "@/lib/exportCsv";
 import { factsFrom } from "@/lib/insight";
 import { formatUtc, withQuery } from "@/lib/selection";
 import { eventWindows, goldenStatus, outlookAt, skyDataEnd, skyHeadline, type GoldenStatus } from "@/lib/skyOutlook";
@@ -221,6 +223,16 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
     );
   }
 
+  const eph = data.ephemeris;
+  const csvTerrain = data.hasTerrain ? (data.heightAt ? "NASA LOLA height tiles, horizon computed in the browser" : null) : "none, flat horizon (terrain not included)";
+  // a curated site's horizon file names its map; the loader keeps the file, so this costs no download
+  const downloadCsv = async (what: "hourly" | "windows") => {
+    const horizon = csvTerrain ?? (site.id !== null ? (await dataLoader.loadHorizon(site.id)).source : "NASA LOLA height tiles, horizon computed in the browser");
+    const source = { site: site.id === null ? "Custom point" : shortName(site), lat: site.lat, lon: site.lon, horizon };
+    const text = what === "hourly" ? hourlyCsv(eph, site, data.profile, timeMs, source) : windowsCsv(timeline, source);
+    saveFile(text, csvFileName(site.id, site.lat, site.lon, timeMs, what));
+  };
+
   return (
     <>
       <SkyIntro site={site} timeMs={timeMs} query={query} summary={summary} status={goldenStatus(state)} />
@@ -239,7 +251,7 @@ function Sky({ site, timeMs, query }: { site: SelectedSite; timeMs: number; quer
         <CountdownItem name="Earth" outlook={outlook.earth} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="Earthrise" sets="Earthset" tone={styles.earth} />
         <CountdownItem name="Sun" outlook={outlook.sun} isSearchCut={outlook.isSearchCut} shownMs={shownMs} rises="sunrise" sets="sunset" tone={styles.sun} />
       </section>
-      <SkyTimeline rows={timeline} startMs={timeMs} shownMs={shownMs} cutMs={timelineCut(data.ephemeris, timeMs)} />
+      <SkyTimeline rows={timeline} startMs={timeMs} shownMs={shownMs} cutMs={timelineCut(data.ephemeris, timeMs)} hourlyRows={hourlyRowCount(timeMs, eph.dataEnd())} onDownload={downloadCsv} />
       {relayPlan && relayEndMs > timeMs && !(site.id !== null && neverSeesEarth(site.id)) && <DsnRelay key={`${siteKey}|${timeMs}`} eph={data.ephemeris} plan={relayPlan} startMs={timeMs} endMs={relayEndMs} shownMs={shownMs} />}
       {site.id !== null && neverSeesEarth(site.id) && (
         <p className={styles.note} data-testid="far-side-note">

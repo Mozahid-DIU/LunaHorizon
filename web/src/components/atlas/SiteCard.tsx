@@ -65,8 +65,6 @@ function Results({ summary, landingMs, hasTerrain, isFromTiles }: ResultsProps) 
       </p>
       <p className={styles.subhead}>golden if you land on {formatUtc(landingMs)}</p>
       <div className={styles.bars}>
-        <MissionBar label="Sun" hours={summary.hours.lit} spans={summary.spans.lit} tone={styles.sun} />
-        <MissionBar label="Comms" hours={summary.hours.comms} spans={summary.spans.comms} tone={styles.earth} />
         <MissionBar label="Golden" hours={summary.hours.golden} spans={summary.spans.golden} tone={styles.golden} />
       </div>
       <div className={styles.countdowns}>
@@ -156,9 +154,6 @@ export function SiteCard({ layer }: { layer: MapLayer }) {
       <p className={styles.coordinates}>{formatCoordinates(site.lat, site.lon)}</p>
       <CardBody site={site} timeMs={timeMs} layer={layer} />
       {!mapPosition(site.lat, site.lon) && <p className={styles.note}>This site lies outside the south polar map.</p>}
-      <p className={styles.note}>
-        For this exact point; ground nearby can differ. <Link href={withQuery("/ellipse", query)}>See the Landing Ellipse</Link>
-      </p>
       <Link className={styles.cta} href={withQuery("/sky", query)}>
         See the sky from here →
       </Link>

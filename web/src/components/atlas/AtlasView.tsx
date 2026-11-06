@@ -97,10 +97,6 @@ function MapKey({ layer }: { layer: MapLayer }) {
         <span>{lowPercent === 0 ? "0%" : `under ${lowPercent}%`}</span>
         <span>{highPercent === 100 ? "100%" : `${highPercent}%+`}</span>
       </div>
-      <p className={styles.keyNote}>
-        <b>Point at the map</b> to read a 5 km cell; <b>click</b> to check that exact point with its own horizon. The map finds
-        regions; good ground can lie between its points. Relief shading is for display only.
-      </p>
     </div>
   );
 }
@@ -220,7 +216,9 @@ export function AtlasView() {
           <h1>
             Find the right place and the <em>right time</em> to land on the Moon.
           </h1>
-          <p>The glow marks ground that {LAYERS[layer].glow}, from real NASA terrain.</p>
+          <p>
+            Real NASA terrain, lit by the real Sun. The glow marks ground that {LAYERS[layer].glow}. Click anywhere to check a point.
+          </p>
         </section>
 
         <div
@@ -271,9 +269,6 @@ export function AtlasView() {
         )}
 
         <div className={styles.controls}>
-          <p className={styles.section}>
-            <span>02</span>Map layer
-          </p>
           <div className={styles.layers} role="group" aria-label="Map layer">
             {LAYER_ORDER.map((id) => (
               <button key={id} type="button" aria-pressed={layer === id} onClick={() => setLayer(id)}>
@@ -289,18 +284,13 @@ export function AtlasView() {
             <MapKey layer={layer} />
           )}
           {isLightReady && (
-            <div className={styles.light}>
-              <p className={styles.section}>
-                <span>03</span>Sunlight
+            <div className={styles.lightRow}>
+              <button type="button" onClick={() => setLightPlaying((playing) => !playing)} aria-label={isLightPlaying ? "Pause the sunlight" : "Play the sunlight"}>
+                {isLightPlaying ? "❚❚" : "▶"}
+              </button>
+              <p title="One lunar day plays in 24 seconds. Ground in shadow is shown dim so it stays readable.">
+                Sunlight · <span ref={lightTime} />
               </p>
-              <div className={styles.lightRow}>
-                <button type="button" onClick={() => setLightPlaying((playing) => !playing)} aria-label={isLightPlaying ? "Pause the sunlight" : "Play the sunlight"}>
-                  {isLightPlaying ? "❚❚" : "▶"}
-                </button>
-                <p>
-                  Lit from the real Sun direction at <span ref={lightTime} />, one lunar day in 24 s. Shadowed ground is shown dim so it stays readable.
-                </p>
-              </div>
             </div>
           )}
         </div>

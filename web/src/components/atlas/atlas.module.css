@@ -1,7 +1,7 @@
 .atlas {
-  --disc: min(1040px, 72vw);
+  --disc: min(940px, 60vw, calc(100vh - 150px));
   position: relative;
-  min-height: calc(var(--disc) + 72px);
+  min-height: max(calc(100vh - 105px), calc(var(--disc) + 60px));
   padding: 28px 40px 40px;
   overflow: clip;
   /* a sparse star field, drawn by the browser so it costs no download */
@@ -45,13 +45,21 @@
 .controls {
   position: relative;
   z-index: 2;
-  width: min(500px, 36vw);
+  width: min(400px, 28vw);
   pointer-events: none;
 }
 
+/* the controls sit at the foot of the hero, under the headline */
+.controls {
+  position: absolute;
+  left: 40px;
+  bottom: 104px;
+  width: 300px;
+}
+
 .intro h1 {
-  margin: 0 0 18px;
-  font-size: clamp(2.4rem, 3.6vw, 3.5rem);
+  margin: 0 0 16px;
+  font-size: clamp(2rem, 2.9vw, 2.9rem);
   font-weight: 300;
   line-height: 1.12;
   letter-spacing: -0.03em;
@@ -66,9 +74,9 @@
 
 .intro p {
   margin: 0 0 24px;
-  max-width: min(330px, 22vw);
+  max-width: min(330px, 24vw);
   color: var(--muted);
-  font-size: 17px;
+  font-size: 15px;
   line-height: 1.5;
   text-shadow: 0 1px 12px var(--space);
 }
@@ -76,8 +84,8 @@
 .map {
   position: absolute;
   z-index: 1;
-  top: 44px;
-  left: 19.5vw;
+  top: 28px;
+  left: calc(50% - var(--disc) / 2 - 40px);
   width: var(--disc);
   aspect-ratio: 1;
 }
@@ -116,7 +124,9 @@
 .lightRow {
   display: flex;
   gap: 12px;
-  align-items: flex-start;
+  align-items: center;
+  margin-top: 18px;
+  pointer-events: auto;
 }
 
 .lightRow button {
@@ -139,8 +149,10 @@
 .lightRow p {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.45;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .lightRow p span {
@@ -165,6 +177,7 @@
 .overlay {
   position: absolute;
   mix-blend-mode: hard-light;
+  opacity: 0.72;
 }
 
 .pin {
@@ -439,10 +452,11 @@
 }
 
 .key {
-  width: 340px;
-  max-width: 100%;
-  padding: 16px 18px;
-  border-radius: 12px;
+  width: 100%;
+  padding: 0;
+  border: 0 !important;
+  background: none !important;
+  backdrop-filter: none !important;
 }
 
 .keyError {
@@ -470,12 +484,14 @@
 }
 
 .keyBar {
-  height: 8px;
-  margin: 12px 0 6px;
-  border-radius: 4px;
+  max-width: 240px;
+  height: 4px;
+  margin: 10px 0 6px;
+  border-radius: 2px;
 }
 
 .keyEnds {
+  max-width: 240px;
   display: flex;
   justify-content: space-between;
   color: var(--muted);
@@ -498,10 +514,10 @@
 .cardColumn {
   position: absolute;
   z-index: 2;
-  top: 12px;
+  top: 28px;
   right: 24px;
   bottom: 0;
-  width: 350px;
+  width: 310px;
 }
 
 .card {
@@ -514,7 +530,7 @@
 
 .card h2 {
   margin: 8px 0 2px;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
@@ -535,16 +551,17 @@
 }
 
 .headline {
-  margin: 20px 0 4px;
+  margin: 18px 0 4px;
   color: var(--mint);
-  font-size: 44px;
+  font-size: 40px;
   font-weight: 300;
   letter-spacing: -0.03em;
 }
 
 .subhead {
   margin: 0;
-  font-size: 15px;
+  color: var(--muted);
+  font-size: 13px;
   line-height: 1.4;
 }
 
@@ -673,6 +690,10 @@ i.golden {
   .intro,
   .controls {
     width: 100%;
+  }
+
+  .controls {
+    position: static;
   }
 
   .intro p {

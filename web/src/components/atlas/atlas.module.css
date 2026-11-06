@@ -49,12 +49,10 @@
   pointer-events: none;
 }
 
-/* the controls sit at the foot of the hero, under the headline */
+/* the controls follow the intro in the left column, so they can never run into its text */
 .controls {
-  position: absolute;
-  left: 40px;
-  bottom: 104px;
   width: 300px;
+  margin-top: 8px;
 }
 
 .intro h1 {
@@ -156,6 +154,7 @@
 }
 
 .lightRow p span {
+  white-space: nowrap;
   color: var(--ink);
   font-family: var(--font-mono), monospace;
   font-size: 12px;

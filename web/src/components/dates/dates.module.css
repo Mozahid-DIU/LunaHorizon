@@ -633,3 +633,20 @@
 .more[open] > summary {
   padding: 16px 4px;
 }
+
+/* narrow screens: month initials only fit without the year; the caption below gives the dates */
+@media (max-width: 600px) {
+  .strip {
+    padding: 14px 12px 12px;
+  }
+
+  .stripMonth {
+    padding-left: 3px;
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+
+  .stripMonth small {
+    display: none;
+  }
+}

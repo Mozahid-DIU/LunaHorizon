@@ -837,3 +837,11 @@
     left: 15mm;
   }
 }
+
+/* on a phone screen the axis keeps every other label, so the landing date never runs into "+7 d" */
+@media screen and (max-width: 600px) {
+  .tlAxis span:nth-child(2),
+  .tlAxis span:nth-child(4) {
+    display: none;
+  }
+}

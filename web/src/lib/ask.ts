@@ -5,6 +5,7 @@
  * that holds any figure from neither place is not shown. Without the AI, the suggested
  * questions are answered by fixed rules from the same two places.
  */
+import { GUIDE } from "./askGuide";
 import { DEFAULT_SEARCH_MS } from "./countdown";
 import { ELEVATION_MASK_DEG } from "./dsnRelay";
 import { factLines, limitSentence, nextChange, NUMBER_WORDS, OTHER_DIGITS, quantities, ruleInsight, siteName, type InsightFacts } from "./insight";
@@ -15,6 +16,8 @@ import { formatHours } from "./timeline";
 export const MAX_QUESTION_CHARS = 300;
 /** The characters an answer may use: English letters, digits, plain punctuation and the degree sign. */
 const PLAIN = /^[A-Za-z0-9 .,;:'"()%°\-–—/?!&]*$/;
+/** How many earlier questions are sent with a new one, so a follow-up can be understood. */
+export const MAX_HISTORY = 3;
 /** Questions that try to change the AI's rules are not sent to it. */
 const STEERING = /\b(ignore|disregard|forget|pretend|role ?play|you are now|act as|system prompt|instructions?|repeat after|say that|say exactly|write exactly|jailbreak|override)\b/i;
 const SEARCH_DAYS = DEFAULT_SEARCH_MS / 86_400_000;
@@ -79,7 +82,7 @@ export const TOPICS: readonly Topic[] = [
 
 /** Every text an answer may take its figures from, for this landing. */
 export function sourceTexts(facts: InsightFacts): string[] {
-  return [ruleInsight(facts), ...factLines(facts), ...NOTES, ...TOPICS.map((topic) => topic.answer(facts)), `within ${SEARCH_DAYS} days`];
+  return [ruleInsight(facts), ...factLines(facts), ...NOTES, ...TOPICS.map((topic) => topic.answer(facts)), `within ${SEARCH_DAYS} days`, ...GUIDE];
 }
 
 /** Figures in `text` that neither the engine's facts nor our notes give; empty means it may be shown. */
@@ -118,6 +121,24 @@ export function parseQuestion(raw: unknown): string {
   if (question.length === 0) throw new Error("the question is empty");
   if (question.length > MAX_QUESTION_CHARS) throw new Error("the question is too long");
   return question;
+}
+
+/**
+ * The visitor's earlier questions, as the browser sent them. Only questions are taken, never
+ * earlier answers, because a browser could forge an answer in LunaHorizon's own voice. A badly
+ * formed list refuses the request; a question that breaks the rules for a new one is left out.
+ */
+export function parseHistory(raw: unknown): string[] {
+  if (raw === undefined) return [];
+  if (!Array.isArray(raw) || raw.length > MAX_HISTORY || !raw.every((item) => typeof item === "string")) throw new Error("the history is not a short list of text");
+  return raw.flatMap((item: string) => {
+    try {
+      const question = parseQuestion(item);
+      return isSteering(question) ? [] : [question];
+    } catch {
+      return [];
+    }
+  });
 }
 
 /** Whether a question asks the AI to drop or change its rules; such questions get rule answers only. */

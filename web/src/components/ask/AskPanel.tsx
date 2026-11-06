@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useSelection } from "@/components/selection/useSelection";
-import { MAX_QUESTION_CHARS, strayInAnswer, topicFor, TOPICS, type Topic } from "@/lib/ask";
+import { MAX_HISTORY, MAX_QUESTION_CHARS, strayInAnswer, topicFor, TOPICS, type Topic } from "@/lib/ask";
 import { DEFAULT_SEARCH_MS } from "@/lib/countdown";
 import { useSiteData } from "@/lib/data/useSiteData";
 import { DATA_END_MS } from "@/lib/dataRange";
@@ -31,9 +31,13 @@ type Message =
 
 type AiAnswer = { ok: true; text: string; model: string } | { ok: false; reason: FallbackReason };
 
-async function askAi(facts: InsightFacts, question: string): Promise<AiAnswer> {
+/** The last questions asked, oldest first, sent with a new one so a follow-up makes sense. */
+const recentQuestions = (messages: readonly Message[]): string[] =>
+  messages.flatMap((message) => (message.role === "question" ? [message.text] : [])).slice(-MAX_HISTORY);
+
+async function askAi(facts: InsightFacts, question: string, history: string[]): Promise<AiAnswer> {
   try {
-    const response = await fetch("/api/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ facts, question }) });
+    const response = await fetch("/api/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ facts, question, history }) });
     const reply = (await response.json()) as InsightReply;
     if (reply.source !== "ai") return { ok: false, reason: Object.hasOwn(REASONS, reply.reason) ? reply.reason : "failed" };
     // the same check as the server's, so a damaged or forged reply is refused too
@@ -100,14 +104,15 @@ function AskDialog({ onClose, isRaised }: { onClose: () => void; isRaised: boole
   const ask = async (question: string, chosen: Topic | null) => {
     if (!facts || isWaiting) return;
     const key = contextKey;
+    const history = recentQuestions(messages);
     push(key, { role: "question", text: question }, { role: "waiting" });
-    const reply = await askAi(facts, question);
+    const reply = await askAi(facts, question, history);
     if (reply.ok) {
       push(key, {
         role: "answer",
         text: reply.text,
         isAi: true,
-        note: `Answered by an AI model (${reply.model} on Groq) from the engine's figures for this landing and our notes. Each figure in it matches one of those; the wording itself is not checked.`,
+        note: `Answered by an AI model (${reply.model} on Groq) from the engine's figures for this landing, our notes and our guide to the app and its sites. Each figure in it matches one of those; the wording itself is not checked.`,
       });
       return;
     }
@@ -144,8 +149,8 @@ function AskDialog({ onClose, isRaised }: { onClose: () => void; isRaised: boole
       <ol className={styles.messages} ref={list} aria-live="polite" aria-relevant="additions" data-testid="ask-messages">
         {messages.length === 0 && (
           <li className={styles.intro}>
-            Ask about this landing or how LunaHorizon works. Answers use only our engine&apos;s figures and our own notes; any figure from anywhere else is
-            not shown.
+            Ask anything about this landing, the sites LunaHorizon covers, the Moon ideas behind them, or how each page works. Answers use only our
+            engine&apos;s figures and our own notes; any figure from anywhere else is not shown.
           </li>
         )}
         {messages.map((message, i) => {
@@ -204,7 +209,7 @@ function AskDialog({ onClose, isRaised }: { onClose: () => void; isRaised: boole
               rows={2}
               maxLength={MAX_QUESTION_CHARS}
               value={draft}
-              placeholder="Type a question about this landing"
+              placeholder="Ask about this landing, a site or a page"
               onChange={(event) => setDraft(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) submit(event);

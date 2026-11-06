@@ -87,3 +87,20 @@ test("the ask route refuses other sites, bad bodies and, here, says the AI is of
   expect(off.status()).toBe(503);
   expect(await off.json()).toEqual({ source: "rules", reason: "off" });
 });
+
+test("a follow-up is sent with the questions before it, never the answers", async ({ page }) => {
+  const bodies: { question: string; history: string[] }[] = [];
+  await page.route("**/api/ask", async (route) => {
+    bodies.push(route.request().postDataJSON());
+    await route.fulfill({ json: { source: "ai", text: "The Shackleton crater rim (best-lit point) has the Sun up 84.8% of hours over 2026 to 2030.", model: "openai/gpt-oss-120b" } });
+  });
+  await open(page);
+  await page.getByLabel("Your question").fill("Which site has the most Sun?");
+  await page.keyboard.press("Enter");
+  await expect(answers(page).first()).toHaveAttribute("data-source", "ai");
+  await page.getByLabel("Your question").fill("and how much Golden?");
+  await page.keyboard.press("Enter");
+  await expect(answers(page)).toHaveCount(2);
+  expect(bodies[0].history).toEqual([]);
+  expect(bodies[1].history).toEqual(["Which site has the most Sun?"]);
+});

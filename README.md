@@ -8,160 +8,100 @@
 NASA Space Apps Challenge 2026 · Challenge: **Lunar Landing Site Navigator** (formerly listed as *CLPS Lunar Mission Browser*)
 Team page: https://www.spaceappschallenge.org/2026/find-a-team/team-astral3/
 
+![The Atlas: the lunar south pole lit from the real Sun's direction, with each site's Golden hours](docs/screens/atlas.webp)
+
 ---
 
-> 🛠️ **Project status: In development**
->
-> **Development start: 28 October 2026**, after our assigned Space Apps mentor confirmed that our team could begin development before the hackathon. All code in this repository is open source (MIT).
+## 🛰️ The problem
 
-### Progress
+At the Moon's south pole the Sun stays a few degrees above or below the horizon, and Earth sinks behind the skyline and rises again. Crater rims and mountains can hide both.
 
-- [x] **Ephemeris engine:** Sun and Earth azimuth/elevation from any point on the Moon (Skyfield + NASA SPICE: DE440, Moon ME frame with libration)
-- [x] **Validated against NASA JPL Horizons:** 24 checks across equatorial (Apollo 11), mid-latitude (Chandrayaan-3) and south pole (89.45°S) sites; all within the 0.1° target, observed difference below 0.0001°
-- [x] **Curated sites with official sources** (NSSDCA, LROC, IAU Gazetteer) and **hourly Sun/Earth sub-points 2026–2030**: any site's az/el reproduces the full SPICE result within 0.00003°
-- [x] **Terrain horizons** for all 5 demo sites from LRO LOLA and SLDEM2015 (NASA LOLA + JAXA Kaguya)
-- [x] **Calculation engine:** power, comms and Golden windows; sunset/Earthset countdown; best dates and slip planner; battery simulation; landing ellipse data; 3D terrain tiles; Golden Window Map data
-- [x] **128 validation checks** against JPL Horizons, LROC and published data, all passing
-- [x] **Website foundation:** nine pages, desktop and phone navigation, checked data loading, shareable site and date links, and a live deployment
-- [x] **Atlas:** south polar relief map from LOLA, Golden / Sunlight / Earth layers, site pins and a site card computed from each site's own horizon
-- [x] **Sky View:** the lander's view of each site, with the Sun and Earth over the real skyline
-- [x] **Sky animation:** play the next 14 days or move through them with a slider
-- [x] **Custom sites:** south of 65° S, any point gets a real horizon, computed in the browser from LOLA height tiles and checked against the full maps
-- [x] **Sky headline and countdown:** Golden days for the chosen date, and the next sunset, sunrise, Earthset or Earthrise
-- [x] **30-day timeline:** Sun, Earth, DSN, Comms and Golden windows for the chosen date, with every window listed
-- [x] **Compare:** up to three sites or dates side by side, each a direct calculation, with a shareable link
-- [x] **Dates:** the best landings in the next 12 months, and what a delay or a nearby site would change, searched in the background
-- [x] **Proof:** every validation check with its difference and limit, read straight from `validation.json`
-- [x] **Plain-language summary:** rule-based from the engine's numbers, with an optional AI rewording whose numbers are checked
-- [x] **20 curated sites:** Apollo 11–17 (except 13), Chang'e 3–6 (two on the far side), SLIM, Blue Ghost 1, Luna 16 and 17, Surveyor 3, Chandrayaan-2 and -3, IM-1, IM-2 and the Shackleton rim, each with an official source and a terrain horizon; 11 landers' ground heights checked against LROC
-- [x] **Power:** an example lander's solar panel and battery over 14 or 30 days, with the battery's charge on a chart and the model's limits on screen
-- [x] **Ellipse:** best, median and worst Golden hours within 100 m, 500 m or 1 km of the target at IM-1, IM-2 and the Shackleton rim, and where IM-2 Athena really came down
-- [x] **Who can hear the Moon:** on the Sky page, which Deep Space Network station (Goldstone, Madrid, Canberra) has the Moon at least 10° up, now, through the day and across 30 days, with the hours when none does
-- [x] **Ask LunaHorizon:** a chat panel on every page for questions about the chosen landing and how the app works; an AI words the answer from the engine's figures and our notes only, any other figure is refused, and suggested questions are answered by fixed rules when the AI is off
-- [x] **Share and CSV:** a Share button on every page copies a link that reopens the same page, site and date (a phone gets its own share sheet); the Sky page's 30-day timeline downloads as hourly data or as a list of windows, each row from the engine
-- [x] **Mission Brief:** a two-page A4 report for any site and date, ready to print or save as PDF, with a QR code back to the live page; every figure from the engine
-- [x] **Small change, big impact:** on the Dates page, the same landing from points 1 km and 2 km away in each direction, each with its own horizon built in the browser, and a day earlier or later
-- [x] **Map reader:** point at the Golden Window Map to read any 5 km cell, click to check that exact point with its own horizon, and see the map's cell beside the point's own five-year share
-- [x] **Lander's-eye 3D:** real LOLA terrain at 1:1 around IM-1, IM-2 and the Shackleton rim, lit from the engine's Sun direction with shadows that move through the 30 days, from above or from the lander's eye, with the horizon file's skyline drawn over it as a check
+For a lander, this decides everything:
 
-📄 Full requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
+- ☀️ **Power:** no Sun above the skyline means no solar power.
+- 🌍 **Contact:** no Earth above the skyline, or no NASA Deep Space Network dish facing the Moon, means no direct link home.
 
-### Run the pipeline
+Pick the wrong spot or the wrong day, and a lander can lose both. IM-1 and IM-2 showed how fine the margins are. The tools that compute Sun and Earth positions exist, but they take an expert to read.
+
+## 💡 What LunaHorizon does
+
+Choose a **site** (20 curated landing sites, or any point you type) and a **date**. LunaHorizon then shows the sky from that exact point: when the lander has sunlight, when it can talk to Earth, and the **Golden hours** when it has both.
+
+| Menu | Page | What you get |
+|---|---|---|
+| **Explore** | Atlas | The south polar map from NASA LOLA terrain, lit from the real Sun's direction across a lunar day. Golden / Sunlight / Earth-view layers, site pins, and a card for any point you click. |
+| **Plan** | Sky | The lander's view: Sun and Earth over the real skyline, a 14-day playback, sunset and Earthset countdowns, and a 30-day timeline of Sun, Earth, DSN, Comms and Golden windows. |
+| | Dates | The 5 best landings in the next 12 months on a year strip, what a slip of 1, 7 or 30 days or a nearby site would change, and the same landing moved 1–2 km or by a day. |
+| | Power | An example lander's solar panel and battery through the mission: does it survive the night? |
+| **Compare** | Compare | Up to three sites or dates side by side, from the same engine. |
+| **Landing** | Ellipse | Landers miss their target, so the target and 24 points on rings 100 m, 500 m and 1 km away are each scored with their own horizon. Includes where IM-2 Athena really came down. |
+| | 3D | Real LOLA terrain at 1:1 around IM-1, IM-2 and the Shackleton rim, with shadows moving with the engine's Sun. |
+| ✓ **Verified** | Proof | All 128 checks against NASA JPL Horizons, the full SPICE calculation and published terrain results. All pass, worst difference 0.000742°. |
+| **Mission Brief** | Brief | A two-page A4 report for any site and date, with a QR code back to the live page. |
+
+**Also in the app**
+
+- **Mission Replay:** Apollo 11, Chandrayaan-3, IM-1, IM-2 and Blue Ghost 1 replayed from touchdown, beside what their teams reported. For example, the engine's sunset at Chandrayaan-3's site falls on the day ISRO put the lander to sleep.
+- **Ask LunaHorizon:** questions in plain English, answered only from the engine's figures and our notes.
+- **Classroom mode:** a short lesson on every page, with answers worked out live by the engine.
+- **Share and CSV:** links that reopen the same page, site and date, and an hourly CSV export of the timeline.
+
+<table>
+<tr><td><img src="docs/screens/sky.webp" alt="Sky page: the lander's view with an engine telemetry panel"></td><td><img src="docs/screens/dates.webp" alt="Dates page: the five best landings on a year strip"></td></tr>
+<tr><td><img src="docs/screens/power.webp" alt="Power page: battery charge through the mission"></td><td><img src="docs/screens/proof.webp" alt="Proof page: 128 of 128 checks passed"></td></tr>
+<tr><td><img src="docs/screens/ellipse.webp" alt="Ellipse page: Golden hours around the target"></td><td><img src="docs/screens/replay.webp" alt="Mission Replay: Chandrayaan-3 from touchdown"></td></tr>
+</table>
+
+## ⚙️ How it works
+
+```
+Python pipeline (run once)                          Browser (Next.js on Vercel)
+  NASA SPICE (DE440, Moon PA DE421) ─▶ hourly Sun and Earth sub-points ─▶ az/el for any site, any minute
+  NASA DSN antenna positions        ─▶ hourly "who can see the Moon"   ─▶ Comms and Golden windows
+  NASA LRO LOLA + SLDEM2015         ─▶ terrain horizons and tiles      ─▶ skylines, custom points, 3D
+  NASA JPL Horizons                 ─▶ independent checks              ─▶ Proof page
+```
+
+- **Golden** means the Sun's centre is above the skyline **and** Earth's centre is above the skyline **and** at least one DSN station (Goldstone, Madrid, Canberra) has the Moon 10° or more above its horizon.
+- Every number on screen comes from this engine.
+- AI never computes a position or a window.
+
+📄 Every dataset, rule, resolution and limit: **[docs/data.md](docs/data.md)**
+📄 Requirements: [Software Requirements Specification (PDF)](docs/LunaHorizon-SRS.pdf)
+
+## ✅ How we know it is right
+
+- **Sun and Earth positions:** 24 checks against NASA JPL Horizons. All within 0.1°; the observed difference is under 0.0001°.
+- **Browser engine:** 80 checks against the full SPICE calculation, within 0.02°.
+- **DSN and terrain:** 24 checks against JPL Horizons, LROC landing heights and published results.
+- **Mission Replay data:** matches JPL Horizons at each touchdown within 0.0004°.
+- **Test suites:** 892 unit tests, 461 browser tests (desktop and phone), and the pipeline's pytest suite.
+
+## 🧰 Tech stack
+
+- **Pipeline:** Python, Skyfield + NASA SPICE kernels, NumPy, Pillow, pytest
+- **Web:** Next.js 16, React 19, TypeScript, SVG charts, WebGL (Atlas light), Three.js (3D), Web Workers for the searches
+- **Tests:** Vitest, Playwright
+- **Hosting:** Vercel
+
+## ▶️ Run it yourself
 
 ```bash
+# Pipeline: data and validation
 python -m venv .venv
 .venv/Scripts/pip install -r pipeline/requirements.txt   # Windows; use .venv/bin/pip on macOS/Linux
 .venv/Scripts/python pipeline/get_kernels.py             # downloads NASA SPICE kernels (~35 MB)
 cd pipeline && ../.venv/Scripts/python -m pytest         # validates against JPL Horizons
+
+# Website
+cd web
+npm install
+npm run dev              # http://localhost:3000
+npm test                 # unit tests
+npx playwright test      # browser tests
 ```
 
----
-
-## 🛰️ The Problem
-
-At the Moon's south pole, the Sun stays only a few degrees above or below the horizon, and Earth keeps rising and setting from view. Crater walls and mountains can block both.
-
-For a lander, this means:
-
-- ☀️ **Power:** if the Sun is too low or blocked, solar panels produce little or no power.
-- 🌍 **Communication:** if Earth is below the horizon, the lander cannot talk directly to Earth.
-
-If a mission picks the wrong site or the wrong date, it can lose both. Tools that calculate Sun and Earth positions already exist, but they are hard to use. It takes an expert to read their results quickly.
-
-## 💡 Our Solution
-
-**LunaHorizon** is a planned interactive web tool. A user picks a **landing site** (from a curated list or their own coordinates) and a **date**, and LunaHorizon shows:
-
-| Feature | What the user sees |
-|---|---|
-| 📍 **Curated and custom sites** | Apollo, CLPS, other nations' missions (e.g. Chandrayaan-3, Chang'e, SLIM), Artemis III regions, or any latitude/longitude |
-| 🌄 **Sky View** | The Sun's path and Earth's position against the real terrain horizon, with an animation over a lunar day |
-| ⏳ **Sunset / Earthset countdown** | Time left before sunset and Earthset, and the current solar elevation |
-| 📡 **Power and comms windows** | When the site has sunlight, when Earth is visible, and the **Golden Window** when both happen together |
-| ⚖️ **Compare** | Up to three sites or dates side by side |
-| 📅 **Best dates + Schedule Slip Planner** | The best landing dates in the next 6–12 months, and what changes if the date slips or the site moves |
-| ✅ **Validation Panel** | Our numbers next to JPL Horizons, with the difference |
-| 💬 **Plain-language summary** | A short explanation of the results for non-experts |
-
-Also planned:
-
-| Feature | What the user sees |
-|---|---|
-| 📡 **DSN-aware comms** | Not just "Earth is up", but "Earth is up **and** a Deep Space Network station (Goldstone, Madrid, Canberra) can hear you" |
-| 🎯 **Landing Ellipse Risk** | Landers miss their target point; best and worst case sunlight inside a 100 m – 1 km landing ellipse |
-| 🔋 **Power & Battery Simulator** | Choose panel, battery and load; see the battery charge across the mission and whether the lander survives the night |
-| 🏔️ **Lander's-eye 3D view** | Real LOLA terrain with moving shadows over a lunar day |
-| 💬 **Ask LunaHorizon + Mission Brief** | Ask in plain English; export a one-page mission brief |
-| 🗺️ **More** | South pole Golden Window Map, "small change, big impact" view, Mission Replay of real landings, Classroom mode, share links, CSV export, offline mode, open data |
-
-### Example view (concept)
-
-```
-┌──────────────────────────────────────────┐
-│  🌙 LunaHorizon                           │
-├──────────────────────────────────────────┤
-│  Landing site:  [ South pole site A ▼ ]  │
-│  Date & time:   [ 2027-01-14  14:30 UTC ]│
-│                                          │
-│   ☀️ Sun elevation:    +1.8°             │
-│   🔋 Power potential:  ███████░░░  High  │
-│   🌍 Earth elevation:  +4.2°             │
-│   📡 Communication:    ✅ Available       │
-│                                          │
-│   [ + Compare another site ]             │
-└──────────────────────────────────────────┘
-```
-
-*Values above are placeholders for illustration only.*
-
-## 👥 Who It's For
-
-- **Mission planners:** quick first check of sites and dates
-- **Educators and students:** a visual way to learn why the lunar south pole is hard
-- **The public:** anyone curious about returning to the Moon
-
-## ⚙️ How It Will Work
-
-```
-NASA open data  →  Position calculation  →  Visualization  →  Plain-language summary
-(ephemeris +        (Sun & Earth elevation    (sky view,         (short explanation
- terrain)            and azimuth per site)     charts, compare)   of the results)
-```
-
-1. **Data:** Sun and Earth positions come from NASA ephemeris data. Terrain data shows where hills or crater walls block the horizon.
-2. **Calculation:** For each site and time, compute Sun and Earth elevation and azimuth, then check them against the local horizon.
-3. **Visualization:** An interactive sky view, elevation charts over time, and a side-by-side comparison.
-4. **Summary:** The calculated numbers are turned into a short, easy explanation. The calculation always comes from the data; the summary only explains it.
-
-## 🗂️ NASA Data Sources (planned)
-
-All source data is kept in one folder, [nasa-data/](nasa-data/), with a list of every file and where it comes from.
-
-| Source | Use |
-|---|---|
-| [NASA JPL Horizons](https://ssd.jpl.nasa.gov/horizons/) | Sun and Earth positions seen from a point on the Moon |
-| [NAIF SPICE](https://naif.jpl.nasa.gov/naif/) | Official ephemeris data used by NASA missions |
-| [LRO LOLA elevation data](https://pds-geosciences.wustl.edu/missions/lro/lola.htm) | Terrain, to find the real local horizon (no atmosphere, so no refraction) |
-| [NASA Moon Trek](https://trek.nasa.gov/moon/) and [LROC QuickMap](https://quickmap.lroc.asu.edu) | Reference maps and layers |
-| [NASA CLPS](https://www.nasa.gov/commercial-lunar-payload-services/), Apollo and other agencies' mission pages | Real landing sites to compare |
-
-The official challenge resources will be published on 13 November 2026. We will update this list to match them.
-
-## 🧰 Planned Tech Stack
-
-- **Frontend:** React / Next.js, TypeScript
-- **Visualization:** SVG charts, Three.js for the 3D view
-- **Calculation / data:** Python (Skyfield or SpiceyPy), JPL Horizons API
-- **Deployment:** Vercel
-
-## 🗓️ Hackathon Plan
-
-| Phase | Goal |
-|---|---|
-| Hours 0–4 | Project setup, fetch Sun and Earth positions for one site |
-| Hours 4–14 | Core UI: site and date picker, sky view, elevation charts |
-| Hours 14–22 | Site and date comparison, power and communication indicators, plain-language summary |
-| Final hours | Testing, deployment, documentation, final video |
+The generated data files are already in `web/public/data/`, so the website runs without the pipeline. The optional AI features need a `GROQ_API_KEY` environment variable; without it, the app shows its rule-based answers.
 
 ## 👩‍🚀 Team Astral
 
@@ -173,21 +113,22 @@ The official challenge resources will be published on 13 November 2026. We will 
 | **Navid Hasan** | Backend & Integration: APIs, data pipeline |
 | **Riyan Khalashi** | Documentation & Testing: docs, test cases, demo preparation |
 
-## 🤖 AI Use Disclosure
+Development started on 28 October 2026, after our assigned Space Apps mentor confirmed that our team could begin before the hackathon.
+
+## 🤖 AI use disclosure
 
 Following NASA Space Apps rules, we disclose our AI use:
 
-- This README and our pitch material were drafted with help from an AI assistant (Claude by Anthropic) and reviewed and edited by the team.
-- We use AI-assisted development (Claude Code) for code generation and review. Every AI-assisted change, with the prompt, the output and how we verified it, is logged in [docs/ai-use.md](docs/ai-use.md).
-- In the app, AI only explains numbers that our own code computed. It never calculates positions or windows. The "Explain with AI" button sends our engine's figures (nothing a visitor types) to the open-weight model gpt-oss-120b on Groq, and an answer is shown only if every figure in it, with its unit, came from our engine. A rule-based summary is always shown first and works without the AI.
-- Any AI-generated images or video will carry a visible watermark.
-- This project uses no NASA logos, flags or mission insignia.
+- **Development:** We used AI-assisted development (Claude Code by Anthropic) for code, tests, documentation and review. Every AI-assisted change is logged in [docs/ai-use.md](docs/ai-use.md), with what we asked, what it produced and how we verified it. This README was drafted with AI help and reviewed by the team.
+- **In the app:** AI only rewords numbers our own code computed. "Explain in plain words" and "Ask LunaHorizon" send the engine's figures to the open-weight model gpt-oss-120b on Groq. An answer is shown only if every figure in it, with its unit, came from the engine or our notes. A rule-based answer always works without the AI.
+- **Media:** Any AI-generated images or video will carry a visible watermark.
+- **Branding:** This project uses no NASA logos, flags or mission insignia.
 
-## 📜 Credits and Licenses
+## 📜 Credits and licences
 
-We use only public-domain NASA data and openly licensed software, fonts and media. The full list, with each licence, is in [docs/CREDITS.md](docs/CREDITS.md).
+We use only public-domain NASA data and openly licensed software, fonts and media. The full list, with each licence, is in [docs/CREDITS.md](docs/CREDITS.md). All code in this repository is open source under the MIT licence.
 
-### 🎵 Video Credits
+### 🎵 Video credits
 
 - Background music: "Lightless Dawn" by Kevin MacLeod ([incompetech.com](https://incompetech.com)), licensed under [Creative Commons: By Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).
 - South pole illumination map: NASA/GSFC/Arizona State University (LRO).

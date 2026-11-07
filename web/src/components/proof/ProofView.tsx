@@ -12,6 +12,7 @@ import styles from "./proof.module.css";
 
 const VALIDATION_SCRIPT = "https://github.com/Mozahid-DIU/LunaHorizon/blob/main/pipeline/validation.py";
 const HORIZONS = "https://ssd.jpl.nasa.gov/horizons/";
+const DATA_DOC = "https://github.com/Mozahid-DIU/LunaHorizon/blob/main/docs/data.md";
 
 function Scale({ plotted, limitDeg, title }: { plotted: readonly PlottedCheck[]; limitDeg: number; title: string }) {
   const worst = Math.max(...plotted.map(({ degrees }) => degrees));
@@ -124,7 +125,8 @@ function Results({ file }: { file: ValidationFile }) {
         </p>
         <p className={styles.note}>
           We compare against <a href={HORIZONS}>NASA JPL Horizons</a> and published terrain results, and the browser engine against our full SPICE calculation.{" "}
-          <a href={VALIDATION_SCRIPT}>Our validation script</a> is open source and can be re-run after downloading NASA&apos;s data. Results from{" "}
+          <a href={VALIDATION_SCRIPT}>Our validation script</a> is open source and can be re-run after downloading NASA&apos;s data. Every dataset, rule and limit is listed in{" "}
+          <a href={DATA_DOC}>Data and method</a>. Results from{" "}
           {formatUtc(Date.parse(`${file.generated}T00:00Z`)).split(",")[0]}.
         </p>
       </div>

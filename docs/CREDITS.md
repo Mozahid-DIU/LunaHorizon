@@ -50,6 +50,8 @@ The model only rewords figures our engine computed. It receives those figures an
 | Video music: "Lightless Dawn" | CC BY 4.0 | Kevin MacLeod (incompetech.com) |
 | All diagrams, icons and illustrations in the app and docs | MIT (this project) | Team Astral |
 | Atlas relief map | NASA data; image MIT (this project) | Rendered by Team Astral from NASA/GSFC LOLA elevation maps |
+| Atlas live lighting (`map/heights.png`) | NASA data; file MIT (this project) | Heights packed by Team Astral from NASA/GSFC LOLA polar elevation maps (`pipeline/relief_heights.py`), lit in the browser from the engine's Sun direction |
+| README screenshots (`docs/screens/`) | MIT (this project) | Screenshots of the LunaHorizon website by Team Astral |
 | Sky View terrain art | NASA data; images MIT (this project) | Rendered by Team Astral from LOLA maps and SLDEM2015 (NASA LOLA + JAXA Kaguya) |
 
 ## Rules we follow

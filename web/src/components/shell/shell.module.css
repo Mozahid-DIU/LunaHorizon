@@ -209,125 +209,14 @@
   text-transform: uppercase;
 }
 
-/* Share: copies a link to the page with the same site and date */
-.shareWrap {
-  position: relative;
-}
-
 .actions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.share {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: none;
-  color: var(--ink);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background var(--duration-fast);
-}
-
-.share:hover,
-.share[aria-expanded="true"] {
-  background: var(--hover);
-}
-
-.share svg {
-  width: 16px;
-  height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-}
-
-.sharePop {
-  position: absolute;
-  z-index: 30;
-  top: calc(100% + 10px);
-  right: 0;
-  width: 360px;
-  max-width: calc(100vw - 24px);
-  padding: 16px;
-  border: 1px solid #46e6b455;
-  border-radius: 14px;
-  background: #0c1226f5;
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 20px 50px #000c;
-}
-
-.sharePop p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.sharePop b {
-  color: var(--mint);
-  font-weight: 600;
-}
-
-.shareUrl {
-  display: block;
-  width: 100%;
-  margin: 10px 0;
-  border: 0;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: #ffffff0d;
-  color: var(--ink);
-  font-family: var(--font-mono), monospace;
-  font-size: 12px;
-  overflow-wrap: anywhere;
-  user-select: all;
-}
-
-.shareActions {
-  display: flex;
-  gap: 8px;
-}
-
-.shareActions button {
-  flex: 1;
-  min-height: 40px;
-  padding: 6px 8px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: none;
-  color: var(--ink);
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.shareActions button:hover {
-  background: var(--hover);
-}
-
-/* narrower desktop bars keep the Share icon; its name is read out */
+/* narrower desktop bars tighten the gap between the menu parts */
 @media (min-width: 1280px) and (max-width: 1599px) {
-  .share {
-    width: 36px;
-    padding: 0;
-    justify-content: center;
-  }
-
-  .shareLabel {
-    display: none;
-  }
-
   .row {
     gap: 18px;
   }
@@ -433,18 +322,5 @@
 
   .placeholder {
     padding: 32px 20px;
-  }
-}
-
-/* the narrowest phones keep Share as an icon, so the header row fits */
-@media (max-width: 400px) {
-  .share {
-    width: 36px;
-    padding: 0;
-    justify-content: center;
-  }
-
-  .shareLabel {
-    display: none;
   }
 }

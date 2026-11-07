@@ -8,7 +8,6 @@ import { SelectionBar, SelectionBarFallback } from "@/components/selection/Selec
 import { useSelection } from "@/components/selection/useSelection";
 import { BRIEF, groupOf, isActivePage, NAV_GROUPS, PROOF_PAGE } from "@/lib/routes";
 import { withQuery } from "@/lib/selection";
-import { ShareButton, ShareButtonFallback } from "./ShareButton";
 import styles from "./shell.module.css";
 
 function MainLinks({ query }: { query: string }) {
@@ -69,9 +68,6 @@ export function TopNav() {
         </Suspense>
         <div className={styles.actions}>
           <ClassroomToggle />
-          <Suspense fallback={<ShareButtonFallback />}>
-            <ShareButton />
-          </Suspense>
         </div>
       </div>
       <div className={styles.context}>

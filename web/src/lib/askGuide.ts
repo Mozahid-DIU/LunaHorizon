@@ -36,7 +36,7 @@ export const PAGES: readonly string[] = [
   "Mission Replay, on the Sky page, plays back 5 real landings (Apollo 11, Chandrayaan-3 Vikram, IM-1 Odysseus, IM-2 Athena and Blue Ghost Mission 1) from touchdown, with the engine's sunset at each site set beside what each team reported, with links to NASA, ISRO and Firefly.",
   "Proof lists every check of our positions against NASA JPL Horizons and full SPICE, with each difference and its limit.",
   "Mission Brief is a report of 2 A4 pages for any site and date, ready to print or save as PDF, with a QR code back to the live page.",
-  "Share copies a link that reopens the same page, site and date. Ask LunaHorizon is this chat.",
+  "The address of any page holds its site and date, so a copied link reopens the same view. Ask LunaHorizon is this chat.",
   "A site and a date are chosen at the top of every page; a custom point can be typed as latitude and longitude.",
 ];
 

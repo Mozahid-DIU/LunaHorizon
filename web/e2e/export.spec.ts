@@ -14,43 +14,6 @@ async function download(page: Page, what: "hourly" | "windows") {
   return { name: file.suggestedFilename(), lines: readFileSync((await file.path())!, "utf-8").trimEnd().split("\r\n") };
 }
 
-test.describe("share", () => {
-  test("Share copies a link that opens the same page, site and date", async ({ page, context, isMobile }) => {
-    test.skip(isMobile, "a phone uses its own share sheet");
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await page.goto("/sky?site=im-2&t=2028-02-01T12:00Z");
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Golden/);
-    const headline = await page.getByRole("heading", { level: 1 }).innerText();
-    await page.getByTestId("share").click();
-    await expect(page.getByTestId("share-pop")).toContainText("Link copied.");
-    const copied = await page.evaluate(() => navigator.clipboard.readText());
-    expect(copied).toMatch(/\/sky\?site=im-2&t=2028-02-01T12:00Z$/);
-    await expect(page.getByTestId("share-url")).toHaveValue(copied);
-
-    await page.getByRole("button", { name: "Copy Mission Brief link" }).click();
-    await expect(page.getByTestId("share-pop")).toContainText("Mission Brief link copied.");
-    expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/\/brief\?site=im-2&t=2028-02-01T12:00Z$/);
-
-    await page.keyboard.press("Escape");
-    await expect(page.getByTestId("share-pop")).toHaveCount(0);
-    await page.goto(copied);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(headline);
-  });
-
-  test("on a phone, Share opens the phone's own share sheet with the page link", async ({ page, isMobile }) => {
-    test.skip(!isMobile, "a phone share sheet");
-    await page.addInitScript(() => {
-      Object.assign(window, { shared: [] as unknown[] });
-      Object.defineProperty(navigator, "share", { value: async (data: unknown) => (window as unknown as { shared: unknown[] }).shared.push(data) });
-    });
-    await page.goto("/dates?site=im-1");
-    await page.getByTestId("share").tap();
-    await expect.poll(() => page.evaluate(() => (window as unknown as { shared: { url: string }[] }).shared.length)).toBe(1);
-    const shared = await page.evaluate(() => (window as unknown as { shared: { url: string }[] }).shared[0].url);
-    expect(shared).toMatch(/\/dates\?site=im-1$/);
-  });
-});
-
 /** The cells of one CSV line, honouring quotes. */
 function cells(text: string): string[] {
   const out: string[] = [];

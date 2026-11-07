@@ -44,7 +44,7 @@ Choose a **site** (20 curated landing sites, or any point you type) and a **date
 - **Mission Replay:** Apollo 11, Chandrayaan-3, IM-1, IM-2 and Blue Ghost 1 replayed from touchdown, beside what their teams reported. For example, the engine's sunset at Chandrayaan-3's site falls on the day ISRO put the lander to sleep.
 - **Ask LunaHorizon:** questions in plain English, answered only from the engine's figures and our notes.
 - **Classroom mode:** a short lesson on every page, with answers worked out live by the engine.
-- **Share and CSV:** links that reopen the same page, site and date, and an hourly CSV export of the timeline.
+- **Links and CSV:** every page's address holds its site and date, so a copied link reopens the same view; the Sky timeline exports as hourly CSV.
 
 <table>
 <tr><td><img src="docs/screens/sky.webp" alt="Sky page: the lander's view with an engine telemetry panel"></td><td><img src="docs/screens/dates.webp" alt="Dates page: the five best landings on a year strip"></td></tr>
